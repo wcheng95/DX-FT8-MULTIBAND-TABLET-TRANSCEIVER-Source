@@ -14,9 +14,9 @@
 #include "log_file.h"
 #include "button.h"
 
-static char log_line[180];
-
 void write_ADIF_Log(void) {
+
+	static char log_line[180];
 
 	make_Real_Time();
 	make_Real_Date();
