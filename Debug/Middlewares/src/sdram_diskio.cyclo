@@ -1,5 +1,0 @@
-../Middlewares/src/sdram_diskio.c:88:9:SDRAMDISK_status	1
-../Middlewares/src/sdram_diskio.c:105:9:SDRAMDISK_read	2
-../Middlewares/src/sdram_diskio.c:128:9:SDRAMDISK_write	2
-../Middlewares/src/sdram_diskio.c:151:9:SDRAMDISK_ioctl	6
-../Middlewares/src/sdram_diskio.c:72:9:SDRAMDISK_initialize	1

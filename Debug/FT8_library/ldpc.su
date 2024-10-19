@@ -1,5 +1,0 @@
-../FT8_library/ldpc.c:127:12:ldpc_check	24	static
-../FT8_library/ldpc.c:228:14:fast_tanh	0	static
-../FT8_library/ldpc.c:33:6:pack_bits	16	static
-../FT8_library/ldpc.c:58:6:ldpc_decode	88	dynamic
-../FT8_library/ldpc.c:143:6:bp_decode	80	dynamic

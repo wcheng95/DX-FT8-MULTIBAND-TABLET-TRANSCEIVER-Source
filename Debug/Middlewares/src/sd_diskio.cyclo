@@ -1,5 +1,0 @@
-../Middlewares/src/sd_diskio.c:73:9:SD_initialize	2
-../Middlewares/src/sd_diskio.c:91:9:SD_status	2
-../Middlewares/src/sd_diskio.c:111:9:SD_read	1
-../Middlewares/src/sd_diskio.c:135:9:SD_write	1
-../Middlewares/src/sd_diskio.c:158:9:SD_ioctl	6

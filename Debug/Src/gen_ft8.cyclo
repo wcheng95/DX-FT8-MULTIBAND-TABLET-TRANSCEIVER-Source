@@ -1,9 +1,0 @@
-../Src/gen_ft8.c:62:7:set_cq	2
-../Src/gen_ft8.c:83:7:set_reply	4
-../Src/gen_ft8.c:118:6:compose_messages	1
-../Src/gen_ft8.c:145:6:que_message	3
-../Src/gen_ft8.c:167:6:clear_qued_message	2
-../Src/gen_ft8.c:177:6:clear_xmit_messages	1
-../Src/gen_ft8.c:185:6:Read_Station_File	2
-../Src/gen_ft8.c:215:6:clear_reply_message_box	1
-../Src/gen_ft8.c:222:6:SD_Initialize	4

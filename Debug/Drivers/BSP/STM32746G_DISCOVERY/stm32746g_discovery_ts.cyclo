@@ -1,8 +1,0 @@
-../Drivers/BSP/STM32746G_DISCOVERY/stm32746g_discovery_ts.c:143:9:BSP_TS_Init	2
-../Drivers/BSP/STM32746G_DISCOVERY/stm32746g_discovery_ts.c:173:9:BSP_TS_DeInit	1
-../Drivers/BSP/STM32746G_DISCOVERY/stm32746g_discovery_ts.c:183:9:BSP_TS_ITConfig	1
-../Drivers/BSP/STM32746G_DISCOVERY/stm32746g_discovery_ts.c:208:9:BSP_TS_ITGetStatus	1
-../Drivers/BSP/STM32746G_DISCOVERY/stm32746g_discovery_ts.c:339:9:BSP_TS_Get_GestureId	9
-../Drivers/BSP/STM32746G_DISCOVERY/stm32746g_discovery_ts.c:219:9:BSP_TS_GetState	15
-../Drivers/BSP/STM32746G_DISCOVERY/stm32746g_discovery_ts.c:383:6:BSP_TS_ITClear	1
-../Drivers/BSP/STM32746G_DISCOVERY/stm32746g_discovery_ts.c:401:9:BSP_TS_ResetTouchData	2

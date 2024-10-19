@@ -1,6 +1,0 @@
-../FT8_library/pack.c:28:9:pack28	20
-../FT8_library/pack.c:118:7:chkcall	8
-../FT8_library/pack.c:139:10:packgrid	10
-../FT8_library/pack.c:183:5:pack77_1	4
-../FT8_library/pack.c:238:6:packtext77	10
-../FT8_library/pack.c:293:5:pack77	1

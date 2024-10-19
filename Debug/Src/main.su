@@ -1,3 +1,0 @@
-../Src/main.c:266:6:update_synchronization	8	static
-../Src/main.c:333:6:HAL_Delay	8	static
-../Src/main.c:91:6:main	208	static,ignoring_inline_asm

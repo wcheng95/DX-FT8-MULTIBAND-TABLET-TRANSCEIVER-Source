@@ -1,9 +1,0 @@
-../Src/options.c:59:9:Options_GetValue	1
-../Src/options.c:88:6:Options_SetValue	1
-../Src/options.c:121:6:Options_ResetToDefaults	1
-../Src/options.c:163:6:Write_Int_MicroSD	1
-../Src/options.c:130:6:Options_WriteToMicroSD	1
-../Src/options.c:149:6:Options_StoreValue	1
-../Src/options.c:180:9:Read_Int_MicroSD	1
-../Src/options.c:139:6:Options_ReadFromMicroSD	1
-../Src/options.c:95:6:Options_Initialize	2

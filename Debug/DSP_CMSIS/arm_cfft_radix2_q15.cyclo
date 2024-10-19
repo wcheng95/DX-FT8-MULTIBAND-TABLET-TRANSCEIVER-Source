@@ -1,3 +1,0 @@
-../DSP_CMSIS/arm_cfft_radix2_q15.c:103:6:arm_radix2_butterfly_q15	6
-../DSP_CMSIS/arm_cfft_radix2_q15.c:432:6:arm_radix2_butterfly_inverse_q15	7
-../DSP_CMSIS/arm_cfft_radix2_q15.c:80:6:arm_cfft_radix2_q15	2
