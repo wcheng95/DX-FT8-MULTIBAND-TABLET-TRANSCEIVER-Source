@@ -65,6 +65,9 @@ extern int Auto_Sync;
 extern uint16_t start_freq;
 extern int BandIndex;
 extern FreqStruct sBand_Data[];
+extern int AGC_Gain;
+extern int ADC_DVC_Gain;
+extern int ADC_DVC_Off;
 
 uint16_t testButton(uint16_t x,uint16_t y,uint16_t w,uint16_t h);
 

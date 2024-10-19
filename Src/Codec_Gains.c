@@ -19,7 +19,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
 #include "stm32746g_discovery.h"
 #include "Codec_Gains.h"
 #include "wm8994.h"
@@ -27,36 +26,35 @@
 
 #define Codec_Pause 1
 
+void Set_HP_Gain(int HP_gain) {
 
-void Set_HP_Gain(int HP_gain)
-{
+	if (HP_gain > HP_GAIN_MAX)
+		HP_gain = HP_GAIN_MAX;
+	if (HP_gain < HP_GAIN_MIN)
+		HP_gain = HP_GAIN_MIN;
 
-	if (HP_gain > HP_GAIN_MAX) 		HP_gain = HP_GAIN_MAX;
-		if (HP_gain < HP_GAIN_MIN)			HP_gain = HP_GAIN_MIN;
-
-	AUDIO_IO_Write(AUDIO_I2C_ADDRESS, 0x001C, HP_gain+64);  //headphone volume
-	AUDIO_IO_Write(AUDIO_I2C_ADDRESS, 0x001D, HP_gain+320);  //headphone volume
-   }   // End of Set_HP_Gain
+	AUDIO_IO_Write(AUDIO_I2C_ADDRESS, 0x001C, HP_gain + 64);  //headphone volume
+	AUDIO_IO_Write(AUDIO_I2C_ADDRESS, 0x001D, HP_gain + 320); //headphone volume
+}   // End of Set_HP_Gain
 
 /*
-void Set_Mic_PGA_Gain(int PGA_gain)
-{
+ void Set_Mic_PGA_Gain(int PGA_gain)
+ {
 
-	if (PGA_gain < PGA_GAIN_MIN)
-		PGA_gain = PGA_GAIN_MIN;
-	if (PGA_gain > PGA_GAIN_MAX)
-		PGA_gain = PGA_GAIN_MAX;
+ if (PGA_gain < PGA_GAIN_MIN)
+ PGA_gain = PGA_GAIN_MIN;
+ if (PGA_gain > PGA_GAIN_MAX)
+ PGA_gain = PGA_GAIN_MAX;
 
-	AUDIO_IO_Write(AUDIO_I2C_ADDRESS, 0x0019, PGA_gain);
-	HAL_Delay(1);
+ AUDIO_IO_Write(AUDIO_I2C_ADDRESS, 0x0019, PGA_gain);
+ HAL_Delay(1);
 
-	AUDIO_IO_Write(AUDIO_I2C_ADDRESS, 0x001B, PGA_gain+256);
-	HAL_Delay(1);
-  }   // End of Set_PGA_gain
-*/
+ AUDIO_IO_Write(AUDIO_I2C_ADDRESS, 0x001B, PGA_gain+256);
+ HAL_Delay(1);
+ }   // End of Set_PGA_gain
+ */
 
-void Set_PGA_Gain(int PGA_gain)
-{
+void Set_PGA_Gain(int PGA_gain) {
 
 	if (PGA_gain < PGA_GAIN_MIN)
 		PGA_gain = PGA_GAIN_MIN;
@@ -66,48 +64,48 @@ void Set_PGA_Gain(int PGA_gain)
 	AUDIO_IO_Write(AUDIO_I2C_ADDRESS, 0x0018, PGA_gain);
 	HAL_Delay(1);
 
-	AUDIO_IO_Write(AUDIO_I2C_ADDRESS, 0x001A, PGA_gain+256);
+	AUDIO_IO_Write(AUDIO_I2C_ADDRESS, 0x001A, PGA_gain + 256);
 	HAL_Delay(1);
 }   // End of Set_PGA_gain
 
 /*==========================================================================*/
 /*
-void Set_Spkr_DVC(int DAC_gain)  //gain is in 1 dB steps
-{
+ void Set_Spkr_DVC(int DAC_gain)  //gain is in 1 dB steps
+ {
 
-	if (DAC_gain > DAC_GAIN_MAX)
-		DAC_gain = DAC_GAIN_MAX;
-	if (DAC_gain < DAC_GAIN_MIN)
-		DAC_gain = DAC_GAIN_MIN;
+ if (DAC_gain > DAC_GAIN_MAX)
+ DAC_gain = DAC_GAIN_MAX;
+ if (DAC_gain < DAC_GAIN_MIN)
+ DAC_gain = DAC_GAIN_MIN;
 
-	AUDIO_IO_Write(AUDIO_I2C_ADDRESS, 0x0026, DAC_gain+64);  //speaker volume
-	HAL_Delay(Codec_Pause);
+ AUDIO_IO_Write(AUDIO_I2C_ADDRESS, 0x0026, DAC_gain+64);  //speaker volume
+ HAL_Delay(Codec_Pause);
 
-	AUDIO_IO_Write(AUDIO_I2C_ADDRESS, 0x0027, DAC_gain+320);  //speaker volume
-	HAL_Delay(Codec_Pause);
+ AUDIO_IO_Write(AUDIO_I2C_ADDRESS, 0x0027, DAC_gain+320);  //speaker volume
+ HAL_Delay(Codec_Pause);
 
 
-}   // End of Set_Dig_DVC
-*/
+ }   // End of Set_Dig_DVC
+ */
 /*============================================================================*/
 /*
-void Set_Mic_ADC_DVC(int ADC_gain)  // gain in 0.375 dB steps
-{
+ void Set_Mic_ADC_DVC(int ADC_gain)  // gain in 0.375 dB steps
+ {
 
-	if (ADC_gain > ADC_GAIN_MAX)
-		ADC_gain = ADC_GAIN_MAX;
-	if (ADC_gain < ADC_GAIN_MIN)
-		ADC_gain = ADC_GAIN_MIN;
-
-
-	AUDIO_IO_Write(AUDIO_I2C_ADDRESS, 0x404, ADC_gain);
-	HAL_Delay(1);
-	AUDIO_IO_Write(AUDIO_I2C_ADDRESS, 0x405, ADC_gain+256);
-	HAL_Delay(1);
+ if (ADC_gain > ADC_GAIN_MAX)
+ ADC_gain = ADC_GAIN_MAX;
+ if (ADC_gain < ADC_GAIN_MIN)
+ ADC_gain = ADC_GAIN_MIN;
 
 
-}   // End of Set_ADC_DVC
-*/
+ AUDIO_IO_Write(AUDIO_I2C_ADDRESS, 0x404, ADC_gain);
+ HAL_Delay(1);
+ AUDIO_IO_Write(AUDIO_I2C_ADDRESS, 0x405, ADC_gain+256);
+ HAL_Delay(1);
+
+
+ }   // End of Set_ADC_DVC
+ */
 
 void Set_ADC_DVC(int ADC_gain)  // gain in 0.375 dB steps
 {
@@ -117,45 +115,38 @@ void Set_ADC_DVC(int ADC_gain)  // gain in 0.375 dB steps
 	if (ADC_gain < ADC_GAIN_MIN)
 		ADC_gain = ADC_GAIN_MIN;
 
-
 	AUDIO_IO_Write(AUDIO_I2C_ADDRESS, 0x400, ADC_gain);
 	HAL_Delay(1);
 
-	AUDIO_IO_Write(AUDIO_I2C_ADDRESS, 0x401, ADC_gain+256);
+	AUDIO_IO_Write(AUDIO_I2C_ADDRESS, 0x401, ADC_gain + 256);
 	HAL_Delay(1);
 
-
 }   // End of Set_ADC_DVC
-
-
-
 
 /*============================================================================*/
 //Mute HP Outputs
 /*
-void Mute_HP(void)
-{
-	AUDIO_IO_Write(AUDIO_I2C_ADDRESS, 0x001C, 0);
-	HAL_Delay(Codec_Pause);
+ void Mute_HP(void)
+ {
+ AUDIO_IO_Write(AUDIO_I2C_ADDRESS, 0x001C, 0);
+ HAL_Delay(Codec_Pause);
 
-	AUDIO_IO_Write(AUDIO_I2C_ADDRESS, 0x001D, 0);
-	HAL_Delay(Codec_Pause);
+ AUDIO_IO_Write(AUDIO_I2C_ADDRESS, 0x001D, 0);
+ HAL_Delay(Codec_Pause);
 
-}
-*/
+ }
+ */
 /*============================================================================*/
-
 
 //Mute Speaker Outputs
 /*
-void Mute_Speakers(void)
-{
-	AUDIO_IO_Write(AUDIO_I2C_ADDRESS, 0x0026, 0xC0);
-	HAL_Delay(Codec_Pause);
+ void Mute_Speakers(void)
+ {
+ AUDIO_IO_Write(AUDIO_I2C_ADDRESS, 0x0026, 0xC0);
+ HAL_Delay(Codec_Pause);
 
-	AUDIO_IO_Write(AUDIO_I2C_ADDRESS, 0x0027, 0xC0);
-	HAL_Delay(Codec_Pause);
-}
-*/
-
+ AUDIO_IO_Write(AUDIO_I2C_ADDRESS, 0x0027, 0xC0);
+ HAL_Delay(Codec_Pause);
+ }
+ */
 

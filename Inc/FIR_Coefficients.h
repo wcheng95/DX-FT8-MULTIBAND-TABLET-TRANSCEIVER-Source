@@ -19,7 +19,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
 #define NUM_FIR_COEF	128
 
 extern q15_t coeff_fir_I_32K[NUM_FIR_COEF];

@@ -5,7 +5,6 @@
  *      Author: user
  */
 
-
 /*
  * F7_SD_Support.c
  *
@@ -32,7 +31,6 @@
 #include "sd_diskio.h"
 #include "arm_math.h"
 
-
 #include "Display.h"
 #include "main.h"
 #include "gen_ft8.h"
@@ -42,17 +40,14 @@
 //char *CurrentLogName;
 //char LogFileName[32];
 
-
 extern ButtonStruct sButtonData[];
 
 /* Fatfs structure */
 FATFS FS;
 FIL LogFile;
 
-
 /* Size structure for FATFS */
 //TM_FATFS_Size_t CardSize;
-
 /* Buffer variable */
 //char buffer[128];
 //char* Band_Label;
@@ -63,54 +58,42 @@ FIL LogFile;
 //UINT i,j;
 //UINT bytes_wrote;
 
-
-
 //extern void ClearTextDisplay(void);
-
 //extern MemoryChannelStruct MemoryChannel;
 
+void Open_Log_File(void) {
 
+	//char header[] = "ADIF EXPORT";
 
+	f_mount(&FS, "SD:", 1);
+	if (f_open(&LogFile, file_name_string,
+			FA_OPEN_ALWAYS | FA_WRITE | FA_OPEN_APPEND) == FR_OK) {
 
-
-void Open_Log_File( void ){
-
-		//char header[] = "ADIF EXPORT";
-
-
-		f_mount(&FS, "SD:", 1);
-		if ( f_open(&LogFile, file_name_string, FA_OPEN_ALWAYS | FA_WRITE | FA_OPEN_APPEND) == FR_OK){
-
-			if(f_size(&LogFile) == 0){
+		if (f_size(&LogFile) == 0) {
 			f_lseek(&LogFile, f_size(&LogFile));
-			f_puts("ADIF EXPORT",&LogFile);
-			f_puts("\n",&LogFile);
-			f_puts("<eoh>",&LogFile);
-			f_puts("\n",&LogFile);
-			}
+			f_puts("ADIF EXPORT", &LogFile);
+			f_puts("\n", &LogFile);
+			f_puts("<eoh>", &LogFile);
+			f_puts("\n", &LogFile);
+		}
 
-		 	}
+	}
 
-		f_close(&LogFile);
-
-
+	f_close(&LogFile);
 
 }
 
-
-
-
-
-void Write_Log_Data( char *ch ){
-	if ( sButtonData[4].state == 1 ){
+void Write_Log_Data(char *ch) {
+	if (sButtonData[4].state == 1) {
 
 		f_mount(&FS, "SD:", 1);
-		if ( f_open(&LogFile, file_name_string, FA_OPEN_ALWAYS | FA_WRITE | FA_OPEN_APPEND) == FR_OK){
+		if (f_open(&LogFile, file_name_string,
+				FA_OPEN_ALWAYS | FA_WRITE | FA_OPEN_APPEND) == FR_OK) {
 			f_lseek(&LogFile, f_size(&LogFile));
-			f_puts(ch,&LogFile);
-			f_puts("\n",&LogFile);
+			f_puts(ch, &LogFile);
+			f_puts("\n", &LogFile);
 
-		 	}
+		}
 
 		f_close(&LogFile);
 
@@ -118,11 +101,8 @@ void Write_Log_Data( char *ch ){
 
 }
 
-void Close_Log_File( void){
+void Close_Log_File(void) {
 
 	f_close(&LogFile);
 }
-
-
-
 

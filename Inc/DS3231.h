@@ -10,12 +10,11 @@
 
 #include "arm_math.h"
 
-typedef struct
-{
-	const char* Name;
+typedef struct {
+	const char *Name;
 	const unsigned char Minimum;
 	const unsigned char Maximum;
-    char data;
+	char data;
 } RTCStruct;
 
 extern char edit_date_string[9];
@@ -53,30 +52,35 @@ extern char edit_time_string[9];
 
 extern int RTC_Set_Flag;
 
-enum days_of_week{SUN = 1, MON, TUE, WED, THU, FRI, SAT};
+enum days_of_week {
+	SUN = 1, MON, TUE, WED, THU, FRI, SAT
+};
 
-extern unsigned char rtc_hour, rtc_minute, rtc_second, rtc_dow, rtc_date, rtc_month, rtc_year;
+extern unsigned char rtc_hour, rtc_minute, rtc_second, rtc_dow, rtc_date,
+		rtc_month, rtc_year;
 extern short rtc_ampm;
 
 extern char log_rtc_time_string[13];
 extern char log_rtc_date_string[13];
 extern char file_name_string[24];
 
-
 unsigned char bcd_to_decimal(unsigned char d);
 unsigned char decimal_to_bcd(unsigned char d);
 unsigned char DS3231_Read(unsigned char address);
 
-
 void DS3231_Write(unsigned char address, unsigned char value);
 void DS3231_init(void);
-void getTime(unsigned char *hour, unsigned char *minute, unsigned char *second, short *am_pm, short hour_format);
-void getDate(unsigned char *day_of_week, unsigned char *date, unsigned char *month, unsigned char *year);
+void getTime(unsigned char *hour, unsigned char *minute, unsigned char *second,
+		short *am_pm, short hour_format);
+void getDate(unsigned char *day_of_week, unsigned char *date,
+		unsigned char *month, unsigned char *year);
 float getTemp(void);
-void format_time(int value, char* result, char zeros);
+void format_time(int value, char *result, char zeros);
 
-void RTC_setTime(unsigned char hSet, unsigned char mSet, unsigned char sSet, short am_pm_state, short hour_format);
-void RTC_setDate(unsigned char daySet, unsigned char dateSet, unsigned char monthSet, unsigned char yearSet);
+void RTC_setTime(unsigned char hSet, unsigned char mSet, unsigned char sSet,
+		short am_pm_state, short hour_format);
+void RTC_setDate(unsigned char daySet, unsigned char dateSet,
+		unsigned char monthSet, unsigned char yearSet);
 
 void display_RealTime(int x, int y);
 void display_Real_Date(int x, int y);
@@ -97,7 +101,5 @@ void set_RTC_to_TimeEdit(void);
 void set_RTC_to_DateEdit(void);
 
 void load_RealDate(void);
-
-
 
 #endif /* DS3231_H_ */

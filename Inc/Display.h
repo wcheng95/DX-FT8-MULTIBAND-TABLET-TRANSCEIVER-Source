@@ -25,25 +25,26 @@ extern int FT8_Touch_Flag;
 extern int FT8_Message_Touch;
 extern char current_QSO_receive_message[20];
 
-void show_variable(uint16_t x, uint16_t y,int variable);
+void show_variable(uint16_t x, uint16_t y, int variable);
 
-void show_short(uint16_t x, uint16_t y,uint8_t variable);
+void show_short(uint16_t x, uint16_t y, uint8_t variable);
 
-void show_wide(uint16_t x, uint16_t y,int variable);
+void show_wide(uint16_t x, uint16_t y, int variable);
 
-void show_UTC_time(uint16_t x, uint16_t y,int utc_hours,int utc_minutes,int utc_seconds, int color);
+void show_UTC_time(uint16_t x, uint16_t y, int utc_hours, int utc_minutes,
+		int utc_seconds, int color);
 
-void show_Real_Date(uint16_t x, uint16_t y,int date,int month,int year);
+void show_Real_Date(uint16_t x, uint16_t y, int date, int month, int year);
 
 void setup_display(void);
 
-void Process_Touch (void);
+void Process_Touch(void);
 
 uint16_t FFT_Touch(void);
 
 int FT8_Touch(void);
 
-void Init_Waterfall (void);
+void Init_Waterfall(void);
 
 void Display_WF(void);
 
