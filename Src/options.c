@@ -86,7 +86,6 @@ void Options_WriteToMicroSD(void) {
 
 void Options_ReadFromMicroSD(void) {
 	int i;
-	//LCD_UsrLog("Read Options\n");
 	for (i = 0; i < NUM_OPTIONS; i++) {
 		int16_t newValue = Read_Int_MicroSD(i);
 		Options_SetValue(i, newValue);
@@ -98,12 +97,6 @@ void Options_StoreValue(int optionIdx) {
 	option_value = Options_GetValue(optionIdx);
 	Write_Int_MicroSD((int16_t) optionIdx, option_value);
 }
-
-//int16_t Options_ReadValue(int optionIdx)
-//{
-//      int16_t newValue = Read_Int_MicroSD(optionIdx);
-//      return newValue;
-//}
 
 //Routine to write a integer value to the MicroSD starting at MicroSD address MicroSD_Addr
 void Write_Int_MicroSD(uint16_t DiskBlock, int16_t value) {

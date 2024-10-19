@@ -1,4 +1,3 @@
-//#pragma once
 
 // codeword is 174 log-likelihoods.
 // plain is a return value, 174 ints, to be 0 or 1.

@@ -1,4 +1,6 @@
-//#pragma once
+
+#ifndef ENCODE_H_
+#define ENCODE_H_
 
 #include <stdint.h>
 
@@ -24,4 +26,6 @@ void encode174(const uint8_t *message, uint8_t *codeword);
 uint16_t crc(uint8_t *message, int num_bits);
 
 void set_cq(void);
+
+#endif // ENCODE_H_
 

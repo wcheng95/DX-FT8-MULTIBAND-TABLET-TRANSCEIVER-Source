@@ -24,6 +24,10 @@ extern int decode_flag;
 extern int FT8_Touch_Flag;
 extern int FT8_Message_Touch;
 extern char current_QSO_receive_message[20];
+extern uint16_t valx, valy;
+extern char current_Beacon_receive_message[20];
+extern char current_Beacon_xmit_message[];
+extern char current_QSO_xmit_message[];
 
 void show_variable(uint16_t x, uint16_t y, int variable);
 

@@ -8,8 +8,6 @@
 #ifndef DECODE_H_
 #define DECODE_H_
 
-//#pragma once
-
 #include <stdint.h>
 
 typedef struct Candidate {

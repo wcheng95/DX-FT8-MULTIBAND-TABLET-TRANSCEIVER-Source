@@ -22,8 +22,6 @@
 #include "SiLabs.h"
 #include "options.h"
 
-extern uint16_t valx, valy;
-
 #define FFT_Resolution 6.25  //8000/2/1280
 
 int Tune_On;  // 0 = Receive, 1 = Xmit Tune Signal
@@ -42,8 +40,6 @@ int freq_scale = 10;
 char display_frequency[] = "14.075";
 
 extern uint16_t refClock;
-extern void set_RTC_to_GPS(void);
-extern RTCStruct s_RTC_Data[];
 
 #define numBands 5
 

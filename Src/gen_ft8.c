@@ -39,7 +39,6 @@
 
 #include "button.h"
 
-extern char current_Beacon_xmit_message[];
 char Target_Frequency[8]; // Five character locator  + /0
 char Locator[5]; // four character locator  + /0
 char Station_Call[7]; //six character call sign + /0
@@ -76,8 +75,6 @@ void set_cq(void) {
 	BSP_LCD_DisplayStringAt(240, 240, (const uint8_t*) message, 0x03);
 
 }
-
-extern char current_Beacon_xmit_message[20];
 
 void set_reply(uint16_t index) {
 
@@ -138,8 +135,6 @@ void compose_messages(void) {
 	BSP_LCD_DisplayStringAt(240, 220, (uint8_t*) xmit_messages[3], 0x03);
 
 }
-
-extern char current_QSO_xmit_message[];
 
 void que_message(int index) {
 

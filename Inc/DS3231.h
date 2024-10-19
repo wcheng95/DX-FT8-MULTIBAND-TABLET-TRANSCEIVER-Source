@@ -17,6 +17,8 @@ typedef struct {
 	char data;
 } RTCStruct;
 
+extern RTCStruct s_RTC_Data[];
+
 extern char edit_date_string[9];
 extern char edit_time_string[9];
 

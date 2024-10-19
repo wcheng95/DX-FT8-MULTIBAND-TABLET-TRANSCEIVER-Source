@@ -31,7 +31,6 @@ typedef struct {
 	int number_times_called;
 	char call[7];
 	char locator[4];
-	//char freq_hz[7];
 	int RSL;
 	int RR73;
 

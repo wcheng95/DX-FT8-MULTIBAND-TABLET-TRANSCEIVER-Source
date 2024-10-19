@@ -14,8 +14,6 @@
 #include "log_file.h"
 #include "button.h"
 
-extern char display_frequency[];
-
 static char log_line[180];
 
 void write_ADIF_Log(void) {

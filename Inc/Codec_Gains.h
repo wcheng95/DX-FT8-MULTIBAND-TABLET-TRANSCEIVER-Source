@@ -21,6 +21,7 @@
 
 #ifndef CODEC_GAINS_H_
 #define CODEC_GAINS_H_
+
 #define PGA_GAIN_MIN 0
 #define PGA_GAIN_MAX 31
 

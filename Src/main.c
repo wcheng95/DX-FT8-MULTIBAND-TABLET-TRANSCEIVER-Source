@@ -67,10 +67,7 @@ static void Error_Handler(void);
 static void CPU_CACHE_Enable(void);
 static void HID_InitApplication(void);
 
-int main(void)
-
-{
-
+int main(void) {
 	CPU_CACHE_Enable();
 
 	HAL_Init();
@@ -78,7 +75,6 @@ int main(void)
 	PTT_Out_Init();
 
 	/* Configure the System clock to have a frequency of 200 MHz */
-
 	SystemClock_Config();
 
 	start_audio_I2C();
@@ -109,8 +105,6 @@ int main(void)
 	cursor = 112;  // 1000 Hz
 	Set_Cursor_Frequency(cursor);
 	show_variable(400, 25, (int) NCO_Frequency);
-
-	//show_hz(100, 100, (uint32_t) (start_freq *1000 + NCO_Frequency));
 
 	show_short(405, 255, AGC_Gain);
 
@@ -180,7 +174,6 @@ int main(void)
 
 					ft8_xmit_delay++;
 
-					//show_variable(0,240, ft8_xmit_delay) ;
 					if (ft8_xmit_delay == 16)
 						output_enable(SI5351_CLK0, 1);
 
@@ -300,25 +293,6 @@ void HAL_Delay(__IO uint32_t Delay) {
 }
 
 /**
- * @brief  Toggles LEDs to show user input state.
- * @param  None
- * @retval None
- */
-
-/*
- void Toggle_Leds(void)
- {
- static uint32_t ticks;
-
- if(ticks++ == 100)
- {
- BSP_LED_Toggle(LED1);
- ticks = 0;
- }
- }
- */
-
-/**
  * @brief  System Clock Configuration
  *         The system Clock is configured as follow :
  *            System Clock source            = PLL (HSE)
@@ -397,19 +371,6 @@ static void Error_Handler(void) {
 	}
 }
 
-/*
- void Timer_Init(void)
- {
-
- __HAL_RCC_TIM2_CLK_ENABLE();
- __HAL_RCC_TIMCLKPRESCALER(RCC_TIMPRES_ACTIVATED);
- hTim2.Instance = TIM2;
- hTim2.Instance->ARR = 0xFFFFFFFF;
- __HAL_TIM_ENABLE(&hTim2);
-
- }
- */
-
 /**
  * @brief  CPU L1-Cache enable.
  * @param  None
@@ -423,42 +384,4 @@ static void CPU_CACHE_Enable(void) {
 	SCB_EnableDCache();
 }
 
-/*
- if (time_toggle == 0) {
- time_toggle = 1;
- time_start_0 = hTim2.Instance->CNT;
- }
- else
- if(time_toggle == 1) {
- time_end_0 = hTim2.Instance->CNT;
- time_diff_0 = (time_end_0 - time_start_0)/200000;
- show_variable(75, 100,(int) time_diff_0);
- time_toggle = 0;
- HAL_Delay(1);
- }
- */
-
-// time_start_1 = hTim2.Instance->CNT;
-// I2S2_RX_ProcessBuffer(buff_offset);
-// time_end_1 = hTim2.Instance->CNT;
-// time_diff_1 = (time_end_1 - time_start_1)/200000;
-// show_variable(150, 100,(int) time_diff_1);
-//HAL_Delay(1);
-//time_start_3 = hTim2.Instance->CNT;
-//Display_FFT();
-// time_end_3 = hTim2.Instance->CNT;
-// time_diff_3 = (time_end_3 - time_start_3)/2000;
-//show_variable(225, 100,(int) time_diff_3);
-//HAL_Delay(1);
-//show_FFT_data();
-//time_start_2 = hTim2.Instance->CNT;
-//ProcPSKDet();
-//HAL_Delay(12);
-//if (NewChar != 0) {
-//	DisplayText(NewChar);
-//	NewChar = 0;
-//   }
-// time_end_2 = hTim2.Instance->CNT;
-// time_diff_2 = (time_end_2 - time_start_2)/200000;
-// show_variable(300, 100,(int) time_diff_2);
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

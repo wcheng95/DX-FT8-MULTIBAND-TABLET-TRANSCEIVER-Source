@@ -36,30 +36,9 @@
 #include "gen_ft8.h"
 #include "DS3231.h"
 
-//int LogNumber = 1;
-//char *CurrentLogName;
-//char LogFileName[32];
-
-extern ButtonStruct sButtonData[];
-
 /* Fatfs structure */
 FATFS FS;
 FIL LogFile;
-
-/* Size structure for FATFS */
-//TM_FATFS_Size_t CardSize;
-/* Buffer variable */
-//char buffer[128];
-//char* Band_Label;
-//char Band_Freq[11];
-//char read_buffer[132];
-//char display_buffer[132];
-//TCHAR bytes_returned = 10;
-//UINT i,j;
-//UINT bytes_wrote;
-
-//extern void ClearTextDisplay(void);
-//extern MemoryChannelStruct MemoryChannel;
 
 void Open_Log_File(void) {
 

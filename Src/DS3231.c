@@ -222,12 +222,6 @@ void make_Real_Time(void) {
 	for (int i = 0; i < 9; i++)
 		if (log_rtc_time_string[i] == 32)
 			log_rtc_time_string[i] = 48;  //blank remover
-
-	/*
-	 BSP_LCD_SetFont (&Font16);
-	 BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-	 BSP_LCD_DisplayStringAt(240, 160, log_rtc_time_string, LEFT_MODE);
-	 */
 }
 
 void make_Real_Date(void) {
@@ -239,17 +233,6 @@ void make_Real_Date(void) {
 	for (int i = 0; i < 9; i++)
 		if (log_rtc_date_string[i] == 32)
 			log_rtc_date_string[i] = 48;  //blank remover
-
-	/*
-	 BSP_LCD_SetFont (&Font16);
-	 BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-
-	 //show_short(240, 120, rtc_date);
-	 //show_short(300, 120, rtc_month);
-	 //show_short(360, 120, rtc_year);
-	 BSP_LCD_DisplayStringAt(240, 140, log_rtc_date_string, LEFT_MODE);
-	 */
-
 }
 
 void make_File_Name(void) {
@@ -257,83 +240,11 @@ void make_File_Name(void) {
 	//make_Real_Time();
 	make_Real_Date();
 
-	//getDate(&rtc_dow,&rtc_date , &rtc_month, &rtc_year);
-	//sprintf((char *)file_name_string,"%s_%s.adi",log_rtc_date_string,log_rtc_time_string);
-	//for (int i=0; i<9; i++) if (log_rtc_date_string[i] == 32) log_rtc_date_string[i] = 48;  //blank remover
-
 	sprintf((char*) file_name_string, "%s.adi", log_rtc_date_string);
 	for (int i = 0; i < 24; i++)
 		if (file_name_string[i] == 32)
 			file_name_string[i] = 48;
-
-	//BSP_LCD_SetFont (&Font16);
-	//BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-
-	//show_short(240, 120, rtc_date);
-	//show_short(300, 120, rtc_month);
-	//show_short(360, 120, rtc_year);
-	//BSP_LCD_DisplayStringAt(240, 180, file_name_string, LEFT_MODE);
-
 }
-
-/*
- void sync_RTC(void) {
- DS3231_Write(secondREG, 0);
-
- }
-
- void sync_FT8_Time(void) {
-
-
- int sync_Flag;
- while (!sync_Flag){
- getTime(&rtc_hour, &rtc_minute, &rtc_second, &rtc_ampm,  _24_hour_format );
- if (rtc_second  % 15 == 0) sync_Flag = 1;
- }
-
-
-
- }
-
-
-
- void set_RTC_Item(int item, int16_t value){
-
- unsigned char bcd_value;
-
-
- switch (item) {
-
- case RTC_Date:
- bcd_value = decimal_to_bcd( (unsigned char) value);
- DS3231_Write(dateREG, bcd_value);
- break;
-
- case RTC_Month:
- bcd_value = decimal_to_bcd( (unsigned char) value);
- DS3231_Write(monthREG, bcd_value);
- break;
-
- case RTC_Year:
- bcd_value = decimal_to_bcd( (unsigned char) value);
- DS3231_Write(yearREG, bcd_value);
- break;
-
- case RTC_Hour:
- bcd_value = decimal_to_bcd( (unsigned char) value);
- DS3231_Write(hourREG, bcd_value);
- break;
-
- case RTC_Minute:
- bcd_value = decimal_to_bcd( (unsigned char) value);
- DS3231_Write(minuteREG, bcd_value);
- break;
-
- }
-
- }
-
- */
 
 void RTC_SetValue(int Idx, char newValue) {
 	s_RTC_Data[Idx].data = newValue;

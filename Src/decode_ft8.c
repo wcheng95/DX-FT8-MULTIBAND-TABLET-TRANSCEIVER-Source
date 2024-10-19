@@ -95,7 +95,7 @@ int ft8_decode(void) {
 		if (chksum != chksum2)
 			continue;
 
-		char message[kMax_message_length];
+		char message[14+14+7+1];
 
 		char field1[14];
 		char field2[14];
@@ -133,10 +133,10 @@ int ft8_decode(void) {
 				display_RSL = (int) ((raw_RSL - 160)) / 6;
 				new_decoded[num_decoded].snr = display_RSL;
 
-				char Target_Locator[] = "    ";
-
+				char Target_Locator[7];
 				strcpy(Target_Locator, new_decoded[num_decoded].field3);
 
+				// TODO Decode.field3 is 7 bytes but Decode.target is only 5
 				if (validate_locator(Target_Locator) == 1) {
 					strcpy(new_decoded[num_decoded].target, Target_Locator);
 				} else {
@@ -155,12 +155,13 @@ int ft8_decode(void) {
 void display_messages(int decoded_messages) {
 
 	char message[kMax_message_length];
-	char CQ[] = "CQ";
+	const char CQ[] = "CQ";
 
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
 	BSP_LCD_FillRect(0, FFT_H, 240, 200);
 	BSP_LCD_SetFont(&Font16);
 
+	//TODO correct sizing of message
 	for (int i = 0; i < decoded_messages && i < message_limit; i++) {
 		sprintf(message, "%s %s %s", new_decoded[i].field1,
 				new_decoded[i].field2, new_decoded[i].field3);
@@ -217,9 +218,8 @@ int validate_locator(char locator[]) {
 
 void clear_log_stored_data(void) {
 
-	char call_blank[] = "       ";
-	char locator_blank[] = "    ";
-	//char freq_blank[] = "    ";
+	const char call_blank[] = "       ";
+	const char locator_blank[] = "    ";
 
 	for (int i = 0; i < log_size; i++) {
 		Answer_CQ[i].number_times_called = 0;
@@ -230,12 +230,9 @@ void clear_log_stored_data(void) {
 	}
 }
 
-extern char current_Beacon_receive_message[20];
-
 int Check_Calling_Stations(int num_decoded, int reply_state) {
 
 	int Beacon_Reply_Status = 0;
-	//char Rcv_freq[] = "00000";
 
 	for (int i = 0; i < num_decoded; i++) {  //check to see if being called
 		char little_gulp[20];
@@ -257,6 +254,7 @@ int Check_Calling_Stations(int num_decoded, int reply_state) {
 
 			if (old_call == 0) {
 
+				//TODO correct sizing of little_gulp
 				sprintf(little_gulp, " %s %s %s", new_decoded[i].field1,
 						new_decoded[i].field2, new_decoded[i].field3);
 				strcpy(current_Beacon_receive_message, little_gulp);
@@ -342,10 +340,9 @@ int Check_QSO_Calling_Stations(int num_decoded, int reply_state) {
 
 	for (int i = 0; i < num_decoded; i++) {  //check to see if being called
 		char little_gulp[20];
-		//char blank[] = "                      ";
-
 		if (strindex(new_decoded[i].field1, Station_Call) >= 0) {
 
+			//TODO correct sizing of little_gulp
 			sprintf(little_gulp, " %s %s %s", new_decoded[i].field1,
 					new_decoded[i].field2, new_decoded[i].field3);
 
@@ -354,9 +351,6 @@ int Check_QSO_Calling_Stations(int num_decoded, int reply_state) {
 			update_log_display(0);
 
 			QSO_Status = 1; //we already have a reply!!
-
-			//  write_ADIF_Log(i);
-
 			break;
 		} //check for station call
 

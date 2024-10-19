@@ -23,11 +23,6 @@ TS_StateTypeDef TS_State = { 0 };
 
 #define LEFT_MODE  3
 
-extern TS_StateTypeDef TS_State;
-extern int RSL;
-extern int Gadc;
-extern int Gdac;
-
 int FT_8_TouchIndex;
 int FT_8_MessageIndex;
 
@@ -55,8 +50,6 @@ char current_QSO_receive_message[20];
 char current_QSO_xmit_message[20];
 int max_log_messages = 4;
 display_message log_messages[4];
-
-extern void set_RTC_to_GPS(void);
 
 void update_log_display(int mode) {
 
@@ -350,13 +343,10 @@ void Display_WF(void) {
 
 	if (Auto_Sync) {
 		for (int x = 0; x < ft8_buffer - ft8_min_bin; x++) {
-			//	if ((*(pWFBfr + 37*FFT_W + 2*x))  > 0) null_count++;
-			//	if ((*(pWFBfr + 38*FFT_W + 2*x))  > 0) null_count++;
 			if ((*(pWFBfr + 39 * FFT_W + 2 * x)) > 0)
 				null_count++;
 
 		}
-		//show_variable(0,220, null_count) ;
 
 		if (null_count < 3) {
 
@@ -364,7 +354,6 @@ void Display_WF(void) {
 
 			if (FFT_Line_Delay >= 2) {
 				FT8_Sync();
-				//set_RTC_to_GPS();
 				Auto_Sync = 0;
 				FFT_Line_Delay = 0;
 				sButtonData[5].state = 0;
