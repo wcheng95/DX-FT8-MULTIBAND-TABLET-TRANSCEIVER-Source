@@ -37,39 +37,6 @@
 #define RTC_Button  100
 #define RTC_Add		180
 
-
-int Tune_On;  // 0 = Receive, 1 = Xmit Tune Signal
-int Beacon_On;
-int Arm_Tune;
-int Auto_Sync;
-
-
-//int Clock_Correction;
-
-
-uint16_t start_freq;
-
-
-
-int BandIndex;
-
-uint16_t testButton(uint16_t x,uint16_t y,uint16_t w,uint16_t h);
-
-/*
-typedef struct
-{
-	char *Frequency;
-	int   Active;
-	int	  Displayed;
-	int   state;
-    const uint16_t x;
-    const uint16_t y;
-    const uint16_t w;
-    const uint16_t h;
-
-} PushButtonStruct;
-*/
-
 typedef struct
 {
 	char* text0;
@@ -85,29 +52,21 @@ typedef struct
 
 } ButtonStruct;
 
-/*
 typedef struct
 {
-	char  *MenuText[20];
-	char  *blank;
-	int   NumberOfEntries;
-	int   Active;
-	int	  Displayed;
-	int   state;
-	int   UpDwn;
-	const uint16_t x;
-    const uint16_t y;
-    const uint16_t w;
-    const uint16_t h;
-
-} MenuStruct;
-*/
-typedef struct
-{
-	//uint8_t Band;
 	uint16_t Frequency;
 	char* display;
 } FreqStruct;
+
+extern int Tune_On;  // 0 = Receive, 1 = Xmit Tune Signal
+extern int Beacon_On;
+extern int Arm_Tune;
+extern int Auto_Sync;
+extern uint16_t start_freq;
+extern int BandIndex;
+extern FreqStruct sBand_Data[];
+
+uint16_t testButton(uint16_t x,uint16_t y,uint16_t w,uint16_t h);
 
 void drawButton(uint16_t i);
 void drawMenu(uint16_t i);
@@ -132,6 +91,5 @@ void setup_Cal_Display(void);
 void erase_Cal_Display(void);
 
 void FT8_Sync(void);
-
 
 #endif /* BUTTON_H_ */

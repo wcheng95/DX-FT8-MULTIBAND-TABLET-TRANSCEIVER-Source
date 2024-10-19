@@ -9,36 +9,32 @@
 #define SDR_AUDIO_H_
 #include "arm_math.h"
 
-
 #define BUFFERSIZE 1280 * 4
-
-q15_t FIR_I_In[BUFFERSIZE / 4];
-q15_t FIR_Q_In[BUFFERSIZE / 4];
-q15_t FIR_I_Out[BUFFERSIZE / 4];
-q15_t FIR_Q_Out[BUFFERSIZE / 4];
-q15_t USB_Out[BUFFERSIZE / 4];
-q15_t LSB_Out[BUFFERSIZE / 4];
-q15_t in_buff[BUFFERSIZE];
-
-q15_t FT8_Data[2048/2];
-q15_t out_buff[BUFFERSIZE];
-
-uint16_t buff_offset;
 
 #define NoOp  __NOP()
 
-float R_lgain;
-//float R_xgain;
-//float T_lgain;
-//float T_xgain;
-//float phase_adjust;
-float x_NCOphzinc;
+extern q15_t FIR_I_In[BUFFERSIZE / 4];
+extern q15_t FIR_Q_In[BUFFERSIZE / 4];
+extern q15_t FIR_I_Out[BUFFERSIZE / 4];
+extern q15_t FIR_Q_Out[BUFFERSIZE / 4];
+extern q15_t USB_Out[BUFFERSIZE / 4];
+extern q15_t LSB_Out[BUFFERSIZE / 4];
+extern q15_t in_buff[BUFFERSIZE];
 
-int DSP_Flag;
-int Xmit_Mode;
-int xmit_flag, ft8_xmit_counter,ft8_xmit_flag,ft8_xmit_delay;
+extern q15_t FT8_Data[2048/2];
+extern q15_t out_buff[BUFFERSIZE];
 
-double ft8_shift;
+extern uint16_t buff_offset;
+
+extern float R_lgain;
+extern float x_NCOphzinc;
+
+extern int DSP_Flag;
+extern int Xmit_Mode;
+extern int xmit_flag, ft8_xmit_counter,ft8_xmit_flag,ft8_xmit_delay;
+
+extern double ft8_shift;
+
 #define ft8_hz 6.25
 
 void transfer_buffers(void);

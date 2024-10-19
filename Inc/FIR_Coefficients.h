@@ -21,10 +21,7 @@
 
 
 #define NUM_FIR_COEF	128
-//q15_t coeff_fir_I[NUM_FIR_COEF];
 
-//q15_t coeff_fir_Q[NUM_FIR_COEF];
+extern q15_t coeff_fir_I_32K[NUM_FIR_COEF];
 
-q15_t coeff_fir_I_32K[NUM_FIR_COEF];
-
-q15_t coeff_fir_Q_32K[NUM_FIR_COEF];
+extern q15_t coeff_fir_Q_32K[NUM_FIR_COEF];

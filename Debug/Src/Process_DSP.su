@@ -1,6 +1,6 @@
-Process_DSP.c:37:6:Process_FIR_I_32K	0	static
-Process_DSP.c:41:6:Process_FIR_Q_32K	0	static
-Process_DSP.c:60:7:ft_blackman_i	8	static
-Process_DSP.c:51:6:init_DSP	16	static
-Process_DSP.c:123:6:extract_power	40	static
-Process_DSP.c:76:6:process_FT8_FFT	24	static
+../Src/Process_DSP.c:57:6:Process_FIR_I_32K	0	static
+../Src/Process_DSP.c:61:6:Process_FIR_Q_32K	0	static
+../Src/Process_DSP.c:80:7:ft_blackman_i	8	static
+../Src/Process_DSP.c:71:6:init_DSP	16	static
+../Src/Process_DSP.c:143:6:extract_power	40	static
+../Src/Process_DSP.c:96:6:process_FT8_FFT	16	static

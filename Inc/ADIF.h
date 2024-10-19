@@ -8,7 +8,6 @@
 #ifndef ADIF_H_
 #define ADIF_H_
 
-
 typedef struct
 {
     char text[24];
@@ -18,6 +17,6 @@ typedef struct
     int  length;
 } ADIF_Label;
 
-//void write_ADIF_Log(int index);
 void write_ADIF_Log(void);
+
 #endif /* ADIF_H_ */

@@ -33,10 +33,6 @@
 FATFS SDFatFs;  /* File system object for SD card logical drive */
 FIL MyFile;     /* File object */
 char SDPath[4]; /* SD card logical drive path */
-//uint8_t workBuffer[_MAX_SS];
-//static uint8_t isInitialized = 0;
-
-//extern int freq_scale;
 
 extern FreqStruct sBand_Data[];
 

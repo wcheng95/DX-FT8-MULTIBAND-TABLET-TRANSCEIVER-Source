@@ -1,0 +1,16 @@
+../FT8_library/text.c:9:14:trim_front	2
+../FT8_library/text.c:17:6:trim_back	3
+../FT8_library/text.c:27:8:trim	1
+../FT8_library/text.c:34:6:to_upper	2
+../FT8_library/text.c:38:7:is_digit	1
+../FT8_library/text.c:42:7:is_letter	1
+../FT8_library/text.c:46:7:is_space	1
+../FT8_library/text.c:50:7:in_range	2
+../FT8_library/text.c:54:7:starts_with	1
+../FT8_library/text.c:58:7:equals	1
+../FT8_library/text.c:63:5:char_index	3
+../FT8_library/text.c:76:6:fmtmsg	4
+../FT8_library/text.c:92:5:dd_to_int	5
+../FT8_library/text.c:118:6:int_to_dd	5
+../FT8_library/text.c:153:6:charn	11
+../FT8_library/text.c:178:5:nchar	16

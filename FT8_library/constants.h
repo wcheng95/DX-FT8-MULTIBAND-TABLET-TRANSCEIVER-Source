@@ -16,24 +16,24 @@
 
 
     // Define FT8 symbol counts
-    int ND;
-    int NS;
+    extern int ND;
+    extern int NS;
 
-    int NN ;
+    extern int NN ;
     // Define the LDPC sizes
-    int N;
-    int K;
+    extern int N;
+    extern int K;
 
-    int M;
+    extern int M;
 
-    int K_BYTES;
+    extern int K_BYTES;
 
     // Define CRC parameters
-    uint16_t CRC_POLYNOMIAL;  // CRC-14 polynomial without the leading (MSB) 1
-    int      CRC_WIDTH;
+    extern uint16_t CRC_POLYNOMIAL;  // CRC-14 polynomial without the leading (MSB) 1
+    extern int      CRC_WIDTH;
 
 
-    uint8_t tones[79];
+    extern uint8_t tones[79];
 
     // Costas 7x7 tone pattern
     extern const uint8_t kCostas_map[7];

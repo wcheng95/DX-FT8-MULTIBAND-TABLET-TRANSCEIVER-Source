@@ -39,12 +39,17 @@
 #include "main.h"
 #include "SiLabs.h"
 
-
-
-
-
-
-
+enum si5351_pll pll_assignment[8];
+uint64_t clk_freq[8];
+uint64_t plla_freq;
+uint64_t pllb_freq;
+enum si5351_pll_input plla_ref_osc;
+enum si5351_pll_input pllb_ref_osc;
+uint32_t xtal_freq[2];
+int32_t ref_correction[2];
+uint8_t clkin_div;
+uint8_t i2c_bus_addr;
+bool clk_first_set[8];
 
 /********************/
 /* Public functions */
@@ -62,29 +67,6 @@ void Si5351_Si5351(uint8_t i2c_addr)
 	pllb_ref_osc = SI5351_PLL_INPUT_XO;
 	clkin_div = SI5351_CLKIN_DIV_1;
 }
-
-/*
- * init(uint8_t xtal_load_c, uint32_t ref_osc_freq, int32_t corr)
- *
- * Setup communications to the Si5351 and set the crystal
- * load capacitance.
- *
- * xtal_load_c - Crystal load capacitance. Use the SI5351_CRYSTAL_LOAD_*PF
- * defines in the header file
- * xo_freq - Crystal/reference oscillator frequency in 1 Hz increments.
- * Defaults to 25000000 if a 0 is used here.
- * corr - Frequency correction constant in parts-per-billion
- *
- * Returns a boolean that indicates whether a device was found on the desired
- * I2C address.
- *
- */
-
-
-
-
-
-
 
 void init(uint8_t xtal_load_c, uint32_t xo_freq, int32_t corr)
 {

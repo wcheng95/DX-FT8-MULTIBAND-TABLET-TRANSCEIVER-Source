@@ -8,6 +8,18 @@
 
 #include "constants.h"
 
+int ND;
+int NS;
+int NN;
+int N;
+int K;
+int M;
+int K_BYTES;
+uint16_t CRC_POLYNOMIAL;  // CRC-14 polynomial without the leading (MSB) 1
+int      CRC_WIDTH;
+uint8_t tones[79];
+
+
 void initalize_constants(void) {
     ND = 58;      // Data symbols
     NS = 21;      // Sync symbols (3 @ Costas 7x7)

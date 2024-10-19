@@ -56,7 +56,12 @@
 TIM_HandleTypeDef hTim2;
 
 extern int AGC_Gain;
-//extern int ADC_DVC_Gain;
+
+uint32_t current_time, start_time, ft8_time;
+uint8_t  ft8_hours, ft8_minutes, ft8_seconds;
+uint32_t hours_fraction;
+uint32_t minute_fraction;
+
 int master_decoded;
 int QSO_xmit;
 int Xmit_DSP_counter;

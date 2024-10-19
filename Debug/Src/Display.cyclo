@@ -1,0 +1,15 @@
+../Src/Display.c:63:6:update_log_display	7
+../Src/Display.c:102:6:update_Beacon_log_display	7
+../Src/Display.c:145:6:show_wide	1
+../Src/Display.c:154:6:show_variable	1
+../Src/Display.c:162:6:show_short	1
+../Src/Display.c:171:6:show_UTC_time	5
+../Src/Display.c:185:6:show_Real_Date	1
+../Src/Display.c:193:6:setup_display	1
+../Src/Display.c:222:6:Set_Cursor_Frequency	1
+../Src/Display.c:264:10:FFT_Touch	2
+../Src/Display.c:273:5:FT8_Touch	3
+../Src/Display.c:291:5:Xmit_message_Touch	3
+../Src/Display.c:226:6:Process_Touch	4
+../Src/Display.c:310:6:Init_Waterfall	1
+../Src/Display.c:321:6:Display_WF	13

@@ -15,16 +15,34 @@
 
 #include "button.h"
 
+q15_t FIR_I_In[BUFFERSIZE / 4];
+q15_t FIR_Q_In[BUFFERSIZE / 4];
+q15_t FIR_I_Out[BUFFERSIZE / 4];
+q15_t FIR_Q_Out[BUFFERSIZE / 4];
+q15_t USB_Out[BUFFERSIZE / 4];
+q15_t LSB_Out[BUFFERSIZE / 4];
+q15_t in_buff[BUFFERSIZE];
+
+q15_t FT8_Data[2048/2];
+q15_t out_buff[BUFFERSIZE];
+
+uint16_t buff_offset;
+
+float R_lgain;
+float x_NCOphzinc;
+
+int DSP_Flag;
+int Xmit_Mode;
+int xmit_flag, ft8_xmit_counter,ft8_xmit_flag,ft8_xmit_delay;
+
+double ft8_shift;
+
 extern const int Sine_table[];
+
 #define PI2 6.2831853071795864765
 #define KCONV 10430.37835              // 		4096*16/PI2
 double LO_Freq = 10000;
 float Sample_Frequency = 32000.0;
-
-
-//uint32_t uwVolume = 80;
-//float rgain = 0.5;
-
 
 void start_audio_I2C (void){
 	AUDIO_IO_Init();

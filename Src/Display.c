@@ -29,6 +29,16 @@ extern int RSL;
 extern int Gadc;
 extern int Gdac;
 
+int FT_8_TouchIndex;
+int FT_8_MessageIndex;
+
+uint16_t cursor;
+char rtc_date_string[9];
+char rtc_time_string[9];
+int decode_flag;
+int FT8_Touch_Flag;
+int FT8_Message_Touch;
+
 int		WF_Line0;
 int		WF_Count = 0;
 uint8_t	*pWFBfr;
@@ -70,14 +80,13 @@ void update_log_display(int mode){
     BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
     BSP_LCD_FillRect(240, 40, 240, 80);
 	BSP_LCD_SetFont (&Font16);
-	//BSP_LCD_SetTextColor(LCD_COLOR_GREEN);
 
 	for (int i = 0; i<max_log_messages; i++ ) {
 
 		if(log_messages[i].text_color == 0 )  BSP_LCD_SetTextColor(LCD_COLOR_RED);
 		if(log_messages[i].text_color == 1 )  BSP_LCD_SetTextColor(LCD_COLOR_YELLOW);
 
-		BSP_LCD_DisplayStringAt(240, 40 + i*20, log_messages[i].message, LEFT_MODE);
+		BSP_LCD_DisplayStringAt(240, 40 + i*20, (const uint8_t*) log_messages[i].message, LEFT_MODE);
 	}
 
 }
@@ -118,7 +127,7 @@ void update_Beacon_log_display(int mode){
 		if(Beacon_log_messages[i].text_color == 0 )  BSP_LCD_SetTextColor(LCD_COLOR_RED);
 		if(Beacon_log_messages[i].text_color == 1 )  BSP_LCD_SetTextColor(LCD_COLOR_YELLOW);
 
-		BSP_LCD_DisplayStringAt(240, 40 + i*20, Beacon_log_messages[i].message, LEFT_MODE);
+		BSP_LCD_DisplayStringAt(240, 40 + i*20, (const uint8_t*) Beacon_log_messages[i].message, LEFT_MODE);
 	}
 
 }
@@ -134,20 +143,20 @@ void show_hz(uint16_t x, uint16_t y,uint32_t variable) {
 */
 
 void show_wide(uint16_t x, uint16_t y,int variable) {
-	uint8_t string[7];   // print format stuff
+	char string[7];   // print format stuff
     sprintf(string,"%6i",variable);
     BSP_LCD_SetFont (&Font16);
     BSP_LCD_SetTextColor(LCD_COLOR_YELLOW);
-    BSP_LCD_DisplayStringAt(x, y, string, LEFT_MODE);
+    BSP_LCD_DisplayStringAt(x, y, (const uint8_t*) string, LEFT_MODE);
 }
 
 
 void show_variable(uint16_t x, uint16_t y,int variable) {
-	uint8_t string[5];   // print format stuff
+	char string[5];   // print format stuff
     sprintf(string,"%4i",variable);
     BSP_LCD_SetFont (&Font16);
     BSP_LCD_SetTextColor(LCD_COLOR_YELLOW);
-    BSP_LCD_DisplayStringAt(x, y, string, LEFT_MODE);
+    BSP_LCD_DisplayStringAt(x, y, (const uint8_t*) string, LEFT_MODE);
 }
 
 void show_short(uint16_t x, uint16_t y,uint8_t variable) {
@@ -155,12 +164,12 @@ void show_short(uint16_t x, uint16_t y,uint8_t variable) {
     sprintf(string,"%2i",variable);
     BSP_LCD_SetFont (&Font16);
     BSP_LCD_SetTextColor(LCD_COLOR_YELLOW);
-    BSP_LCD_DisplayStringAt(x, y, string, LEFT_MODE);
+    BSP_LCD_DisplayStringAt(x, y, (const uint8_t*) string, LEFT_MODE);
 }
 
 
 void show_UTC_time(uint16_t x, uint16_t y,int utc_hours,int utc_minutes,int utc_seconds, int color) {
-	sprintf((char *)rtc_time_string,"%2i:%2i:%2i",utc_hours,utc_minutes,utc_seconds);
+	sprintf(rtc_time_string,"%2i:%2i:%2i",utc_hours,utc_minutes,utc_seconds);
 	for (int i=0; i<9; i++) if (rtc_time_string[i] == 32) rtc_time_string[i] = 48;  //blank remover
 
 
@@ -169,15 +178,15 @@ void show_UTC_time(uint16_t x, uint16_t y,int utc_hours,int utc_minutes,int utc_
     if(color == 0)BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
     if(color == 1)BSP_LCD_SetTextColor(LCD_COLOR_YELLOW);
 
-    BSP_LCD_DisplayStringAt(x, y, rtc_time_string, LEFT_MODE);
+    BSP_LCD_DisplayStringAt(x, y, (const uint8_t*) rtc_time_string, LEFT_MODE);
 }
 
 
 void show_Real_Date(uint16_t x, uint16_t y,int date,int month,int year) {
-	sprintf((char *)rtc_date_string,"%2i:%2i:%2i",date,month,year);
+	sprintf(rtc_date_string,"%2i:%2i:%2i",date,month,year);
     BSP_LCD_SetFont (&Font16);
     BSP_LCD_SetTextColor(LCD_COLOR_GREEN);
-    BSP_LCD_DisplayStringAt(x, y, rtc_date_string, LEFT_MODE);
+    BSP_LCD_DisplayStringAt(x, y, (const uint8_t*) rtc_date_string, LEFT_MODE);
 }
 
 

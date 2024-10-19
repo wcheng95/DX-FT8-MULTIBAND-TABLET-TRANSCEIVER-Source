@@ -1,0 +1,2 @@
+../FT8_library/decode.c:34:5:find_sync	20
+../FT8_library/decode.c:122:6:extract_likelihood	6

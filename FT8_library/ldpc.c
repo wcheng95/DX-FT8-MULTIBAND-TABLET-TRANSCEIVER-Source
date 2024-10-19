@@ -146,9 +146,6 @@ void bp_decode(float codeword[], int max_iters, uint8_t plain[], int *ok) {
 
     int min_errors = M;
 
-    int nclast = 0;
-    int ncnt = 0;
-
     // initialize messages to checks
     for (int i = 0; i < M; ++i) {
         for (int j = 0; j < kNrw[i]; ++j) {
@@ -236,10 +233,6 @@ static float fast_tanh(float x) {
         return 1.0f;
     }
     float x2 = x * x;
-    //float a = x * (135135.0f + x2 * (17325.0f + x2 * (378.0f + x2)));
-    //float b = 135135.0f + x2 * (62370.0f + x2 * (3150.0f + x2 * 28.0f));
-    //float a = x * (10395.0f + x2 * (1260.0f + x2 * 21.0f));
-    //float b = 10395.0f + x2 * (4725.0f + x2 * (210.0f + x2));
     float a = x * (945.0f + x2 * (105.0f + x2));
     float b = 945.0f + x2 * (420.0f + x2 * 15.0f);
     return a / b;
@@ -248,57 +241,10 @@ static float fast_tanh(float x) {
 
 static float fast_atanh(float x) {
     float x2 = x * x;
-    //float a = x * (-15015.0f + x2 * (19250.0f + x2 * (-5943.0f + x2 * 256.0f)));
-    //float b = (-15015.0f + x2 * (24255.0f + x2 * (-11025.0f + x2 * 1225.0f)));
-    //float a = x * (-1155.0f + x2 * (1190.0f + x2 * -231.0f));
-    //float b = (-1155.0f + x2 * (1575.0f + x2 * (-525.0f + x2 * 25.0f)));
     float a = x * (945.0f + x2 * (-735.0f + x2 * 64.0f));
     float b = (945.0f + x2 * (-1050.0f + x2 * 225.0f));
     return a / b;
 }
 
-
-static float pltanh(float x) {
-    float isign = +1;
-    if (x < 0) {
-        isign = -1;
-        x = -x;
-    }
-    if (x < 0.8f) {
-        return isign * 0.83 * x;
-    }
-    if (x < 1.6f) {
-        return isign * (0.322f * x + 0.4064f);
-    }
-    if (x < 3.0f) {
-        return isign * (0.0524f * x + 0.8378f);
-    }
-    if (x < 7.0f) {
-        return isign * (0.0012f * x + 0.9914f);
-    }
-    return isign*0.9998f;
-}
-
-
-static float platanh(float x) {
-    float isign = +1;
-    if (x < 0) {
-        isign = -1;
-        x = -x;
-    }
-    if (x < 0.664f) {
-        return isign * x / 0.83f;
-    }
-    if (x < 0.9217f) {
-        return isign * (x - 0.4064f) / 0.322f;
-    }
-    if (x < 0.9951f) {
-        return isign * (x - 0.8378f) / 0.0524f;
-    }
-    if (x < 0.9998f) {
-        return isign * (x - 0.9914f) / 0.0012f;
-    }
-    return isign * 7.0f;
-}
 
 

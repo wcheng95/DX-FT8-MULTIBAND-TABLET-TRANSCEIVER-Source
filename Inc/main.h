@@ -15,13 +15,10 @@ void HAL_Delay(uint32_t Delay);
 
 #define NoOp  __NOP()
 
-//int16_t Clock_Source;
-
-uint32_t current_time, start_time, ft8_time;
-uint8_t  ft8_hours, ft8_minutes, ft8_seconds;
-//uint32_t days_fraction;
-uint32_t hours_fraction;
-uint32_t minute_fraction;
+extern uint32_t current_time, start_time, ft8_time;
+extern uint8_t  ft8_hours, ft8_minutes, ft8_seconds;
+extern uint32_t hours_fraction;
+extern uint32_t minute_fraction;
 
 void update_synchronization(void);
 

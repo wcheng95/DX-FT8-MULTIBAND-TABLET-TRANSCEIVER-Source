@@ -11,13 +11,13 @@
 #include "main.h"
 #include "options.h"
 
-//char set_hour, set_minute, set_ampm, set_day, set_dow, set_event_desc[8], set_recipient_phone[16];
+char log_rtc_time_string[13];
+char log_rtc_date_string[13];
 
-unsigned int temp_conv;
-char txt_buffer[7];
+unsigned char rtc_hour, rtc_minute, rtc_second, rtc_dow, rtc_date, rtc_month, rtc_year;
+short rtc_ampm;
 
-char tmp, no_of_zeros;
-
+char file_name_string[24];
 
 RTCStruct s_RTC_Data[] = {
 	{
@@ -184,28 +184,6 @@ void RTC_setDate(unsigned char daySet, unsigned char dateSet, unsigned char mont
          DS3231_Write(monthREG, (decimal_to_bcd(monthSet)));
          DS3231_Write(yearREG, (decimal_to_bcd(yearSet)));
 }
-
-/*
-float getTemp(void)
-{
-         register float t = 0.0;
-         unsigned char lowByte = 0;
-         signed char highByte = 0;
-         lowByte = DS3231_Read(tempLSBREG);
-         highByte = DS3231_Read(tempMSBREG);
-         lowByte >>= 6;
-         lowByte &= 0x03;
-         t = ((float)lowByte);
-
-
-         t *= 0.25;
-         t += highByte;
-         return t;// return temp value
-
-}
-
-*/
-
 
 void display_RealTime(int x, int y) {
 	 //fetch time from RTC

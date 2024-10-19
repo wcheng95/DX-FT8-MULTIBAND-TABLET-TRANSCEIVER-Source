@@ -27,6 +27,13 @@ extern uint16_t valx,valy;
 
 #define FFT_Resolution 6.25  //8000/2/1280
 
+int Tune_On;  // 0 = Receive, 1 = Xmit Tune Signal
+int Beacon_On;
+int Arm_Tune;
+int Auto_Sync;
+uint16_t start_freq;
+int BandIndex;
+
 int AGC_Gain = 20;
 int ADC_DVC_Gain = 180;
 int ADC_DVC_Off = 90;
@@ -481,9 +488,9 @@ void drawButton(uint16_t i) {
     BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
 
     if (sButtonData[i].state == 1)
-    BSP_LCD_DisplayStringAt(sButtonData[i].x, sButtonData[i].y+15, sButtonData[i].text1, 0x03);
+    BSP_LCD_DisplayStringAt(sButtonData[i].x, sButtonData[i].y+15, (const uint8_t*) sButtonData[i].text1, 0x03);
     else
-    BSP_LCD_DisplayStringAt(sButtonData[i].x, sButtonData[i].y+15, sButtonData[i].text0, 0x03);
+    BSP_LCD_DisplayStringAt(sButtonData[i].x, sButtonData[i].y+15, (const uint8_t*) sButtonData[i].text0, 0x03);
 
     BSP_LCD_SetBackColor(LCD_COLOR_BLACK);
     }

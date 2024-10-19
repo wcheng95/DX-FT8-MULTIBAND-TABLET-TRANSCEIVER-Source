@@ -1,0 +1,3 @@
+../Src/Codec_Gains.c:31:6:Set_HP_Gain	1
+../Src/Codec_Gains.c:58:6:Set_PGA_Gain	1
+../Src/Codec_Gains.c:112:6:Set_ADC_DVC	1

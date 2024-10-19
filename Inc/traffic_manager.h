@@ -8,9 +8,8 @@
 #ifndef TRAFFIC_MANAGER_H_
 #define TRAFFIC_MANAGER_H_
 
-int CQ_State;
-
-int Beacon_State;
+extern int CQ_State;
+extern int Beacon_State;
 
 void service_QSO_mode(int decoded_signals, int message_touch);
 void service_Beacon_mode(int decoded_signals);
@@ -26,7 +25,5 @@ void ft8_receive_sequence(void);
 void ft8_transmit_sequence(void);
 void set_FT8_Tone( uint8_t ft8_tone);
 void set_Rcvr_Freq(void);
-
-//int CQ_Respond(uint16_t index);
 
 #endif /* TRAFFIC_MANAGER_H_ */

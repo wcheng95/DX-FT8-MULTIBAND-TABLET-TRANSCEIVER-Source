@@ -1379,95 +1379,6 @@ __weak void HAL_UART_RxHalfCpltCallback(UART_HandleTypeDef *huart)
 }
 
 /**
-  * @brief Send an amount of data in interrupt mode 
-  *         Function called under interruption only, once
-  *         interruptions have been enabled by HAL_UART_Transmit_IT()
-  * @param  huart: UART handle
-  * @retval HAL status
-  */
-static HAL_StatusTypeDef UART_Transmit_IT(UART_HandleTypeDef *huart)
-{
-  uint16_t* tmp;
-
-  if ((huart->State == HAL_UART_STATE_BUSY_TX) || (huart->State == HAL_UART_STATE_BUSY_TX_RX))
-  {
-
-    if(huart->TxXferCount == 0)
-    {
-      /* Disable the UART Transmit Data Register Empty Interrupt */
-      __HAL_UART_DISABLE_IT(huart, UART_IT_TXE);
-
-      /* Check if a receive Process is ongoing or not */
-      if(huart->State == HAL_UART_STATE_BUSY_TX_RX) 
-      {
-        huart->State = HAL_UART_STATE_BUSY_RX;
-      }
-      else
-      {      
-        huart->State = HAL_UART_STATE_READY;
-      }
-      
-      /* Wait on TC flag to be able to start a second transfer */
-      if(UART_WaitOnFlagUntilTimeout(huart, UART_FLAG_TC, RESET, HAL_UART_TIMEOUT_VALUE) != HAL_OK)
-      { 
-        return HAL_TIMEOUT;
-      }
-
-      HAL_UART_TxCpltCallback(huart);
-
-      return HAL_OK;
-    }
-    else
-    {
-      if ((huart->Init.WordLength == UART_WORDLENGTH_9B) && (huart->Init.Parity == UART_PARITY_NONE))
-      {
-        tmp = (uint16_t*) huart->pTxBuffPtr;
-        huart->Instance->TDR = (*tmp & (uint16_t)0x01FF);
-        huart->pTxBuffPtr += 2;
-      } 
-      else
-      {
-        huart->Instance->TDR = (uint8_t)(*huart->pTxBuffPtr++ & (uint8_t)0xFF);
-      }
-
-      huart->TxXferCount--;
-      
-      return HAL_OK;
-    }
-  }
-  else
-  {
-    return HAL_BUSY;   
-  }
-}
-
-/**
-  * @brief  Wrap up transmission in non-blocking mode.
-  * @param  huart: pointer to a UART_HandleTypeDef structure that contains
-  *                the configuration information for the specified UART module.
-  * @retval HAL status
-  */
-static HAL_StatusTypeDef UART_EndTransmit_IT(UART_HandleTypeDef *huart)
-{
-  /* Disable the UART Transmit Complete Interrupt */
-  __HAL_UART_DISABLE_IT(huart, UART_IT_TC);
-
-  /* Check if a receive process is ongoing or not */
-  if(huart->State == HAL_UART_STATE_BUSY_TX_RX)
-  {
-    huart->State = HAL_UART_STATE_BUSY_RX;
-  }
-  else
-  {
-    huart->State = HAL_UART_STATE_READY;
-  }
-
-  HAL_UART_TxCpltCallback(huart);
-
-  return HAL_OK;
-}
-
-/**
   * @brief Receive an amount of data in interrupt mode 
   *         Function called under interruption only, once
   *         interruptions have been enabled by HAL_UART_Receive_IT()
@@ -1476,15 +1387,10 @@ static HAL_StatusTypeDef UART_EndTransmit_IT(UART_HandleTypeDef *huart)
   */
 static HAL_StatusTypeDef UART_Receive_IT(UART_HandleTypeDef *huart)
 {
-  uint16_t* tmp;
-  uint16_t uhMask = huart->Mask;
-
-    //  *huart->pRxBuffPtr = (uint8_t)(huart->Instance->RDR & (uint8_t)uhMask);
-    
       *huart->pRxBuffPtr = (uint8_t)(huart->Instance->RDR);
       HAL_UART_RxCpltCallback(huart);
 
-    
+
     return HAL_OK;
 
 }

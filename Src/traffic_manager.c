@@ -18,9 +18,6 @@
 
 #define FT8_TONE_SPACING        625
 
-//char blank1[] = "                  ";
-//char blank2[] = "                           ";
-
 extern int QSO_xmit;
 extern int Xmit_DSP_counter;
 
@@ -29,6 +26,8 @@ extern int AGC_Gain;
 extern int ADC_DVC_Gain;
 extern int ADC_DVC_Off;
 
+int CQ_State;
+int Beacon_State;
 
 void service_QSO_mode(int decoded_signals, int message_touch){
 

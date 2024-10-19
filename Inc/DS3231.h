@@ -18,11 +18,9 @@ typedef struct
     char data;
 } RTCStruct;
 
-char edit_date_string[9];
+extern char edit_date_string[9];
+extern char edit_time_string[9];
 
-char edit_time_string[9];
-
-//#define DS3231_Address              0xD0
 #define DS3231_Address              0x68
 
 #define DS3231_Read_addr            ((DS3231_Address << 1) | 0x01)
@@ -53,29 +51,27 @@ char edit_time_string[9];
 #define AM                          0
 #define PM                          1
 
-int RTC_Set_Flag;
+extern int RTC_Set_Flag;
 
 enum days_of_week{SUN = 1, MON, TUE, WED, THU, FRI, SAT};
 
-char rtc_hour, rtc_minute, rtc_second, rtc_ampm, rtc_dow, rtc_date, rtc_month, rtc_year;
+extern unsigned char rtc_hour, rtc_minute, rtc_second, rtc_dow, rtc_date, rtc_month, rtc_year;
+extern short rtc_ampm;
 
-char log_rtc_time_string[13];
-char log_rtc_date_string[13];
+extern char log_rtc_time_string[13];
+extern char log_rtc_date_string[13];
+extern char file_name_string[24];
 
 
 unsigned char bcd_to_decimal(unsigned char d);
 unsigned char decimal_to_bcd(unsigned char d);
 unsigned char DS3231_Read(unsigned char address);
 
-char file_name_string[24];
-
 
 void DS3231_Write(unsigned char address, unsigned char value);
 void DS3231_init(void);
 void getTime(unsigned char *hour, unsigned char *minute, unsigned char *second, short *am_pm, short hour_format);
 void getDate(unsigned char *day_of_week, unsigned char *date, unsigned char *month, unsigned char *year);
-//void setTime(unsigned char hSet, unsigned char mSet, unsigned char sSet, short am_pm_state, short hour_format);
-//void setDate(unsigned char daySet, unsigned char dateSet, unsigned char monthSet, unsigned char yearSet);
 float getTemp(void);
 void format_time(int value, char* result, char zeros);
 

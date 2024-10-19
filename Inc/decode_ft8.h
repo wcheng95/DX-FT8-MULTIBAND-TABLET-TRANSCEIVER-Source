@@ -8,8 +8,8 @@
 #ifndef DECODE_FT8_H_
 #define DECODE_FT8_H_
 
-int 	num_CQ_calls;
-int num_calls_to_CQ_station;
+extern int 	num_CQ_calls;
+extern int num_calls_to_CQ_station;
 
 typedef struct
 {
@@ -66,6 +66,3 @@ void clear_log_stored_data(void);
 
 
 #endif /* DECODE_FT8_H_ */
-
-
-

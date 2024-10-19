@@ -18,18 +18,38 @@
 
 float ft_blackman_i(int i, int N);
 
+double NCO_Frequency;
+
+int ft8_flag, FT_8_counter, ft8_marker;
+q15_t  window_dsp_buffer[FFT_SIZE];
+uint16_t  FFT_Buffer[2*ft8_buffer];
+
+q15_t extract_signal[input_gulp_size *3];  // was float
+q15_t dsp_output[FFT_SIZE *2];
+
+uint8_t export_fft_power[ft8_msg_samples*ft8_buffer*4] ;
+
+int offset_step;
+
+q15_t FFT_Scale[FFT_SIZE * 2];
+q15_t FFT_Magnitude[FFT_SIZE];
+int32_t FFT_Mag_10[FFT_SIZE/2];
+
+float  mag_db[FFT_SIZE/2 + 1];
+float   window[FFT_SIZE];
+
 int plain_text[174];
 int iterations = 40;
 int test_results;
 double RSL_Mag;
 int    RSL;
+double NCO_Frequency;
 
 q15_t FIR_State_I[NUM_FIR_COEF + (BUFFERSIZE / 4) - 1];
 q15_t FIR_State_Q[NUM_FIR_COEF + (BUFFERSIZE / 4) - 1];
 
 
 arm_fir_instance_q15 S_FIR_I_32K = { NUM_FIR_COEF,&FIR_State_I[0], &coeff_fir_I_32K[0] };
-//arm_fir_instance_q15 S_FIR_Q_32K = { NUM_FIR_COEF,&FIR_State_Q[0], &coeff_fir_Q_32K[0] };
 arm_fir_instance_q15 S_FIR_Q_32K = { NUM_FIR_COEF,&FIR_State_Q[0], &coeff_fir_I_32K[0] };
 
 

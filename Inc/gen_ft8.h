@@ -11,27 +11,24 @@
 #include <math.h>
 #include "arm_math.h"
 
-char Target_Frequency[8]; // Five character locator  + /0
-char Locator[5]; // four character locator  + /0
-char Station_Call[7]; //six character call sign + /0
-char Target_Call[7]; //six character call sign + /0
-char Target_Locator[5]; // four character locator  + /0
-int Target_RSL; // four character RSL  + /0
-char CQ_Target_Call[7];
+extern char Target_Frequency[8]; // Five character locator  + /0
+extern char Locator[5]; // four character locator  + /0
+extern char Station_Call[7]; //six character call sign + /0
+extern char Target_Call[7]; //six character call sign + /0
+extern char Target_Locator[5]; // four character locator  + /0
+extern int Target_RSL; // four character RSL  + /0
+extern char CQ_Target_Call[7];
 
-char reply_message[18];
-char reply_message_list[18][8];
-int  reply_message_count;
+extern char reply_message[21];
+extern char reply_message_list[18][8];
+extern int  reply_message_count;
 
-char SDPath[4]; /* SD card logical drive path */
-
+extern char SDPath[4]; /* SD card logical drive path */
 
 void clear_reply_message_box(void);
-
-//void  set_reply(uint16_t index, uint16_t vector );
-void  set_reply(uint16_t index );
-void  set_cq(void);
-void  set_CQ_reply(void);
+void set_reply(uint16_t index );
+void set_cq(void);
+void set_CQ_reply(void);
 
 void Open_Station_File( void );
 void Write_Station_File( void );

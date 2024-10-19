@@ -18,6 +18,7 @@
 #include "constants.h"
 #include "encode.h"
 #include "button.h"
+#include "main.h"
 
 #include "Process_DSP.h"
 #include "display.h"
@@ -28,8 +29,6 @@
 #include "ADIF.h"
 #include "DS3231.h"
 
-//char erase[] = "                   ";
-
 const int kLDPC_iterations = 20;
 const int kMax_candidates = 20;
 const int kMax_decoded_messages = 20;  //chhh 27 feb
@@ -39,27 +38,18 @@ const int kMin_score = 40;		// Minimum sync score threshold for candidates
 int validate_locator(char locator[]);
 int strindex(char s[],char t[]);
 
-extern FreqStruct sBand_Data[];
+static Decode new_decoded[20];  //chh 27 Feb
 
-extern uint32_t ft8_time;
+static display_message display[10];
 
-Decode new_decoded[20];  //chh 27 Feb
+static Calling_Station Answer_CQ[50];  //
+static int log_size = 50;
 
-extern char current_QSO_receive_message[];
-display_message display[10];
+static int 	num_calls;  // number of unique calling stations
+static int message_limit = 10;
 
-Calling_Station Answer_CQ[50];  //
-int log_size = 50;
-//CQ_Station Calling_CQ[8];
-
-int 	num_calls;  // number of unique calling stations
-//int max_displayed_CQ = 5;
-int message_limit = 10;
 int ft8_decode(void) {
 
-
-	//int  store_hz;
-	//char store_frequency[14];
     // Find top candidates by Costas sync score and localize them in time and frequency
     Candidate candidate_list[kMax_candidates];
 
@@ -168,15 +158,14 @@ void display_messages(int decoded_messages){
 		BSP_LCD_SetFont (&Font16);
 
 		for (int i = 0; i<decoded_messages && i<message_limit; i++ ){
-		sprintf(message,"%s %s %s",new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3);
+			sprintf(message,"%s %s %s", new_decoded[i].field1, new_decoded[i].field2, new_decoded[i].field3);
 
-		strcpy(display[i].message, message);
+			strcpy(display[i].message, message);
 
-
-		if(strcmp(CQ, new_decoded[i].field1) == 0 )
-		display[i].text_color = (int)1;
-		else
-		display[i].text_color = (int) 0;
+			if(strcmp(CQ, new_decoded[i].field1) == 0 )
+				display[i].text_color = 1;
+			else
+				display[i].text_color = 0;
 
 		 }
 
@@ -185,7 +174,7 @@ void display_messages(int decoded_messages){
 		BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
 		else
 		BSP_LCD_SetTextColor(LCD_COLOR_GREEN);
-		BSP_LCD_DisplayStringAt(0, 40+j*20, display[j].message,0x03);
+		BSP_LCD_DisplayStringAt(0, 40+j*20, (const uint8_t*) display[j].message,0x03);
 
 		}
 }
@@ -279,11 +268,6 @@ int Check_Calling_Stations(int num_decoded , int reply_state) {
 	strcpy(Answer_CQ[num_calls].call, new_decoded[i].field2);
 	strcpy(Answer_CQ[num_calls].locator, new_decoded[i].target);
 	Answer_CQ[num_calls].RSL = Target_RSL;
-
-
-	//itoa(new_decoded[i].freq_hz,Rcv_freq,10);
-	//strcpy(Answer_CQ[num_calls].freq_hz, Rcv_freq);
-	//Answer_CQ[num_calls].freq_hz = new_decoded[i].freq_hz;
 
 	num_calls++;
 

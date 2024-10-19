@@ -1,0 +1,3 @@
+../Src/main.c:266:6:update_synchronization	3
+../Src/main.c:333:6:HAL_Delay	3
+../Src/main.c:91:6:main	29
