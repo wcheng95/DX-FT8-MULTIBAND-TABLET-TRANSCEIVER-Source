@@ -5,8 +5,8 @@
  *      Author: user
  */
 
+#include <Display.h>
 #include <stdlib.h>
-#include "display.h"
 #include "button.h"
 #include "stm32746g_discovery_lcd.h"
 #include "SDR_Audio.h"

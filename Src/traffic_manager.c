@@ -5,13 +5,13 @@
  *      Author: user
  */
 
+#include <Display.h>
 #include "button.h"
 #include "gen_ft8.h"
 #include "decode_ft8.h"
 #include "stm32746g_discovery_lcd.h"
 #include "SDR_Audio.h"
 #include "traffic_manager.h"
-#include "display.h"
 #include "SiLabs.h"
 #include "Process_DSP.h"
 #include "Codec_Gains.h"

@@ -1,4 +1,4 @@
-#include "display.h"
+#include <Display.h>
 #include "options.h"
 #include "SDR_Audio.h"
 #include "Codec_Gains.h"

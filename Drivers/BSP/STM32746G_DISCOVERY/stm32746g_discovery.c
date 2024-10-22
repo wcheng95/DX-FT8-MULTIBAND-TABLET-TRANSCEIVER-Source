@@ -38,9 +38,9 @@
   */ 
 
 /* Includes ------------------------------------------------------------------*/
+#include <Display.h>
 #include "stm32746g_discovery.h"
 #include "stm32f746xx.h"
-#include "display.h"
 /** @addtogroup BSP
   * @{
   */ 

@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <ctype.h>
+#include <Display.h>
 #include <gen_ft8.h>
 
 #include "unpack.h"
@@ -21,7 +22,6 @@
 #include "main.h"
 
 #include "Process_DSP.h"
-#include "display.h"
 #include "stm32746g_discovery_lcd.h"
 #include "log_file.h"
 #include "decode_ft8.h"

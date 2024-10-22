@@ -5,13 +5,12 @@
  *      Author: user
  */
 
+#include <Display.h>
 #include "decode.h"
 
 #include <math.h>
 
 #include "constants.h"
-
-#include "display.h"
 
 #include "Process_DSP.h"
 
