@@ -46,7 +46,8 @@ extern "C" {
 
 /* Set Multi-touch as supported */
 #if !defined(TS_MONO_TOUCH_SUPPORTED)
-#define TS_MULTI_TOUCH_SUPPORTED        1
+// Touch support removed to improve performance
+#define TS_MULTI_TOUCH_SUPPORTED        0
 #endif /* TS_MONO_TOUCH_SUPPORTED */
 
 /* Includes ------------------------------------------------------------------*/

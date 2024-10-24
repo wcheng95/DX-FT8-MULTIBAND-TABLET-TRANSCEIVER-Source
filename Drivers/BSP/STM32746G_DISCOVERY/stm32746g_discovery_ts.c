@@ -405,16 +405,13 @@ uint8_t BSP_TS_ResetTouchData(TS_StateTypeDef *TS_State)
 
   if (TS_State != (TS_StateTypeDef *)NULL)
   {
-    TS_State->gestureId = GEST_ID_NO_GESTURE;
+    // Gesture and some touch support removed for performance
     TS_State->touchDetected = 0;
 
     for(index = 0; index < TS_MAX_NB_TOUCH; index++)
     {
       TS_State->touchX[index]       = 0;
       TS_State->touchY[index]       = 0;
-      TS_State->touchArea[index]    = 0;
-      TS_State->touchEventId[index] = TOUCH_EVENT_NO_EVT;
-      TS_State->touchWeight[index]  = 0;
     }
 
     ts_status = TS_OK;
