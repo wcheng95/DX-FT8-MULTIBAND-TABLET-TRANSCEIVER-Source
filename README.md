@@ -25,6 +25,6 @@ There are still concerning warnings about potential buffer overflows often I hav
 I took the opportunity to clean up the code removing most of the unused commented out code, unreferenced variables and so on.
 I also used the STM IDE to reformat the code for consistency.
 This repo is the result. 
-This is a work in progress and will complete it when my hardware arrives.
+Every release is tested on my own FT8 Transceiver.
 
 Paul G8KIG
