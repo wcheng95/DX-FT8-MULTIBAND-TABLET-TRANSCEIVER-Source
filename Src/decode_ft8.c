@@ -220,6 +220,12 @@ void clear_log_stored_data(void) {
 	}
 }
 
+static void copyString(char *dest, const char *src, size_t size)
+{
+	memcpy(dest, src, size);
+	dest[size-1] = 0;
+}
+
 int Check_Calling_Stations(int num_decoded, int reply_state) {
 
 	int Beacon_Reply_Status = 0;
@@ -247,13 +253,17 @@ int Check_Calling_Stations(int num_decoded, int reply_state) {
 
 			if (old_call == 0) {
 				sprintf(current_Beacon_receive_message, " %s %s %s", field1, field2, field3);
-				sprintf(current_QSO_receive_message, " %s %s %s", field1, field2, field3);
+				memcpy(current_QSO_receive_message, current_Beacon_receive_message, sizeof(current_QSO_receive_message));
 
 			   // update_Beacon_log_display(0);
-				if(Beacon_On == 1) update_Beacon_log_display(0);
-				if(Beacon_On == 0) update_log_display(0);
+				if(Beacon_On == 1)
+					update_Beacon_log_display(0);
+				else
+				if(Beacon_On == 0)
+					update_log_display(0);
 
-				strcpy(Target_Call, field2);
+				copyString(Target_Call, field2, sizeof(Target_Call));
+
 				Target_RSL = new_decoded[i].snr;
 
 				if (Beacon_On == 1)
@@ -261,8 +271,9 @@ int Check_Calling_Stations(int num_decoded, int reply_state) {
 
 				Beacon_Reply_Status = 1;
 
-				strcpy(Answer_CQ[num_calls].call, field2);
-				strcpy(Answer_CQ[num_calls].locator, new_decoded[i].target);
+				copyString(Answer_CQ[num_calls].call, field2, sizeof(Answer_CQ[num_calls].call));
+				copyString(Answer_CQ[num_calls].locator, new_decoded[i].target, sizeof(Answer_CQ[num_calls].locator));
+
 				Answer_CQ[num_calls].RSL = 1;
 
 				num_calls++;
@@ -270,21 +281,22 @@ int Check_Calling_Stations(int num_decoded, int reply_state) {
 				break;
 
 			}
-
+			else
 			if (old_call >= 1) {
 
 				sprintf(current_Beacon_receive_message, " %s %s %s", field1, field2, field3);
-				sprintf(current_QSO_receive_message, " %s %s %s", field1, field2, field3);
+				memcpy(current_QSO_receive_message, current_Beacon_receive_message, sizeof(current_QSO_receive_message));
 
 			    if (Beacon_On == 1) 
 					update_Beacon_log_display(0);
+			    else
 			    if(Beacon_On == 0) 
 					update_log_display(0);
 
 				if (Answer_CQ[old_call_address].RR73 == 0) {
 
-					strcpy(Target_Call, Answer_CQ[old_call_address].call);
-					strcpy(Target_Locator, Answer_CQ[old_call_address].locator);
+					copyString(Target_Call, Answer_CQ[old_call_address].call, sizeof(Target_Call));
+					copyString(Target_Locator, Answer_CQ[old_call_address].locator, sizeof(Target_Locator));
 
 					Target_RSL = Answer_CQ[old_call_address].RSL;
 
@@ -308,32 +320,24 @@ int Check_Calling_Stations(int num_decoded, int reply_state) {
 
 void process_selected_Station(int stations_decoded, int TouchIndex) {
 
-	if(stations_decoded > 0 && TouchIndex <= stations_decoded ){
-	strcpy(Target_Call, new_decoded[TouchIndex].field2);
-	strcpy(Target_Locator, new_decoded[TouchIndex].target);
-	Target_RSL = new_decoded[TouchIndex].snr;
-	target_slot = new_decoded[TouchIndex].slot;
-	target_freq = new_decoded[TouchIndex].freq_hz;
-	set_QSO_Xmit_Freq(target_freq);
+	if(stations_decoded > 0 && TouchIndex <= stations_decoded)
+	{
+		copyString(Target_Call, Answer_CQ[TouchIndex].call, sizeof(Target_Call));
+		copyString(Target_Locator, Answer_CQ[TouchIndex].locator, sizeof(Target_Locator));
 
-	compose_messages();
-	Auto_QSO_State = 1;
-	stop_QSO_reply = 0;
+		Target_RSL = new_decoded[TouchIndex].snr;
+		target_slot = new_decoded[TouchIndex].slot;
+		target_freq = new_decoded[TouchIndex].freq_hz;
+		set_QSO_Xmit_Freq(target_freq);
 
+		compose_messages();
+		Auto_QSO_State = 1;
+		stop_QSO_reply = 0;
 	}
 
 	FT8_Touch_Flag = 0;
 
 }
-
-/*
-void clear_CQ_List_box(void) {
-
-	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-	BSP_LCD_FillRect(240, 40, 240, 200);
-	num_CQ_calls = 0;
-}
-*/
 
 void set_QSO_Xmit_Freq(int freq) {
 

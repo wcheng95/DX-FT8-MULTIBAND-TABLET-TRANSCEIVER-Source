@@ -32,7 +32,7 @@ typedef struct {
 
 	int number_times_called;
 	char call[7];
-	char locator[4];
+	char locator[5];
 	int RSL;
 	int RR73;
 

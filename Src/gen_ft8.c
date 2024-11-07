@@ -103,10 +103,6 @@ void set_reply(uint16_t index) {
 		write_ADIF_Log();
 	}
 
-
-
-
-
 	strcpy(current_Beacon_xmit_message, reply_message);
 	update_Beacon_log_display(1);
 
@@ -120,8 +116,6 @@ void set_reply(uint16_t index) {
 	BSP_LCD_DisplayStringAt(240, 240, (const uint8_t*) reply_message, 0x03);
 }
 
-//static char xmit_messages[4][20];
-
 static char xmit_messages[3][20];
 
 void compose_messages(void) {
@@ -130,21 +124,11 @@ void compose_messages(void) {
 	itoa(in_range(Target_RSL, -999, 9999), RSL, 10);
 
 	sprintf(xmit_messages[0], "%s %s %s", Target_Call, Station_Call, Locator);
-	sprintf(xmit_messages[1],"%s %s %R%s", Target_Call,Station_Call,RSL);
-	sprintf(xmit_messages[2], "%s %s %s", Target_Call, Station_Call,
-			seventy_three);
-	//sprintf(xmit_messages[3], "%s %s %s", CQ, Station_Call, Locator);
-
+	sprintf(xmit_messages[1],"%s %s R%s", Target_Call,Station_Call,RSL);
+	sprintf(xmit_messages[2], "%s %s %s", Target_Call, Station_Call, seventy_three);
 
 	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-	BSP_LCD_DisplayStringAt(240, 240, xmit_messages[0],0x03);
-
-	/*
-	BSP_LCD_DisplayStringAt(240, 160, (uint8_t*) xmit_messages[0], 0x03);
-	BSP_LCD_DisplayStringAt(240, 180, (uint8_t*) xmit_messages[1], 0x03);
-	BSP_LCD_DisplayStringAt(240, 200, (uint8_t*) xmit_messages[2], 0x03);
-	BSP_LCD_DisplayStringAt(240, 220, (uint8_t*) xmit_messages[3], 0x03);
-	*/
+	BSP_LCD_DisplayStringAt(240, 240, (const uint8_t *) xmit_messages[0],0x03);
 }
 
 void que_message(int index) {
@@ -156,12 +140,10 @@ void que_message(int index) {
 
 	BSP_LCD_SetFont(&Font16);
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-	//BSP_LCD_DisplayStringAt(240, 140, blank, 0x03);
 	BSP_LCD_DisplayStringAt(240, 220, blank,0x03);
 
 	BSP_LCD_SetTextColor(LCD_COLOR_RED);
-	//BSP_LCD_DisplayStringAt(240, 140, (uint8_t*) xmit_messages[index], 0x03);
-	BSP_LCD_DisplayStringAt(240, 220, xmit_messages[index],0x03);
+	BSP_LCD_DisplayStringAt(240, 220, (const uint8_t *) xmit_messages[index],0x03);
 
 	strcpy(current_QSO_xmit_message, xmit_messages[index]);
 
@@ -172,39 +154,41 @@ void que_message(int index) {
 
 void clear_qued_message(void) {
 
-	BSP_LCD_SetFont(&Font16);
+  	BSP_LCD_SetFont(&Font16);
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-	//BSP_LCD_DisplayStringAt(240, 140, blank, 0x03);
 	BSP_LCD_DisplayStringAt(240, 220, blank,0x03);
 }
 
 void clear_xmit_messages(void) {
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-	//BSP_LCD_FillRect(240, 130, 240, 120);
     BSP_LCD_DisplayStringAt(240, 240, blank,0x03);
 }
 
 void Read_Station_File(void) {
 
-	uint8_t i, j;
 	char read_buffer[132];
 
 	f_mount(&FS, SDPath, 1);
 	if (f_open(&fil, "StationData.txt", FA_OPEN_ALWAYS | FA_READ) == FR_OK) {
 		char *Station_Data;
 
-		for (j = 0; j < 64; j++)
-			read_buffer[j] = 0;
+		memset(read_buffer, 0, sizeof(read_buffer));
 		f_lseek(&fil, 0);
 		f_gets(read_buffer, 64, &fil);
-		i = strlen(read_buffer);
-		read_buffer[i] = 0;
 
 		Station_Data = strtok(read_buffer, ":");
-		strcpy(Station_Call, Station_Data);
-		Station_Data = strtok(NULL, ":");
-		strcpy(Locator, Station_Data);
+		if (Station_Data != NULL)
+		{
+			memcpy(Station_Call, Station_Data, sizeof(Station_Call));
+			Station_Call[6] = 0;
 
+			Station_Data = strtok(NULL, ":");
+			if (Station_Data != NULL)
+			{
+				memcpy(Locator, Station_Data, sizeof(Locator));
+				Locator[4] = 0;
+			}
+		}
 		f_close(&fil);
 	}
 
