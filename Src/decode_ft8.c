@@ -35,10 +35,12 @@ const int kMax_decoded_messages = 20;  //chhh 27 feb
 const int kMax_message_length = 20;
 const int kMin_score = 40;		// Minimum sync score threshold for candidates
 
-int validate_locator(char locator[]);
-int strindex(char s[], char t[]);
+static int validate_locator(const char locator[]);
+static int strindex(const char s[], const char t[]);
 
 static Decode new_decoded[20];  //chh 27 Feb
+extern char current_QSO_receive_message[];
+extern char current_Beacon_receive_message[];
 
 static display_message display[10];
 
@@ -48,14 +50,14 @@ static int log_size = 50;
 static int num_calls;  // number of unique calling stations
 static int message_limit = 10;
 
+int Auto_QSO_State;  //chh
+
 int ft8_decode(void) {
 
 	// Find top candidates by Costas sync score and localize them in time and frequency
 	Candidate candidate_list[kMax_candidates];
 
-	int num_candidates = find_sync(export_fft_power, ft8_msg_samples,
-			ft8_buffer, kCostas_map, kMax_candidates, candidate_list,
-			kMin_score);
+	int num_candidates = find_sync(export_fft_power, ft8_msg_samples,ft8_buffer, kCostas_map, kMax_candidates, candidate_list,kMin_score);
 	char decoded[kMax_decoded_messages][kMax_message_length];
 
 	const float fsk_dev = 6.25f;    // tone deviation in Hz and symbol rate
@@ -65,20 +67,17 @@ int ft8_decode(void) {
 
 	for (int idx = 0; idx < num_candidates; ++idx) {
 		Candidate cand = candidate_list[idx];
-		float freq_hz =
-				((float) cand.freq_offset + (float) cand.freq_sub / 2.0f)
-						* fsk_dev;
+		float freq_hz =	((float) cand.freq_offset + (float) cand.freq_sub / 2.0f)* fsk_dev;
 
 		float log174[N];
-		extract_likelihood(export_fft_power, ft8_buffer, cand, kGray_map,
-				log174);
+		extract_likelihood(export_fft_power, ft8_buffer, cand, kGray_map,log174);
 
 		// bp_decode() produces better decodes, uses way less memory
 		uint8_t plain[N];
 		int n_errors = 0;
 		bp_decode(log174, kLDPC_iterations, plain, &n_errors);
 
-		if (n_errors > 0)
+		if (n_errors > 0) 
 			continue;
 
 		// Extract payload + CRC (first K bits)
@@ -86,13 +85,12 @@ int ft8_decode(void) {
 		pack_bits(plain, K, a91);
 
 		// Extract CRC and check it
-		uint16_t chksum = ((a91[9] & 0x07) << 11) | (a91[10] << 3)
-				| (a91[11] >> 5);
+		uint16_t chksum = ((a91[9] & 0x07) << 11) | (a91[10] << 3) | (a91[11] >> 5);
 		a91[9] &= 0xF8;
 		a91[10] = 0;
 		a91[11] = 0;
 		uint16_t chksum2 = crc(a91, 96 - 14);
-		if (chksum != chksum2)
+		if (chksum != chksum2) 	
 			continue;
 
 		char message[14+14+7+1];
@@ -101,13 +99,12 @@ int ft8_decode(void) {
 		char field2[14];
 		char field3[7];
 		int rc = unpack77_fields(a91, field1, field2, field3);
-		if (rc < 0)
+		if (rc < 0)	
 			continue;
 
 		sprintf(message, "%s %s %s ", field1, field2, field3);
 
 		_Bool found = false;
-
 		for (int i = 0; i < num_decoded; ++i) {
 			if (0 == strcmp(decoded[i], message)) {
 				found = true;
@@ -129,16 +126,15 @@ int ft8_decode(void) {
 				strcpy(new_decoded[num_decoded].field2, field2);
 				strcpy(new_decoded[num_decoded].field3, field3);
 
+				new_decoded[num_decoded].slot = slot_state;
+
 				raw_RSL = (float) new_decoded[num_decoded].sync_score;
 				display_RSL = (int) ((raw_RSL - 160)) / 6;
 				new_decoded[num_decoded].snr = display_RSL;
 
-				char Target_Locator[7];
-				strcpy(Target_Locator, new_decoded[num_decoded].field3);
-
 				// TODO Decode.field3 is 7 bytes but Decode.target is only 5
-				if (validate_locator(Target_Locator) == 1) {
-					strcpy(new_decoded[num_decoded].target, Target_Locator);
+				if (validate_locator(field3) == 1) {
+					strcpy(new_decoded[num_decoded].target, field3);
 				} else {
 					strcpy(new_decoded[num_decoded].target, "    ");
 				}
@@ -154,35 +150,32 @@ int ft8_decode(void) {
 
 void display_messages(int decoded_messages) {
 
-	char message[kMax_message_length];
 	const char CQ[] = "CQ";
 
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
 	BSP_LCD_FillRect(0, FFT_H, 240, 200);
 	BSP_LCD_SetFont(&Font16);
 
-	//TODO correct sizing of message
 	for (int i = 0; i < decoded_messages && i < message_limit; i++) {
-		sprintf(message, "%s %s %s", new_decoded[i].field1,
-				new_decoded[i].field2, new_decoded[i].field3);
+		const char *field1 = new_decoded[i].field1;
+		const char *field2 = new_decoded[i].field2;
+		const char *field3 = new_decoded[i].field3;
 
-		strcpy(display[i].message, message);
+		// TODO display_message.message is 20 characters but 40 required.
+		sprintf(display[i].message, "%s %s %s", field1, field2, field3);
 
-		if (strcmp(CQ, new_decoded[i].field1) == 0)
+		if (strcmp(CQ, field1) == 0)
 			display[i].text_color = 1;
 		else
 			display[i].text_color = 0;
-
 	}
 
 	for (int j = 0; j < decoded_messages && j < message_limit; j++) {
-		if (display[j].text_color == 0)
+		if (display[j].text_color == 0)	
 			BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
 		else
 			BSP_LCD_SetTextColor(LCD_COLOR_GREEN);
-		BSP_LCD_DisplayStringAt(0, 40 + j * 20,
-				(const uint8_t*) display[j].message, 0x03);
-
+		BSP_LCD_DisplayStringAt(0, 40 + j * 20,	(const uint8_t*) display[j].message, 0x03);
 	}
 }
 
@@ -191,7 +184,7 @@ void clear_messages(void) {
 	BSP_LCD_FillRect(0, FFT_H, 240, 201);
 }
 
-int validate_locator(char locator[]) {
+static int validate_locator(const char locator[]) {
 
 	uint8_t A1, A2, N1, N2;
 	uint8_t test = 0;
@@ -203,12 +196,9 @@ int validate_locator(char locator[]) {
 
 	if (A1 >= 0 && A1 <= 17)
 		test++;
-	if (A2 > 0 && A2 < 17)
-		test++; //block RR73 Artic and Anartica
-	if (N1 >= 0 && N1 <= 9)
-		test++;
-	if (N2 >= 0 && N2 <= 9)
-		test++;
+	if (A2 > 0 && A2 < 17) test++; //block RR73 Arctic and Antarctica
+	if (N1 >= 0 && N1 <= 9) test++;
+	if (N2 >= 0 && N2 <= 9)	test++;
 
 	if (test == 4)
 		return 1;
@@ -235,7 +225,6 @@ int Check_Calling_Stations(int num_decoded, int reply_state) {
 	int Beacon_Reply_Status = 0;
 
 	for (int i = 0; i < num_decoded; i++) {  //check to see if being called
-		char little_gulp[20];
 		int old_call;
 		int old_call_address;
 
@@ -252,25 +241,29 @@ int Check_Calling_Stations(int num_decoded, int reply_state) {
 
 			}
 
+			const char *field1 = new_decoded[i].field1;
+			const char *field2 = new_decoded[i].field2;
+			const char *field3 = new_decoded[i].field3;
+
 			if (old_call == 0) {
+				sprintf(current_Beacon_receive_message, " %s %s %s", field1, field2, field3);
+				sprintf(current_QSO_receive_message, " %s %s %s", field1, field2, field3);
 
-				//TODO correct sizing of little_gulp
-				sprintf(little_gulp, " %s %s %s", new_decoded[i].field1,
-						new_decoded[i].field2, new_decoded[i].field3);
-				strcpy(current_Beacon_receive_message, little_gulp);
-				update_Beacon_log_display(0);
+			   // update_Beacon_log_display(0);
+				if(Beacon_On == 1) update_Beacon_log_display(0);
+				if(Beacon_On == 0) update_log_display(0);
 
-				strcpy(Target_Call, new_decoded[i].field2);
+				strcpy(Target_Call, field2);
 				Target_RSL = new_decoded[i].snr;
 
-				//set_reply(0, i);
-				set_reply(0);
+				if (Beacon_On == 1)
+					set_reply(0);
 
 				Beacon_Reply_Status = 1;
 
-				strcpy(Answer_CQ[num_calls].call, new_decoded[i].field2);
+				strcpy(Answer_CQ[num_calls].call, field2);
 				strcpy(Answer_CQ[num_calls].locator, new_decoded[i].target);
-				Answer_CQ[num_calls].RSL = Target_RSL;
+				Answer_CQ[num_calls].RSL = 1;
 
 				num_calls++;
 
@@ -280,10 +273,13 @@ int Check_Calling_Stations(int num_decoded, int reply_state) {
 
 			if (old_call >= 1) {
 
-				sprintf(little_gulp, " %s %s %s", new_decoded[i].field1,
-						new_decoded[i].field2, new_decoded[i].field3);
-				strcpy(current_Beacon_receive_message, little_gulp);
-				update_Beacon_log_display(0);
+				sprintf(current_Beacon_receive_message, " %s %s %s", field1, field2, field3);
+				sprintf(current_QSO_receive_message, " %s %s %s", field1, field2, field3);
+
+			    if (Beacon_On == 1) 
+					update_Beacon_log_display(0);
+			    if(Beacon_On == 0) 
+					update_log_display(0);
 
 				if (Answer_CQ[old_call_address].RR73 == 0) {
 
@@ -292,88 +288,72 @@ int Check_Calling_Stations(int num_decoded, int reply_state) {
 
 					Target_RSL = Answer_CQ[old_call_address].RSL;
 
-					set_reply(1);
+					if (Beacon_On == 1) 
+						set_reply(1);
 
 					Answer_CQ[old_call_address].RR73 = 1;
 
 					Beacon_Reply_Status = 1;
 
 				}
-
-				//write_ADIF_Log(i);
+				else
+					Beacon_Reply_Status = 0;
 			}
-
-			//break;
-
 		}   //check for station call
 
 	} //check to see if being called
 
 	return Beacon_Reply_Status;
-
 }
 
 void process_selected_Station(int stations_decoded, int TouchIndex) {
 
-	if (stations_decoded > 0 && TouchIndex <= stations_decoded) {
-		strcpy(Target_Call, new_decoded[TouchIndex].field2);
-		strcpy(Target_Locator, new_decoded[TouchIndex].target);
-		Target_RSL = new_decoded[TouchIndex].snr;
+	if(stations_decoded > 0 && TouchIndex <= stations_decoded ){
+	strcpy(Target_Call, new_decoded[TouchIndex].field2);
+	strcpy(Target_Locator, new_decoded[TouchIndex].target);
+	Target_RSL = new_decoded[TouchIndex].snr;
+	target_slot = new_decoded[TouchIndex].slot;
+	target_freq = new_decoded[TouchIndex].freq_hz;
+	set_QSO_Xmit_Freq(target_freq);
 
-		compose_messages();
+	compose_messages();
+	Auto_QSO_State = 1;
+	stop_QSO_reply = 0;
+
 	}
 
 	FT8_Touch_Flag = 0;
 
 }
 
+/*
 void clear_CQ_List_box(void) {
 
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
 	BSP_LCD_FillRect(240, 40, 240, 200);
 	num_CQ_calls = 0;
 }
+*/
 
-int Check_QSO_Calling_Stations(int num_decoded, int reply_state) {
+void set_QSO_Xmit_Freq(int freq) {
 
-	int QSO_Status = 0;
+	freq = freq - ft8_min_freq;
+	cursor = (uint16_t) ( (float)freq / FFT_Resolution);
 
-	for (int i = 0; i < num_decoded; i++) {  //check to see if being called
-		char little_gulp[20];
-		if (strindex(new_decoded[i].field1, Station_Call) >= 0) {
+	Set_Cursor_Frequency();
+	show_variable(400, 25,(int)  NCO_Frequency );
+    }
 
-			//TODO correct sizing of little_gulp
-			sprintf(little_gulp, " %s %s %s", new_decoded[i].field1,
-					new_decoded[i].field2, new_decoded[i].field3);
 
-			strcpy(current_QSO_receive_message, little_gulp);
 
-			update_log_display(0);
 
-			QSO_Status = 1; //we already have a reply!!
-			break;
-		} //check for station call
-
-		else {
-
-			QSO_Status = 0;
-
-		} //check to see if being called
-
-	}
-
-	return QSO_Status;
-
-}
-
-int strindex(char s[], char t[]) {
+static int strindex(const char s[], const char t[]) {
 	int i, j, k, result;
 
 	result = -1;
 
 	for (i = 0; s[i] != '\0'; i++) {
-		for (j = i, k = 0; t[k] != '\0' && s[j] == t[k]; j++, k++)
-			;
+		for (j = i, k = 0; t[k] != '\0' && s[j] == t[k]; j++, k++)	;
 		if (k > 0 && t[k] == '\0')
 			result = i;
 	}
