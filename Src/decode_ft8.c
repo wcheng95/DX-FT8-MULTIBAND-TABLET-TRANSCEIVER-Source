@@ -175,7 +175,7 @@ void display_messages(int decoded_messages) {
 			BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
 		else
 			BSP_LCD_SetTextColor(LCD_COLOR_GREEN);
-		BSP_LCD_DisplayStringAt(0, 40 + j * 20,	(const uint8_t*) display[j].message, 0x03);
+		BSP_LCD_DisplayStringAt(0, 40 + j * 20,	(const uint8_t*) display[j].message, LEFT_MODE);
 	}
 }
 
@@ -202,8 +202,7 @@ static int validate_locator(const char locator[]) {
 
 	if (test == 4)
 		return 1;
-	else
-		return 0;
+	return 0;
 }
 
 void clear_log_stored_data(void) {
@@ -255,7 +254,6 @@ int Check_Calling_Stations(int num_decoded, int reply_state) {
 				sprintf(current_Beacon_receive_message, " %s %s %s", field1, field2, field3);
 				memcpy(current_QSO_receive_message, current_Beacon_receive_message, sizeof(current_QSO_receive_message));
 
-			   // update_Beacon_log_display(0);
 				if(Beacon_On == 1)
 					update_Beacon_log_display(0);
 				else
@@ -346,10 +344,7 @@ void set_QSO_Xmit_Freq(int freq) {
 
 	Set_Cursor_Frequency();
 	show_variable(400, 25,(int)  NCO_Frequency );
-    }
-
-
-
+}
 
 static int strindex(const char s[], const char t[]) {
 	int i, j, k, result;

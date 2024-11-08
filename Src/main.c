@@ -125,8 +125,9 @@ int main(void) {
 	HAL_Delay(10);
 	receive_sequence();
 	HAL_Delay(10);
+
 	Init_Waterfall();
-	HAL_Delay(10);
+
 	Set_HP_Gain(30);
 	HAL_Delay(10);
 
@@ -165,15 +166,12 @@ int main(void) {
 								clear_qued_message();
 						}
 					}
-
 					else {
 						ft8_shift = 0;
 					}
 
 				}
-
 				else
-
 				{
 
 					ft8_xmit_delay++;
@@ -182,7 +180,6 @@ int main(void) {
 						output_enable(SI5351_CLK0, 1);
 
 				}
-
 			}
 
 			display_RealTime(100, 240);

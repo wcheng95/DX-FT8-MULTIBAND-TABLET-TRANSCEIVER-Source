@@ -448,10 +448,10 @@ void drawButton(uint16_t i) {
 
 		if (sButtonData[i].state == 1)
 			BSP_LCD_DisplayStringAt(sButtonData[i].x, sButtonData[i].y + 15,
-					(const uint8_t*) sButtonData[i].text1, 0x03);
+					(const uint8_t*) sButtonData[i].text1, LEFT_MODE);
 		else
 			BSP_LCD_DisplayStringAt(sButtonData[i].x, sButtonData[i].y + 15,
-					(const uint8_t*) sButtonData[i].text0, 0x03);
+					(const uint8_t*) sButtonData[i].text0, LEFT_MODE);
 
 		BSP_LCD_SetBackColor(LCD_COLOR_BLACK);
 	}

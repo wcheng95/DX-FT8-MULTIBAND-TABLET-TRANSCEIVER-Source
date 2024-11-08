@@ -74,9 +74,9 @@ void set_cq(void) {
 
 	BSP_LCD_SetFont(&Font16);
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-	BSP_LCD_DisplayStringAt(240, 240, blank, 0x03);
+	BSP_LCD_DisplayStringAt(240, 240, blank, LEFT_MODE);
 	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-	BSP_LCD_DisplayStringAt(240, 240, (const uint8_t*) message, 0x03);
+	BSP_LCD_DisplayStringAt(240, 240, (const uint8_t*) message, LEFT_MODE);
 
 }
 
@@ -111,9 +111,9 @@ void set_reply(uint16_t index) {
 
 	BSP_LCD_SetFont(&Font16);
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-	BSP_LCD_DisplayStringAt(240, 240, blank, 0x03);
+	BSP_LCD_DisplayStringAt(240, 240, blank, LEFT_MODE);
 	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-	BSP_LCD_DisplayStringAt(240, 240, (const uint8_t*) reply_message, 0x03);
+	BSP_LCD_DisplayStringAt(240, 240, (const uint8_t*) reply_message, LEFT_MODE);
 }
 
 static char xmit_messages[3][20];
@@ -128,7 +128,7 @@ void compose_messages(void) {
 	sprintf(xmit_messages[2], "%s %s %s", Target_Call, Station_Call, seventy_three);
 
 	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-	BSP_LCD_DisplayStringAt(240, 240, (const uint8_t *) xmit_messages[0],0x03);
+	BSP_LCD_DisplayStringAt(240, 240, (const uint8_t *) xmit_messages[0],LEFT_MODE);
 }
 
 void que_message(int index) {
@@ -140,28 +140,27 @@ void que_message(int index) {
 
 	BSP_LCD_SetFont(&Font16);
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-	BSP_LCD_DisplayStringAt(240, 220, blank,0x03);
+	BSP_LCD_DisplayStringAt(240, 220, blank,LEFT_MODE);
 
 	BSP_LCD_SetTextColor(LCD_COLOR_RED);
-	BSP_LCD_DisplayStringAt(240, 220, (const uint8_t *) xmit_messages[index],0x03);
+	BSP_LCD_DisplayStringAt(240, 220, (const uint8_t *) xmit_messages[index],LEFT_MODE);
 
 	strcpy(current_QSO_xmit_message, xmit_messages[index]);
 
 	if (index == 2)
 		write_ADIF_Log();
-
 }
 
 void clear_qued_message(void) {
 
   	BSP_LCD_SetFont(&Font16);
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-	BSP_LCD_DisplayStringAt(240, 220, blank,0x03);
+	BSP_LCD_DisplayStringAt(240, 220, blank,LEFT_MODE);
 }
 
 void clear_xmit_messages(void) {
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-    BSP_LCD_DisplayStringAt(240, 240, blank,0x03);
+    BSP_LCD_DisplayStringAt(240, 240, blank,LEFT_MODE);
 }
 
 void Read_Station_File(void) {
@@ -212,10 +211,10 @@ void SD_Initialize(void) {
 			isInitialized = 1;
 			FATFS_LinkDriver(&SD_Driver, SDPath);
 		} else {
-			BSP_LCD_DisplayStringAt(0, 100, (uint8_t*) "Insert SD.", 0x03);
+			BSP_LCD_DisplayStringAt(0, 100, (uint8_t*) "Insert SD.", LEFT_MODE);
 			while (BSP_SD_IsDetected() != SD_PRESENT) {
 			}
-			BSP_LCD_DisplayStringAt(0, 100, (uint8_t*) "Reboot Now.", 0x03);
+			BSP_LCD_DisplayStringAt(0, 100, (uint8_t*) "Reboot Now.", LEFT_MODE);
 
 		}
 	}
