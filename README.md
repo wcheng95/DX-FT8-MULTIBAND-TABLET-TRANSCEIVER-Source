@@ -15,7 +15,7 @@ Unfortunately I was still unable to build the sources due to build errors.
 These errors were due to C variables being defined in header files causing multiple definition errors at link time.
 I suspect in part this is because Arduino-style C++ code has been converted to C.
 
-The source code contains the sources to the excellent FT8 library by Karlis Goba.
+The source code contains the sources to the excellent FT8 library by Karlis Goba, YL3JG.
 The original repo for the ft8 library is at
 
 https://github.com/kgoba/ft8_lib
