@@ -130,14 +130,14 @@ void compose_messages(void) {
 	itoa(in_range(Target_RSL, -999, 9999), RSL, 10);
 
 	sprintf(xmit_messages[0], "%s %s %s", Target_Call, Station_Call, Locator);
-	sprintf(xmit_messages[1],"%s %s %R%s", Target_Call,Station_Call,RSL);
+	sprintf(xmit_messages[1],"%s %s R%s", Target_Call,Station_Call,RSL);
 	sprintf(xmit_messages[2], "%s %s %s", Target_Call, Station_Call,
 			seventy_three);
 	//sprintf(xmit_messages[3], "%s %s %s", CQ, Station_Call, Locator);
 
 
 	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-	BSP_LCD_DisplayStringAt(240, 240, xmit_messages[0],0x03);
+	BSP_LCD_DisplayStringAt(240, 240, (const uint8_t *)xmit_messages[0],0x03);
 
 	/*
 	BSP_LCD_DisplayStringAt(240, 160, (uint8_t*) xmit_messages[0], 0x03);
@@ -160,8 +160,7 @@ void que_message(int index) {
 	BSP_LCD_DisplayStringAt(240, 220, blank,0x03);
 
 	BSP_LCD_SetTextColor(LCD_COLOR_RED);
-	//BSP_LCD_DisplayStringAt(240, 140, (uint8_t*) xmit_messages[index], 0x03);
-	BSP_LCD_DisplayStringAt(240, 220, xmit_messages[index],0x03);
+	BSP_LCD_DisplayStringAt(240, 220, (const uint8_t *)xmit_messages[index],0x03);
 
 	strcpy(current_QSO_xmit_message, xmit_messages[index]);
 
