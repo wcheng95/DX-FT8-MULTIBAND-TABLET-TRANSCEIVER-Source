@@ -19,7 +19,8 @@ typedef struct {
     int  freq_hz;
     int  sync_score;
     int  snr;
-    char target[5];
+    int  received_snr;
+    char target[7];
     int  slot;
 } Decode;
 
