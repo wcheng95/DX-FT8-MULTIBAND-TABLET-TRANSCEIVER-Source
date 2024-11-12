@@ -142,7 +142,7 @@ void que_message(int index) {
 	genft8(packed, tones);
 
 	BSP_LCD_SetFont(&Font16);
-	BSP_LCD_SetTextColor(LCD_COLOR_BLACK););
+	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
 	BSP_LCD_DisplayStringAt(240, 220, blank,0x03);
 
 	BSP_LCD_SetTextColor(LCD_COLOR_RED);
