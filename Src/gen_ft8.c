@@ -95,20 +95,15 @@ void set_reply(uint16_t index) {
 	uint8_t packed[K_BYTES];
 	char RSL[5];
 
-	
-
 	if (index == 0) {
 		itoa(in_range(Target_RSL, -999, 9999), RSL, 10);
 		sprintf(reply_message,"%s %s %s",Target_Call,Station_Call,RSL);
+	}
 	else if (index == 1) {
 		sprintf(reply_message, "%s %s %s", Target_Call, Station_Call,
 				seventy_three);
 		write_ADIF_Log();
 	}
-
-
-
-
 
 	strcpy(current_Beacon_xmit_message, reply_message);
 	update_Beacon_log_display(1);
@@ -123,8 +118,6 @@ void set_reply(uint16_t index) {
 	BSP_LCD_DisplayStringAt(240, 240, (const uint8_t*) reply_message, 0x03);
 }
 
-//static char xmit_messages[4][20];
-
 static char xmit_messages[3][20];
 
 void compose_messages(void) {
@@ -136,18 +129,9 @@ void compose_messages(void) {
 	sprintf(xmit_messages[1],"%s %s R%s", Target_Call,Station_Call,RSL);
 	sprintf(xmit_messages[2], "%s %s %s", Target_Call, Station_Call,
 			seventy_three);
-	//sprintf(xmit_messages[3], "%s %s %s", CQ, Station_Call, Locator);
-
 
 	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
 	BSP_LCD_DisplayStringAt(240, 240, (const uint8_t *)xmit_messages[0],0x03);
-
-	/*
-	BSP_LCD_DisplayStringAt(240, 160, (uint8_t*) xmit_messages[0], 0x03);
-	BSP_LCD_DisplayStringAt(240, 180, (uint8_t*) xmit_messages[1], 0x03);
-	BSP_LCD_DisplayStringAt(240, 200, (uint8_t*) xmit_messages[2], 0x03);
-	BSP_LCD_DisplayStringAt(240, 220, (uint8_t*) xmit_messages[3], 0x03);
-	*/
 }
 
 void que_message(int index) {
