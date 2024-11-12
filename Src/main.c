@@ -106,7 +106,7 @@ int main(void) {
 
 	start_Si5351();
 
-	cursor = 112;  // 1000 Hz
+	cursor = 192;  // 1500 Hz
 	Set_Cursor_Frequency();
 	show_variable(400, 25, (int) NCO_Frequency);
 
