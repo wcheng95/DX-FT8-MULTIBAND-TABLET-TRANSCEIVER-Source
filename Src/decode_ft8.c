@@ -302,7 +302,7 @@ int Check_Calling_Stations(int num_decoded, int reply_state) {
 
 				strcpy(Answer_CQ[num_calls].call, field2);
 				strcpy(Answer_CQ[num_calls].locator, new_decoded[i].target);
-				Answer_CQ[num_calls].RSL = 1;
+				Answer_CQ[num_calls].RSL = Target_RSL;
 				Answer_CQ[num_calls].received_RSL = Station_RSL;
 				
 				num_calls++;
