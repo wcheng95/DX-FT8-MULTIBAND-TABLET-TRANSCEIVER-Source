@@ -17,6 +17,7 @@ extern char Station_Call[7]; //six character call sign + /0
 extern char Target_Call[7]; //six character call sign + /0
 extern char Target_Locator[5]; // four character locator  + /0
 extern int Target_RSL; // four character RSL  + /0
+extern int Station_RSL;
 extern char CQ_Target_Call[7];
 
 extern char reply_message[21];
