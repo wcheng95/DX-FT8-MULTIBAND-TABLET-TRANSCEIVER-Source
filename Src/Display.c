@@ -12,7 +12,6 @@
 
 #define FFT_X  0
 #define FFT_Y  1
-//#define FFT_W  2 * (ft8_buffer - ft8_min_bin )
 #define FFT_W   (ft8_buffer - ft8_min_bin )
 
 #define FT8_X  48
@@ -78,7 +77,6 @@ void update_log_display(int mode) {
 	}
 
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-	//BSP_LCD_FillRect(240, 40, 240, 80);
 	BSP_LCD_FillRect(240, 40, 240, 160);
 
 	BSP_LCD_SetFont(&Font16);
@@ -212,7 +210,7 @@ void setup_display(void) {
     BSP_LCD_SetBackColor(LCD_COLOR_BLACK);
     BSP_LCD_SetTextColor(LCD_COLOR_GREEN);
 
-    BSP_LCD_DisplayStringAt(0, 100, (const uint8_t *)"DX FT8 Version: V1.1", LEFT_MODE);
+    BSP_LCD_DisplayStringAt(0, 100, (const uint8_t *)"DX FT8 Version: V1.2", LEFT_MODE);
 
 	drawButton(0);
 	drawButton(1);
@@ -265,9 +263,6 @@ void Process_Touch(void) {
 }
 
 uint16_t FFT_Touch(void) {
-
-	// if  ((valx > FFT_X  && valx < FFT_X + FFT_W/2 ) && (valy > FFT_Y && valy < FFT_Y + 2 * FFT_H))
-	//if ((valx > FFT_X && valx < FFT_X + FFT_W / 2) 			&& (valy > FFT_Y && valy < 30))
 
 	if  ((valx > FFT_X  && valx < FFT_X + FFT_W ) && (valy > FFT_Y && valy < 30))
 		return 1;
@@ -351,13 +346,6 @@ void Display_WF(void) {
 			for (int y = 0; y < WF_Line0 ; y++){
 
 				memcpy(WF_Bfr + (FFT_W * y), WF_Bfr + (FFT_W * (y + 1)), FFT_W);
-
-				/*
-				for (int x = 0; x <FFT_W ; x++) {
-
-					*(pWFBfr + (FFT_W*y) + x) = *(pWFBfr + (FFT_W*(y+1)) + x);
-					}
-				*/
 
 				}
 
