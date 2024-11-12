@@ -40,7 +40,6 @@ int WF_Line0;
 int WF_Count = 0;
 uint8_t *pWFBfr;
 
-//uint8_t WF_Bfr[FFT_H * (ft8_buffer - ft8_min_bin) * 2];
 uint8_t WF_Bfr[FFT_H  * (ft8_buffer - ft8_min_bin)];
 
 uint32_t cursor_line[FFT_W];
