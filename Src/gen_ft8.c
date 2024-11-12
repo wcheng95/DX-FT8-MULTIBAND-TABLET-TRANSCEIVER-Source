@@ -47,6 +47,7 @@ char Station_Call[7]; //six character call sign + /0
 char Target_Call[7]; //six character call sign + /0
 char Target_Locator[5]; // four character locator  + /0
 int Target_RSL; // four character RSL  + /0
+int Station_RSL;
 char CQ_Target_Call[7];
 
 char reply_message[21];
@@ -62,6 +63,7 @@ static FIL fil;
 const char CQ[] = "CQ";
 const char seventy_three[] = "RR73";
 const uint8_t blank[] = "                      ";
+const char Station_Power[] = "0.5";
 
 void set_cq(void) {
 	char message[18];
@@ -93,9 +95,10 @@ void set_reply(uint16_t index) {
 	uint8_t packed[K_BYTES];
 	char RSL[5];
 
-	itoa(in_range(Target_RSL, -999, 9999), RSL, 10);
+	
 
-	if (index == 0)
+	if (index == 0) {
+		itoa(in_range(Target_RSL, -999, 9999), RSL, 10);
 		sprintf(reply_message,"%s %s %s",Target_Call,Station_Call,RSL);
 	else if (index == 1) {
 		sprintf(reply_message, "%s %s %s", Target_Call, Station_Call,
