@@ -199,6 +199,7 @@ int main(void) {
 		if (decode_flag == 1 && Tune_On == 0 && xmit_flag == 0) {
 
 			update_slot_status();
+			clear_decoded_messages ();
 
 			master_decoded = ft8_decode();
 
