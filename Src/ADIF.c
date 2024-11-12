@@ -14,21 +14,21 @@
 #include "log_file.h"
 #include "button.h"
 
+extern const char Station_Power[];
+
 void write_ADIF_Log(void) {
 
-	static char log_line[180];
+	static char log_line[220];
 
 	make_Real_Time();
 	make_Real_Date();
 
 	sprintf(display_frequency,"%s",sBand_Data[BandIndex].display);
 
-
 	sprintf(log_line,
-			"<call:7>%7s<gridsquare:4>%4s<mode:3>FT8<qso_date:8>%8s <time_on:6>%6s<freq:9>%9s<station_callsign:7>%7s<my_gridsquare:4>%4s <eor>",
-			Target_Call, Target_Locator, log_rtc_date_string,
-			log_rtc_time_string, display_frequency, Station_Call, Locator);
-
+	"<call:7>%7s<gridsquare:4>%4s<mode:3>FT8<qso_date:8>%8s <time_on:6>%6s<freq:9>%9s<station_callsign:7>%7s <my_gridsquare:4>%4s  <rst_sent:3:N>%3i  <rst_rcvd:3:N>%3i <tx_pwr:4>%4s <eor>",
+	Target_Call, Target_Locator, log_rtc_date_string,
+	log_rtc_time_string, display_frequency, Station_Call, Locator, Target_RSL,Station_RSL, Station_Power);
 
 
 	Write_Log_Data(log_line);
