@@ -62,6 +62,7 @@ extern int Tune_On;  // 0 = Receive, 1 = Xmit Tune Signal
 extern int Beacon_On;
 extern int Arm_Tune;
 extern int Auto_Sync;
+extern int QSO_Fix;
 extern uint16_t start_freq;
 extern int BandIndex;
 extern FreqStruct sBand_Data[];
