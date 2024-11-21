@@ -358,8 +358,9 @@ void process_selected_Station(int stations_decoded, int TouchIndex) {
 	Target_RSL = new_decoded[TouchIndex].snr;
 	target_slot = new_decoded[TouchIndex].slot;
 	target_freq = new_decoded[TouchIndex].freq_hz;
-	set_QSO_Xmit_Freq(target_freq);
-
+	
+	if(QSO_Fix == 1) set_QSO_Xmit_Freq(target_freq);
+		
 	compose_messages();
 	Auto_QSO_State = 1;
 	stop_QSO_reply = 0;
