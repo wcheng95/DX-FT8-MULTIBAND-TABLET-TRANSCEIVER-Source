@@ -371,14 +371,7 @@ void process_selected_Station(int stations_decoded, int TouchIndex) {
 
 }
 
-/*
-void clear_CQ_List_box(void) {
 
-	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-	BSP_LCD_FillRect(240, 40, 240, 200);
-	num_CQ_calls = 0;
-}
-*/
 
 void set_QSO_Xmit_Freq(int freq) {
 
