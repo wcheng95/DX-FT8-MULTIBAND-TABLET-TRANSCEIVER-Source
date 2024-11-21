@@ -130,6 +130,8 @@ int main(void) {
 	Set_HP_Gain(30);
 	HAL_Delay(10);
 
+	make_File_Name();
+	
 	FT8_Sync();
 	HAL_Delay(10);
 
