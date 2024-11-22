@@ -39,8 +39,6 @@
 
 #include "button.h"
 
-
-
 char Target_Frequency[8]; // Seven character frequency  + /0
 char Locator[5]; // four character locator  + /0
 char Station_Call[7]; //six character call sign + /0
@@ -62,7 +60,8 @@ static FIL fil;
 
 const char CQ[] = "CQ";
 const char seventy_three[] = "RR73";
-const uint8_t blank[] = "                      ";
+//const uint8_t blank[] = "                      ";
+//                         1234567890123456789012
 
 void set_cq(void) {
 	char message[18];
@@ -75,7 +74,9 @@ void set_cq(void) {
 
 	BSP_LCD_SetFont(&Font16);
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-	BSP_LCD_DisplayStringAt(240, 240, blank, LEFT_MODE);
+//	BSP_LCD_DisplayStringAt(240, 240, blank, LEFT_MODE);
+	BSP_LCD_FillRect(240, 240, 20*22, 20);
+
 	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
 	BSP_LCD_DisplayStringAt(240, 240, (const uint8_t*) message, LEFT_MODE);
 
@@ -112,7 +113,9 @@ void set_reply(uint16_t index) {
 
 	BSP_LCD_SetFont(&Font16);
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-	BSP_LCD_DisplayStringAt(240, 240, blank, LEFT_MODE);
+//	BSP_LCD_DisplayStringAt(240, 240, blank, LEFT_MODE);
+	BSP_LCD_FillRect(240, 240, 20*22, 20);
+
 	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
 	BSP_LCD_DisplayStringAt(240, 240, (const uint8_t*) reply_message, LEFT_MODE);
 }
@@ -130,7 +133,7 @@ void compose_messages(void) {
 			seventy_three);
 
 	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-	BSP_LCD_DisplayStringAt(240, 240, (const uint8_t *)xmit_messages[0],0x03);
+	BSP_LCD_DisplayStringAt(240, 240, (const uint8_t *)xmit_messages[0],LEFT_MODE);
 }
 
 void que_message(int index) {
@@ -142,10 +145,11 @@ void que_message(int index) {
 
 	BSP_LCD_SetFont(&Font16);
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-	BSP_LCD_DisplayStringAt(240, 220, blank,0x03);
+//	BSP_LCD_DisplayStringAt(240, 220, blank,0x03);
+	BSP_LCD_FillRect(240, 220, 20*22, 20);
 
 	BSP_LCD_SetTextColor(LCD_COLOR_RED);
-	BSP_LCD_DisplayStringAt(240, 220, (const uint8_t *)xmit_messages[index],0x03);
+	BSP_LCD_DisplayStringAt(240, 220, (const uint8_t *)xmit_messages[index],LEFT_MODE);
 
 	strcpy(current_QSO_xmit_message, xmit_messages[index]);
 
@@ -157,12 +161,14 @@ void clear_qued_message(void) {
 
   	BSP_LCD_SetFont(&Font16);
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-	BSP_LCD_DisplayStringAt(240, 220, blank,LEFT_MODE);
+//	BSP_LCD_DisplayStringAt(240, 220, blank,LEFT_MODE);
+	BSP_LCD_FillRect(240, 220, 20*22, 20);
 }
 
 void clear_xmit_messages(void) {
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-    BSP_LCD_DisplayStringAt(240, 240, blank,LEFT_MODE);
+//  BSP_LCD_DisplayStringAt(240, 240, blank,LEFT_MODE);
+	BSP_LCD_FillRect(240, 240, 20*22, 20);
 }
 
 void Read_Station_File(void) {
