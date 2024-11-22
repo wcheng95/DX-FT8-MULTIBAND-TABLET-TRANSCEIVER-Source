@@ -8,9 +8,16 @@
 #ifndef DECODE_FT8_H_
 #define DECODE_FT8_H_
 
-extern int num_CQ_calls;
-extern int num_calls_to_CQ_station;
 extern int Auto_QSO_State;
+
+extern char Target_Frequency[8]; // Seven character frequency  + /0
+extern char Locator[5]; // four character locator  + /0
+extern char Station_Call[7]; //six character call sign + /0
+extern char Target_Call[7]; //six character call sign + /0
+extern char Target_Locator[5]; // four character locator  + /0
+extern char RSL[5];
+extern int Target_RSL; // four character RSL  + /0
+extern int Station_RSL;
 
 typedef struct {
     char field1[14];
@@ -19,21 +26,24 @@ typedef struct {
     int  freq_hz;
     int  sync_score;
     int  snr;
-    char target[5];
+    int  received_snr;
+    char target[7];
     int  slot;
+    int  RR73;
 } Decode;
 
 typedef struct {
-	char message[20];
+	char message[40];
 	int text_color;
 } display_message;
 
 typedef struct {
 
 	int number_times_called;
-	char call[7];
-	char locator[5];
+	char call[14];
+	char locator[7];
 	int RSL;
+	int received_RSL;
 	int RR73;
 
 } Calling_Station;
@@ -59,5 +69,6 @@ void process_selected_Station(int stations_decoded, int TouchIndex);
 int Check_QSO_Calling_Stations(int num_decoded, int reply_state);
 void clear_log_stored_data(void);
 void set_QSO_Xmit_Freq(int freq);
+void clear_decoded_messages (void);
 
 #endif /* DECODE_FT8_H_ */

@@ -106,7 +106,7 @@ int main(void) {
 
 	start_Si5351();
 
-	cursor = 112;  // 1000 Hz
+	cursor = 192;  // 1500 Hz
 	Set_Cursor_Frequency();
 	show_variable(400, 25, (int) NCO_Frequency);
 
@@ -131,6 +131,8 @@ int main(void) {
 	Set_HP_Gain(30);
 	HAL_Delay(10);
 
+	make_File_Name();
+	
 	FT8_Sync();
 	HAL_Delay(10);
 
@@ -196,6 +198,7 @@ int main(void) {
 		if (decode_flag == 1 && Tune_On == 0 && xmit_flag == 0) {
 
 			update_slot_status();
+			clear_decoded_messages ();
 
 			master_decoded = ft8_decode();
 

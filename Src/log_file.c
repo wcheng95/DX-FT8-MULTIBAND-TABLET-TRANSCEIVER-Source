@@ -63,7 +63,7 @@ void Open_Log_File(void) {
 }
 
 void Write_Log_Data(char *ch) {
-	if (sButtonData[4].state == 1) {
+
 
 		f_mount(&FS, "SD:", 1);
 		if (f_open(&LogFile, file_name_string,
@@ -76,7 +76,7 @@ void Write_Log_Data(char *ch) {
 
 		f_close(&LogFile);
 
-	}
+	
 
 }
 
