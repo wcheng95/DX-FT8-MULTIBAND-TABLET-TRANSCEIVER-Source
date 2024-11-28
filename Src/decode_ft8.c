@@ -281,7 +281,7 @@ int Check_Calling_Stations(int num_decoded, int reply_state) {
 			const char *field3 = new_decoded[i].field3;
 
 			if (old_call == 0) {
-				sprintf(current_Beacon_receive_message, " %s %s %s", field1, field2, field3);
+				sprintf(current_Beacon_receive_message, "%s %s %s", field1, field2, field3);
 				sprintf(current_QSO_receive_message, " %s %s %s", field1, field2, field3);
 
 				if(Beacon_On == 1) update_Beacon_log_display(0);
@@ -313,7 +313,7 @@ int Check_Calling_Stations(int num_decoded, int reply_state) {
 
 			if (old_call >= 1 && old_call < 4) {
 
-				sprintf(current_Beacon_receive_message, " %s %s %s", field1, field2, field3);
+				sprintf(current_Beacon_receive_message, "%s %s %s", field1, field2, field3);
 				sprintf(current_QSO_receive_message, " %s %s %s", field1, field2, field3);
 
 			    if (Beacon_On == 1) 
