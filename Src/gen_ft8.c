@@ -67,7 +67,7 @@ static FIL fil;
 
 const char CQ[] = "CQ";
 const char seventy_three[] = "RR73";
-const uint8_t blank[] = "                      ";
+const uint8_t blank[] = "                  ";
 
 void set_cq(void) {
 	char message[18];
