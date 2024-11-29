@@ -203,7 +203,7 @@ void clear_reply_message_box(void) {
 
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
 	//BSP_LCD_FillRect(240, 40, 240, 201);
-	BSP_LCD_FillRect(display_start, 40, 240, 215);
+	BSP_LCD_FillRect(display_start, 40, display_width, 215);
 }
 
 void SD_Initialize(void) {
