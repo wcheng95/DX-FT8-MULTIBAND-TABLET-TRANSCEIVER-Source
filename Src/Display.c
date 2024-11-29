@@ -41,7 +41,7 @@ int WF_Count = 0;
 uint8_t *pWFBfr;
 
 int log_start = 240;
-in log_width = 230;
+int log_width = 230;
 
 uint8_t WF_Bfr[FFT_H  * (ft8_buffer - ft8_min_bin)];
 
