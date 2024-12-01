@@ -40,6 +40,9 @@ int WF_Line0;
 int WF_Count = 0;
 uint8_t *pWFBfr;
 
+int log_start = 240;
+int log_width = 230;
+
 uint8_t WF_Bfr[FFT_H  * (ft8_buffer - ft8_min_bin)];
 
 uint32_t cursor_line[FFT_W];
@@ -76,7 +79,7 @@ void update_log_display(int mode) {
 	}
 
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-	BSP_LCD_FillRect(240, 40, 240, 160);
+	BSP_LCD_FillRect(log_start, 40, log_width, 160);
 
 	BSP_LCD_SetFont(&Font16);
 
@@ -87,7 +90,7 @@ void update_log_display(int mode) {
 		if (log_messages[i].text_color == 1)
 			BSP_LCD_SetTextColor(LCD_COLOR_YELLOW);
 
-		BSP_LCD_DisplayStringAt(240, 40 + i * 20,
+		BSP_LCD_DisplayStringAt(log_start, 40 + i * 20,
 				(const uint8_t*) log_messages[i].message, LEFT_MODE);
 	}
 
@@ -129,7 +132,7 @@ void update_Beacon_log_display(int mode) {
 	}
 
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-	BSP_LCD_FillRect(240, 40, 240, 200);
+	BSP_LCD_FillRect(log_start, 40, log_width, 200);
 	BSP_LCD_SetFont(&Font16);
 
 	for (int i = 0; i < max_Beacon_log_messages; i++) {
@@ -139,7 +142,7 @@ void update_Beacon_log_display(int mode) {
 		if (Beacon_log_messages[i].text_color == 1)
 			BSP_LCD_SetTextColor(LCD_COLOR_YELLOW);
 
-		BSP_LCD_DisplayStringAt(240, 40 + i * 20,
+		BSP_LCD_DisplayStringAt(log_start, 40 + i * 20,
 				(const uint8_t*) Beacon_log_messages[i].message, LEFT_MODE);
 	}
 
@@ -209,7 +212,11 @@ void setup_display(void) {
     BSP_LCD_SetBackColor(LCD_COLOR_BLACK);
     BSP_LCD_SetTextColor(LCD_COLOR_GREEN);
 
-    BSP_LCD_DisplayStringAt(0, 100, (const uint8_t *)"DX FT8 Version: V1.3", LEFT_MODE);
+    
+    BSP_LCD_DisplayStringAt(0, 60, (const uint8_t *) "DX FT8: A FT8 Xceiver", LEFT_MODE);
+    BSP_LCD_DisplayStringAt(0, 80, (const uint8_t *) "Hardware: V1.1", LEFT_MODE);
+    BSP_LCD_DisplayStringAt(0, 100, (const uint8_t *)"Firmware: V1.4", LEFT_MODE);
+    BSP_LCD_DisplayStringAt(50, 120, (const uint8_t *)"W5BAA - WB2CBA", LEFT_MODE);
 
 	drawButton(0);
 	drawButton(1);

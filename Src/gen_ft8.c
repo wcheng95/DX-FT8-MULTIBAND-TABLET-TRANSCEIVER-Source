@@ -54,6 +54,11 @@ char reply_message[21];
 char reply_message_list[18][8];
 int reply_message_count;
 
+int display_start = 240;
+int display_width = 230;
+
+
+
 static uint8_t isInitialized = 0;
 
 /* Fatfs structure */
@@ -62,7 +67,7 @@ static FIL fil;
 
 const char CQ[] = "CQ";
 const char seventy_three[] = "RR73";
-const uint8_t blank[] = "                      ";
+const uint8_t blank[] = "                  ";
 
 void set_cq(void) {
 	char message[18];
@@ -75,9 +80,9 @@ void set_cq(void) {
 
 	BSP_LCD_SetFont(&Font16);
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-	BSP_LCD_DisplayStringAt(240, 240, blank, 0x03);
+	BSP_LCD_DisplayStringAt(display_start, 240, blank, 0x03);
 	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-	BSP_LCD_DisplayStringAt(240, 240, (const uint8_t*) message, 0x03);
+	BSP_LCD_DisplayStringAt(display_start, 240, (const uint8_t*) message, 0x03);
 
 }
 
@@ -101,7 +106,7 @@ void set_reply(uint16_t index) {
 	else if (index == 1) {
 		sprintf(reply_message, "%s %s %s", Target_Call, Station_Call,
 				seventy_three);
-		write_ADIF_Log();
+		if(Station_RSL != 99) write_ADIF_Log();
 	}
 
 	strcpy(current_Beacon_xmit_message, reply_message);
@@ -112,9 +117,9 @@ void set_reply(uint16_t index) {
 
 	BSP_LCD_SetFont(&Font16);
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-	BSP_LCD_DisplayStringAt(240, 240, blank, 0x03);
+	BSP_LCD_DisplayStringAt(display_start, 240, blank, 0x03);
 	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-	BSP_LCD_DisplayStringAt(240, 240, (const uint8_t*) reply_message, 0x03);
+	BSP_LCD_DisplayStringAt(display_start, 240, (const uint8_t*) reply_message, 0x03);
 }
 
 static char xmit_messages[3][20];
@@ -130,7 +135,7 @@ void compose_messages(void) {
 			seventy_three);
 
 	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-	BSP_LCD_DisplayStringAt(240, 240, (const uint8_t *)xmit_messages[0],0x03);
+	BSP_LCD_DisplayStringAt(display_start, 240, (const uint8_t *)xmit_messages[0],0x03);
 }
 
 void que_message(int index) {
@@ -142,15 +147,14 @@ void que_message(int index) {
 
 	BSP_LCD_SetFont(&Font16);
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-	BSP_LCD_DisplayStringAt(240, 220, blank,0x03);
+	BSP_LCD_DisplayStringAt(display_start, 220, blank,0x03);
 
 	BSP_LCD_SetTextColor(LCD_COLOR_RED);
-	BSP_LCD_DisplayStringAt(240, 220, (const uint8_t *)xmit_messages[index],0x03);
+	BSP_LCD_DisplayStringAt(display_start, 220, (const uint8_t *)xmit_messages[index],0x03);
 
 	strcpy(current_QSO_xmit_message, xmit_messages[index]);
 
-	if (index == 2)
-		write_ADIF_Log();
+	if (index == 2 && Station_RSL != 99) write_ADIF_Log();
 
 }
 
@@ -159,13 +163,13 @@ void clear_qued_message(void) {
 	BSP_LCD_SetFont(&Font16);
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
 	//BSP_LCD_DisplayStringAt(240, 140, blank, 0x03);
-	BSP_LCD_DisplayStringAt(240, 220, blank,0x03);
+	BSP_LCD_DisplayStringAt(display_start, 220, blank,0x03);
 }
 
 void clear_xmit_messages(void) {
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
 	//BSP_LCD_FillRect(240, 130, 240, 120);
-    BSP_LCD_DisplayStringAt(240, 240, blank,0x03);
+    BSP_LCD_DisplayStringAt(display_start, 240, blank,0x03);
 }
 
 void Read_Station_File(void) {
@@ -198,7 +202,7 @@ void clear_reply_message_box(void) {
 
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
 	//BSP_LCD_FillRect(240, 40, 240, 201);
-	BSP_LCD_FillRect(240, 40, 240, 215);
+	BSP_LCD_FillRect(display_start, 40, display_width, 215);
 }
 
 void SD_Initialize(void) {
