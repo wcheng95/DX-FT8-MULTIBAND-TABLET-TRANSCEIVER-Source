@@ -106,7 +106,7 @@ void set_reply(uint16_t index) {
 	else if (index == 1) {
 		sprintf(reply_message, "%s %s %s", Target_Call, Station_Call,
 				seventy_three);
-		write_ADIF_Log();
+		if(Station_RSL != 99) write_ADIF_Log();
 	}
 
 	strcpy(current_Beacon_xmit_message, reply_message);
@@ -154,8 +154,7 @@ void que_message(int index) {
 
 	strcpy(current_QSO_xmit_message, xmit_messages[index]);
 
-	if (index == 2)
-		write_ADIF_Log();
+	if (index == 2 && Station_RSL != 99) write_ADIF_Log();
 
 }
 
