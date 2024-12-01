@@ -225,7 +225,7 @@ void clear_log_stored_data(void) {
 		strcpy(Answer_CQ[i].locator, locator_blank);
 		Answer_CQ[i].RSL = 0;
 		Answer_CQ[i].RR73 = 0;
-		Answer_CQ[i].received_RSL = 0;
+		Answer_CQ[i].received_RSL = 99;
 	}
 }
 
@@ -242,7 +242,7 @@ void clear_decoded_messages (void) {
 		strcpy(new_decoded[i].target, locator_blank);
 		new_decoded[i].freq_hz = 0;
 		new_decoded[i].sync_score =0;
-	    	new_decoded[i].received_snr = 0;
+	    	new_decoded[i].received_snr = 99;
 	    	new_decoded[i].slot = 0;
 	    	new_decoded[i].RR73 = 0;
 
@@ -258,6 +258,7 @@ void clear_decoded_messages (void) {
 int Check_Calling_Stations(int num_decoded, int reply_state) {
 
 	int Beacon_Reply_Status = 0;
+	Station_RSL = 99;
 
 	for (int i = 0; i < num_decoded; i++) {  //check to see if being called
 		int old_call;
