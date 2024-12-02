@@ -58,10 +58,6 @@ enum days_of_week {
 	SUN = 1, MON, TUE, WED, THU, FRI, SAT
 };
 
-extern unsigned char rtc_hour, rtc_minute, rtc_second, rtc_dow, rtc_date,
-		rtc_month, rtc_year;
-extern short rtc_ampm;
-
 extern char log_rtc_time_string[13];
 extern char log_rtc_date_string[13];
 extern char file_name_string[24];
