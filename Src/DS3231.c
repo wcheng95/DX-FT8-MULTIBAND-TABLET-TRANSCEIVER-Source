@@ -161,8 +161,10 @@ void display_RealTime(int x, int y) {
 	//fetch time from RTC
 	unsigned char old_rtc_hour = rtc_hour;
 	getTime(&rtc_hour, &rtc_minute, &rtc_second, &rtc_ampm, _24_hour_format);
-	if (rtc_hour < old_rtc_hour)
+	if (rtc_hour < old_rtc_hour) {
 		getDate(&rtc_dow, &rtc_date, &rtc_month, &rtc_year);
+		make_File_Name();
+	}
 	show_UTC_time(x, y, rtc_hour, rtc_minute, rtc_second, 0);
 }
 
