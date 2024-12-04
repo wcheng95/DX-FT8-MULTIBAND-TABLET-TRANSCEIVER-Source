@@ -258,7 +258,7 @@ void clear_decoded_messages (void) {
 int Check_Calling_Stations(int num_decoded, int reply_state) {
 
 	int Beacon_Reply_Status = 0;
-	Station_RSL = 99;
+
 
 	for (int i = 0; i < num_decoded; i++) {  //check to see if being called
 		int old_call;
@@ -293,7 +293,7 @@ int Check_Calling_Stations(int num_decoded, int reply_state) {
 				if(Beacon_On == 1)
 					Target_RSL = new_decoded[i].snr;
 				
-				if(new_decoded[i].received_snr != 0)
+				if(new_decoded[i].received_snr != 99)
 					Station_RSL = new_decoded[i].received_snr;				
 
 				if (Beacon_On == 1)
@@ -329,7 +329,7 @@ int Check_Calling_Stations(int num_decoded, int reply_state) {
 
 					Target_RSL = Answer_CQ[old_call_address].RSL;
 
-					if(new_decoded[i].received_snr != 0) Station_RSL = new_decoded[i].received_snr;
+					if(new_decoded[i].received_snr != 99) Station_RSL = new_decoded[i].received_snr;
 					else
 					Station_RSL = Answer_CQ[num_calls].received_RSL;			
 
