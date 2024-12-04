@@ -495,6 +495,8 @@ void executeButton(uint16_t index)
 		FT8_Message_Touch = 0;
 		Auto_QSO_State = 0;
 		clear_reply_message_box();
+		clear_log_stored_data();
+		clear_log_messages();
 
 		sButtonData[0].state = 1;
 		drawButton(0);
