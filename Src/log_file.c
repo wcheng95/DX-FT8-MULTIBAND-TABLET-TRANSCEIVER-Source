@@ -40,6 +40,14 @@
 FATFS FS;
 FIL LogFile;
 
+
+void Init_Log_File(void) {
+make_File_Name();
+HAL_Delay(1);	
+Open_Log_File();	
+}
+
+
 void Open_Log_File(void) {
 
 	//char header[] = "ADIF EXPORT";
