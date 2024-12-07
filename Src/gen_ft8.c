@@ -54,10 +54,8 @@ char reply_message[21];
 char reply_message_list[18][8];
 int reply_message_count;
 
-int display_start = 240;
-int display_width = 230;
-
-
+const int display_start = 240;
+const int display_width = 230;
 
 static uint8_t isInitialized = 0;
 
@@ -189,10 +187,15 @@ void Read_Station_File(void) {
 		read_buffer[i] = 0;
 
 		Station_Data = strtok(read_buffer, ":");
-		strcpy(Station_Call, Station_Data);
-		Station_Data = strtok(NULL, ":");
-		strcpy(Locator, Station_Data);
-
+		if (Station_Data != NULL)
+		{
+			strcpy(Station_Call, Station_Data);
+			Station_Data = strtok(NULL, ":");
+		}
+		if (Station_Data != NULL)
+		{
+			strcpy(Locator, Station_Data);
+		}
 		f_close(&fil);
 	}
 
