@@ -137,7 +137,6 @@ int ft8_decode(void) {
 				if (validate_locator(field3) == 1)
 				{
 				strcpy(new_decoded[num_decoded].target, field3);
-				else if  (strindex(field3, "73")  >= 0 )  new_decoded[num_decoded].RR73 = 1;
 				new_decoded[num_decoded].msg = 1;
 				}
 				else if  (strindex(field3, "73")  >= 0 || strindex(field3, "RR73")  >= 0 || strindex(field3, "RRR")  >= 0 )
