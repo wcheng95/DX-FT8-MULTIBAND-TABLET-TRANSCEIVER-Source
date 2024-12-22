@@ -10,7 +10,7 @@
 #include "Display.h"
 #include "main.h"
 #include "options.h"
-
+#include "log_file.h"
 char log_rtc_time_string[13];
 char log_rtc_date_string[13];
 
