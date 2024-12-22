@@ -23,7 +23,7 @@ int CQ_State;
 int Beacon_State;
 
 
-//int Auto_QSO_State;
+
 int stop_QSO_reply;
 int RSL_sent;
 int QSO_xmit_count;
@@ -38,7 +38,7 @@ void service_QSO_mode(int decoded_signals, int message_touch){
 
 		switch (Auto_QSO_State) {
 
-		case 0
+		case 0;
 			
 		break;
 
