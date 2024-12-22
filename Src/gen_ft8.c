@@ -49,6 +49,7 @@ char Target_Locator[5]; // four character locator  + /0
 int Target_RSL; // four character RSL  + /0
 int Station_RSL;
 char CQ_Target_Call[7];
+int Target_Msg;
 
 char reply_message[21];
 char reply_message_list[18][8];
@@ -64,7 +65,8 @@ static FATFS FS;
 static FIL fil;
 
 const char CQ[] = "CQ";
-const char seventy_three[] = "RR73";
+const char Beacon_seventy_three[] = "RR73";
+const char QSO_seventy_three[] = "73";
 const uint8_t blank[] = "                  ";
 
 void set_cq(void) {
@@ -103,7 +105,8 @@ void set_reply(uint16_t index) {
 	}
 	else if (index == 1) {
 		sprintf(reply_message, "%s %s %s", Target_Call, Station_Call,
-				seventy_three);
+				Beacon_seventy_three);
+
 		if(Station_RSL != 99) write_ADIF_Log();
 	}
 
@@ -130,7 +133,8 @@ void compose_messages(void) {
 	sprintf(xmit_messages[0], "%s %s %s", Target_Call, Station_Call, Locator);
 	sprintf(xmit_messages[1],"%s %s R%s", Target_Call,Station_Call,RSL);
 	sprintf(xmit_messages[2], "%s %s %s", Target_Call, Station_Call,
-			seventy_three);
+			QSO_seventy_three);
+
 
 	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
 	BSP_LCD_DisplayStringAt(display_start, 240, (const uint8_t *)xmit_messages[0],0x03);
