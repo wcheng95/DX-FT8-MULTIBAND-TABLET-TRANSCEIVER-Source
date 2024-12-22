@@ -30,6 +30,8 @@ typedef struct {
     char target[7];
     int  slot;
     int  RR73;
+    int  msg;
+
 } Decode;
 
 typedef struct {
