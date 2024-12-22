@@ -262,7 +262,7 @@ void Process_Touch(void) {
 		}
 
 		FT8_Touch_Flag = FT8_Touch();
-		FT8_Message_Touch = Xmit_message_Touch();
+		
 
 	}
 
