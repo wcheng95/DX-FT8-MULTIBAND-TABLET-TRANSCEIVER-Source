@@ -492,7 +492,7 @@ void executeButton(uint16_t index)
 	case 0:
 		clear_xmit_messages();
 		terminate_QSO();
-		FT8_Message_Touch = 0;
+
 		Auto_QSO_State = 0;
 		clear_reply_message_box();
 		clear_log_stored_data();
@@ -517,9 +517,6 @@ void executeButton(uint16_t index)
 		else
 		{
 			Beacon_On = 1;
-			//cursor = 192; // 1000 Hz
-			//Set_Cursor_Frequency();
-			//show_variable(400, 25, (int)NCO_Frequency);
 			clear_reply_message_box();
 			clear_log_stored_data();
 			clear_Beacon_log_messages();
