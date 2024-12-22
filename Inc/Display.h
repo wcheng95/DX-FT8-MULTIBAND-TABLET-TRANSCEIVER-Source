@@ -15,7 +15,7 @@
 #define FFT_Resolution 6.25  //8000/2/1280
 
 extern int FT_8_TouchIndex;
-extern int FT_8_MessageIndex;
+
 
 extern uint16_t cursor;
 extern char rtc_date_string[9];
@@ -61,8 +61,6 @@ int FT8_Touch(void);
 void Init_Waterfall(void);
 
 void Display_WF(void);
-
-int Xmit_message_Touch(void);
 
 void Set_Cursor_Frequency(void);
 
