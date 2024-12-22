@@ -135,17 +135,27 @@ int ft8_decode(void) {
 
 				// TODO Decode.field3 is 7 bytes but Decode.target is only 5
 				if (validate_locator(field3) == 1)
-
+				{
 				strcpy(new_decoded[num_decoded].target, field3);
-
 				else if  (strindex(field3, "73")  >= 0 )  new_decoded[num_decoded].RR73 = 1;
-				
+				new_decoded[num_decoded].msg = 1;
+				}
+				else if  (strindex(field3, "73")  >= 0 || strindex(field3, "RR73")  >= 0 || strindex(field3, "RRR")  >= 0 )
+				{
+				new_decoded[num_decoded].RR73 = 1;
+				new_decoded[num_decoded].msg = 3;
+				}
 				else
 				{
 				if(field3[0] == 82) field3[0] = 32;
 				received_RSL = atoi(field3);
+				if(received_RSL < 30 )   //Prevents an 73 being decode as an received RSL
+				{
 				new_decoded[num_decoded].received_snr = received_RSL;
+				new_decoded[num_decoded].msg = 2;
 				}
+				}
+
 
 				++num_decoded;
 
@@ -245,7 +255,7 @@ void clear_decoded_messages (void) {
 	    	new_decoded[i].received_snr = 99;
 	    	new_decoded[i].slot = 0;
 	    	new_decoded[i].RR73 = 0;
-
+	    	new_decoded[i].msg = 0;
 	}
 
 }
@@ -286,9 +296,16 @@ int Check_Calling_Stations(int num_decoded, int reply_state) {
 				sprintf(current_QSO_receive_message, "%s %s %s", field1, field2, field3);
 
 				if(Beacon_On == 1) update_Beacon_log_display(0);
-				if(Beacon_On == 0) update_log_display(0);
+				if(Beacon_On == 0)
+				{update_log_display(0);
+				Auto_QSO_State = 2;
+				}
+
 
 				strcpy(Target_Call, field2);
+
+				Target_Msg = new_decoded[i].msg;
+
 
 				if(Beacon_On == 1)
 					Target_RSL = new_decoded[i].snr;
@@ -328,15 +345,20 @@ int Check_Calling_Stations(int num_decoded, int reply_state) {
 					strcpy(Target_Locator, Answer_CQ[old_call_address].locator);
 
 					Target_RSL = Answer_CQ[old_call_address].RSL;
+					Target_Msg = new_decoded[i].msg;
 
-					if(new_decoded[i].received_snr != 99) Station_RSL = new_decoded[i].received_snr;
+					if(new_decoded[i].received_snr != 99)
+					{Station_RSL = new_decoded[i].received_snr;
+					Answer_CQ[old_call_address].received_RSL = Station_RSL;
+					}
 					else
-					Station_RSL = Answer_CQ[num_calls].received_RSL;			
+					Station_RSL = Answer_CQ[old_call_address].received_RSL;
 
-					if (Beacon_On == 1) 
-						set_reply(1);
+					if (Beacon_On == 1)
+					set_reply(1);
 
-					Answer_CQ[old_call_address].RR73 = 1;
+					Answer_CQ[ old_call_address].RR73 = 1;
+
 
 					Beacon_Reply_Status = 1;
 
