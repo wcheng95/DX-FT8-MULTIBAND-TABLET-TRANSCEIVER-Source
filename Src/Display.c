@@ -34,7 +34,7 @@ char rtc_date_string[9];
 char rtc_time_string[9];
 int decode_flag;
 int FT8_Touch_Flag;
-int FT8_Message_Touch;
+
 
 int WF_Line0;
 int WF_Count = 0;
@@ -291,30 +291,6 @@ int FT8_Touch(void) {
 		return 0;
 }
 
-int Xmit_message_Touch(void) {
-
-	int y_test;
-	if ((valx > 240 && valx < 480) && (valy > 160 && valy < 240)) {
-		y_test = valy - 160;
-
-		FT_8_MessageIndex = y_test / 20;
-
-		return 1;
-	}
-
-	else
-		return 0;
-}
-
-int Xmit_QSO_Message(void) {
-
-	  if  ((valx > 240  && valx < 480 ) && (valy > 140 && valy < 160)){
-
-	  return 1;
-  }
-	  else
-	  return 0;
-}
 
 
 
