@@ -131,7 +131,7 @@ int main(void) {
 	HAL_Delay(10);
 
 	Init_Log_File();
-	//make_File_Name();
+	
 	
 	FT8_Sync();
 	HAL_Delay(10);
