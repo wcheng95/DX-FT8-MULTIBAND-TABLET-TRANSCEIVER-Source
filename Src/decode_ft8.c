@@ -386,7 +386,9 @@ void process_selected_Station(int stations_decoded, int TouchIndex) {
 	compose_messages();
 	Auto_QSO_State = 1;
 	stop_QSO_reply = 0;
-
+	RSL_sent = 0;
+	RR73_sent = 0;
+	
 	}
 
 	FT8_Touch_Flag = 0;
