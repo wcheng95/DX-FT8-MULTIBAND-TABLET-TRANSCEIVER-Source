@@ -38,7 +38,7 @@ void service_QSO_mode(int decoded_signals, int message_touch){
 
 		switch (Auto_QSO_State) {
 
-		case 0;
+		case 0:
 			
 		break;
 
