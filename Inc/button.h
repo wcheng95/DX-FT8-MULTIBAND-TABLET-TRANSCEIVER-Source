@@ -33,53 +33,68 @@
 #define RTC_line4 160
 #define RTC_line5 190
 
-#define RTC_Sub		10
-#define RTC_Button  100
-#define RTC_Add		180
+#define RTC_Sub 10
+#define RTC_Button 100
+#define RTC_Add 180
+
+extern int Band_Minimum;
+extern int BTS_Status;
 
 typedef struct
 {
-	char* text0;
-	char* text1;
-	char* blank;
-	int   Active;
-	int	  Displayed;
-	int   state;
-    const uint16_t x;
-    const uint16_t y;
-    const uint16_t w;
-    const uint16_t h;
+	char *text0;
+	char *text1;
+	char *blank;
+	int Active;
+	int Displayed;
+	int state;
+	const uint16_t x;
+	const uint16_t y;
+	const uint16_t w;
+	const uint16_t h;
 
 } ButtonStruct;
 
 typedef struct
 {
 	uint16_t Frequency;
-	char* display;
+	char *display;
 } FreqStruct;
 
-extern int Tune_On;  // 0 = Receive, 1 = Xmit Tune Signal
+enum BandIndex
+{
+	_40M = 0,
+	_30M = 1,
+	_20M = 2,
+	_17M = 3,
+	_15M = 4,
+	_12M = 5,
+	_10M = 6,
+	NumBands = 7
+};
+
+extern int Tune_On; // 0 = Receive, 1 = Xmit Tune Signal
 extern int Beacon_On;
 extern int Arm_Tune;
 extern int Auto_Sync;
 extern int QSO_Fix;
 extern uint16_t start_freq;
 extern int BandIndex;
-extern FreqStruct sBand_Data[];
+extern int Band_Minimum;
+extern const FreqStruct sBand_Data[];
 extern int AGC_Gain;
 extern int ADC_DVC_Gain;
 extern int ADC_DVC_Off;
 extern char display_frequency[];
 
-uint16_t testButton(uint16_t x,uint16_t y,uint16_t w,uint16_t h);
+uint16_t testButton(uint16_t x, uint16_t y, uint16_t w, uint16_t h);
 
 void drawButton(uint16_t i);
 void drawMenu(uint16_t i);
 void checkButton(void);
 
-void executeButton (uint16_t index);
-void executeCalibrationButton (uint16_t index);
-void PTT_Out_Init(void);
+void executeButton(uint16_t index);
+void executeCalibrationButton(uint16_t index);
 void Execute_PTT(void);
 void xmit_sequence(void);
 void receive_sequence(void);
@@ -88,6 +103,11 @@ void start_Si5351(void);
 void PTT_Out_Init(void);
 void PTT_Out_Set(void);
 void PTT_Out_RST_Clr(void);
+void RLY_Select_20to40(void);
+void RLY_Select_10to17(void);
+void Check_Board_Version(void);
+void Init_BoardVersionInput(void);
+void DeInit_BoardVersionInput(void);
 void set_codec_input_gain(void);
 
 extern ButtonStruct sButtonData[];
@@ -96,5 +116,7 @@ void setup_Cal_Display(void);
 void erase_Cal_Display(void);
 
 void FT8_Sync(void);
+
+void SelectFilterBlock();
 
 #endif /* BUTTON_H_ */

@@ -9,66 +9,54 @@
 #define DECODE_FT8_H_
 
 extern int Auto_QSO_State;
-
 extern char Target_Frequency[8]; // Seven character frequency  + /0
-extern char Locator[5]; // four character locator  + /0
-extern char Station_Call[7]; //six character call sign + /0
-extern char Target_Call[7]; //six character call sign + /0
-extern char Target_Locator[5]; // four character locator  + /0
+extern char Locator[5];          // four character locator  + /0
+extern char Station_Call[7];     // six character call sign + /0
+extern char Target_Call[7];      // six character call sign + /0
+extern char Target_Locator[5];   // four character locator  + /0
 extern char RSL[5];
 extern int Target_RSL; // four character RSL  + /0
 extern int Station_RSL;
 
-typedef struct {
+typedef struct
+{
     char field1[14];
     char field2[14];
     char field3[7];
-    int  freq_hz;
-    int  sync_score;
-    int  snr;
-    int  received_snr;
+    int freq_hz;
+    int sync_score;
+    int snr;
+    int received_snr;
     char target[7];
-    int  slot;
-    int  RR73;
+    int slot;
+    int RR73;
+
 } Decode;
 
-typedef struct {
-	char message[40];
-	int text_color;
+typedef struct
+{
+    char message[40];
+    int text_color;
 } display_message;
 
-typedef struct {
+typedef struct
+{
 
-	int number_times_called;
-	char call[14];
-	char locator[7];
-	int RSL;
-	int received_RSL;
-	int RR73;
+    int number_times_called;
+    char call[14];
+    char locator[7];
+    int RSL;
+    int received_RSL;
+    int RR73;
 
 } Calling_Station;
 
-typedef struct {
-	char decode_time[10];
-	char call[7];
-	int distance;
-	int snr;
-	int freq_hz;
-} CQ_Station;
-
-
-
 int Check_Calling_Stations(int num_decoded, int reply_state);
 void Check_CQ_Stations(int num_decoded);
-void clear_CQ_List_box(void);
 void display_messages(int decoded_messages);
-int Check_CQ_Calling_Stations(int num_decoded, int reply_state);
-void clear_CQ_List_box(void);
-void clear_messages(void);
 void process_selected_Station(int stations_decoded, int TouchIndex);
-int Check_QSO_Calling_Stations(int num_decoded, int reply_state);
 void clear_log_stored_data(void);
 void set_QSO_Xmit_Freq(int freq);
-void clear_decoded_messages (void);
+void clear_decoded_messages(void);
 
 #endif /* DECODE_FT8_H_ */

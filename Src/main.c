@@ -42,7 +42,7 @@
 #include "gen_ft8.h"
 #include "log_file.h"
 #include "traffic_manager.h"
-# include "button.h"
+#include "button.h"
 #include "DS3231.h"
 
 #include "SiLabs.h"
@@ -53,9 +53,6 @@
 
 TIM_HandleTypeDef hTim2;
 uint32_t current_time, start_time, ft8_time;
-//uint8_t ft8_hours, ft8_minutes, ft8_seconds;
-//uint32_t hours_fraction;
-//uint32_t minute_fraction;
 
 int master_decoded;
 int QSO_xmit;
@@ -71,21 +68,24 @@ static void Error_Handler(void);
 static void CPU_CACHE_Enable(void);
 static void HID_InitApplication(void);
 
-int main(void) {
+int main(void)
+{
 	CPU_CACHE_Enable();
 
 	HAL_Init();
-
-	PTT_Out_Init();
 
 	/* Configure the System clock to have a frequency of 200 MHz */
 	SystemClock_Config();
 
 	start_audio_I2C();
 
-	HAL_Delay(10);
+	PTT_Out_Init();
 
-	HID_InitApplication();  //really sets up LCD Display, leftover from example
+	Init_BoardVersionInput();
+	Check_Board_Version();
+	DeInit_BoardVersionInput();
+
+	HID_InitApplication(); // really sets up LCD Display, leftover from example
 	HAL_Delay(10);
 	BSP_TS_Init(BSP_LCD_GetXSize(), BSP_LCD_GetYSize());
 
@@ -106,9 +106,9 @@ int main(void) {
 
 	start_Si5351();
 
-	cursor = 192;  // 1500 Hz
+	cursor = 192; // 1500 Hz
 	Set_Cursor_Frequency();
-	show_variable(400, 25, (int) NCO_Frequency);
+	show_variable(400, 25, (int)NCO_Frequency);
 
 	show_short(405, 255, AGC_Gain);
 
@@ -130,27 +130,28 @@ int main(void) {
 	Set_HP_Gain(30);
 	HAL_Delay(10);
 
-	//make_File_Name();
 	Init_Log_File();
-	
+
 	FT8_Sync();
 	HAL_Delay(10);
 
-	while (1) {
-
-		if (DSP_Flag == 1) {
-
+	while (1)
+	{
+		if (DSP_Flag == 1)
+		{
 			I2S2_RX_ProcessBuffer(buff_offset);
 
-			if (xmit_flag == 1) {
-
-				if (ft8_xmit_delay >= 20) {
-
-					if (Tune_On == 0) {
-						if (ft8_xmit_counter < 79) {
-							if (Xmit_DSP_counter % 4 == 0) {
-								ft8_shift = ft8_hz
-										* (double) tones[ft8_xmit_counter];
+			if (xmit_flag == 1)
+			{
+				if (ft8_xmit_delay >= 20)
+				{
+					if (Tune_On == 0)
+					{
+						if (ft8_xmit_counter < 79)
+						{
+							if (Xmit_DSP_counter % 4 == 0)
+							{
+								ft8_shift = ft8_hz * (double)tones[ft8_xmit_counter];
 								set_FT8_Tone(tones[ft8_xmit_counter]);
 								ft8_xmit_counter++;
 							}
@@ -158,55 +159,50 @@ int main(void) {
 
 						Xmit_DSP_counter++;
 
-						if (ft8_xmit_counter == 79) {
+						if (ft8_xmit_counter == 79)
+						{
 							xmit_flag = 0;
 							ft8_receive_sequence();
 							receive_sequence();
 							ft8_xmit_delay = 0;
-							//show_variable(0,240, ft8_xmit_delay) ;
 							if (Beacon_On == 0)
 								clear_qued_message();
 						}
 					}
-
-					else {
+					else
+					{
 						ft8_shift = 0;
 					}
-
 				}
-
 				else
-
 				{
-
 					ft8_xmit_delay++;
 
 					if (ft8_xmit_delay == 16)
 						output_enable(SI5351_CLK0, 1);
-
 				}
-
 			}
 
 			display_RealTime(100, 240);
 
-			if (Tune_On == 1) {
+			if (Tune_On == 1)
+			{
 				display_RealTime(100, 240);
 				display_Real_Date(0, 240);
 			}
 
 			DSP_Flag = 0;
-
 		}
 
-		if (decode_flag == 1 && Tune_On == 0 && xmit_flag == 0) {
-
+		if (decode_flag == 1 && Tune_On == 0 && xmit_flag == 0)
+		{
 			update_slot_status();
-			clear_decoded_messages ();
+			clear_decoded_messages();
 
 			master_decoded = ft8_decode();
 
-			if (master_decoded > 0) {
+			if (master_decoded > 0)
+			{
 				display_messages(master_decoded);
 				if (Beacon_On == 1)
 					service_Beacon_mode(master_decoded);
@@ -215,7 +211,7 @@ int main(void) {
 			}
 
 			decode_flag = 0;
-		}      //end of servicing FT_Decode
+		} // end of servicing FT_Decode
 
 		if (FT_8_counter > 0 && FT_8_counter < 90)
 			Process_Touch();
@@ -223,58 +219,48 @@ int main(void) {
 		if (Tune_On == 0 && FT8_Touch_Flag == 1 && Beacon_On == 0)
 			process_selected_Station(master_decoded, FT_8_TouchIndex);
 
-
 		update_synchronization();
-
 	}
 }
 
-int slot_state,slot_number;
+int slot_state, slot_number;
 
-void update_synchronization(void) {
+void update_synchronization(void)
+{
 	current_time = HAL_GetTick();
 	ft8_time = current_time - start_time;
 
-	/*
-	ft8_hours = (int8_t) (ft8_time / 3600000);
-	hours_fraction = ft8_time % 3600000;
-	ft8_minutes = (int8_t) (hours_fraction / 60000);
-	ft8_seconds = (int8_t) ((hours_fraction % 60000) / 1000);
-	*/
-
-	if (ft8_time % 15000 <= 160 || FT_8_counter > 90) {
-
+	if (ft8_time % 15000 <= 160 || FT_8_counter > 90)
+	{
 		ft8_flag = 1;
 		FT_8_counter = 0;
 		ft8_marker = 1;
 		decode_flag = 0;
-		display_RealTime(100, 240);
 
-		if(QSO_xmit == 1 && target_slot == slot_state) {
-			 		setup_to_transmit_on_next_DSP_Flag();
-			 		update_log_display(1);
-			 		QSO_xmit = 0;
-			 	}
+		if (QSO_xmit == 1 && target_slot == slot_state)
+		{
+			setup_to_transmit_on_next_DSP_Flag();
+			update_log_display(1);
+			QSO_xmit = 0;
+		}
 	}
-
 }
 
-void update_slot_status(void) {
-
-	if (slot_state == 0 )
-	slot_state = 1;
+void update_slot_status(void)
+{
+	if (slot_state == 0)
+		slot_state = 1;
 	else
-	slot_state = 0;
-
+		slot_state = 0;
 }
-
 
 /**
  * @brief  HID application Init
  * @param  None
  * @retval None
  */
-static void HID_InitApplication(void) {
+static void HID_InitApplication(void)
+{
 	/* Configure Key button */
 	BSP_PB_Init(BUTTON_TAMPER, BUTTON_MODE_GPIO);
 
@@ -292,7 +278,6 @@ static void HID_InitApplication(void) {
 
 	/* Enable the display */
 	BSP_LCD_DisplayOn();
-
 }
 
 /**
@@ -311,9 +296,12 @@ static void HID_InitApplication(void) {
  * @retval None
  */
 
-void HAL_Delay(__IO uint32_t Delay) {
-	while (Delay) {
-		if (SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) {
+void HAL_Delay(__IO uint32_t Delay)
+{
+	while (Delay)
+	{
+		if (SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk)
+		{
 			Delay--;
 		}
 	}
@@ -340,7 +328,8 @@ void HAL_Delay(__IO uint32_t Delay) {
  * @param  None
  * @retval None
  */
-void SystemClock_Config(void) {
+void SystemClock_Config(void)
+{
 	RCC_ClkInitTypeDef RCC_ClkInitStruct;
 	RCC_OscInitTypeDef RCC_OscInitStruct;
 	RCC_PeriphCLKInitTypeDef PeriphClkInitStruct;
@@ -355,12 +344,14 @@ void SystemClock_Config(void) {
 	RCC_OscInitStruct.PLL.PLLN = 400;
 	RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
 	RCC_OscInitStruct.PLL.PLLQ = 8;
-	if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
+	if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+	{
 		Error_Handler();
 	}
 
 	/* Activate the OverDrive to reach the 200 Mhz Frequency */
-	if (HAL_PWREx_EnableOverDrive() != HAL_OK) {
+	if (HAL_PWREx_EnableOverDrive() != HAL_OK)
+	{
 		Error_Handler();
 	}
 
@@ -370,19 +361,20 @@ void SystemClock_Config(void) {
 	PeriphClkInitStruct.PLLSAI.PLLSAIN = 192;
 	PeriphClkInitStruct.PLLSAI.PLLSAIQ = 4;
 	PeriphClkInitStruct.PLLSAI.PLLSAIP = RCC_PLLSAIP_DIV4;
-	if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK) {
+	if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
+	{
 		Error_Handler();
 	}
 
 	/* Select PLL as system clock source and configure the HCLK, PCLK1 and PCLK2
 	 clocks dividers */
-	RCC_ClkInitStruct.ClockType = (RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK
-			| RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2);
+	RCC_ClkInitStruct.ClockType = (RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2);
 	RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
 	RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
 	RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
 	RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
-	if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_6) != HAL_OK) {
+	if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_6) != HAL_OK)
+	{
 		Error_Handler();
 	}
 }
@@ -392,9 +384,11 @@ void SystemClock_Config(void) {
  * @param  None
  * @retval None
  */
-static void Error_Handler(void) {
+static void Error_Handler(void)
+{
 	/* User may add here some code to deal with this error */
-	while (1) {
+	while (1)
+	{
 	}
 }
 
@@ -403,7 +397,8 @@ static void Error_Handler(void) {
  * @param  None
  * @retval None
  */
-static void CPU_CACHE_Enable(void) {
+static void CPU_CACHE_Enable(void)
+{
 	/* Enable I-Cache */
 	SCB_EnableICache();
 

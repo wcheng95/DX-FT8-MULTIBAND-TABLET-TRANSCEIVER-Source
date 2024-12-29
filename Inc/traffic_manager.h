@@ -11,6 +11,10 @@
 extern int CQ_State;
 extern int Beacon_State;
 extern int stop_QSO_reply;
+extern int RSL_sent;
+extern int QSO_xmit_count;
+extern int RR73_sent;
+
 
 void service_QSO_mode(int decoded_signals, int message_touch);
 void service_Beacon_mode(int decoded_signals);
