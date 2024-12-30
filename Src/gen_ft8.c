@@ -47,7 +47,7 @@ char Target_Locator[5];	  // four character locator  + /0
 int Target_RSL;			  // four character RSL  + /0
 int Station_RSL;
 char CQ_Target_Call[7];
-int Target_Msg;
+
 
 char reply_message[21];
 char reply_message_list[18][8];

@@ -56,8 +56,6 @@ void Init_Waterfall(void);
 
 void Display_WF(void);
 
-//int Xmit_message_Touch(void);
-
 void Set_Cursor_Frequency(void);
 
 void update_log_display(int mode);

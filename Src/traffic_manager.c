@@ -23,10 +23,6 @@ int CQ_State;
 int Beacon_State;
 
 
-//int Auto_QSO_State;
-
-//int CQ_State;
-//int stop_QSO_reply;
 int RSL_sent;
 int QSO_xmit_count;
 int RR73_sent;
@@ -39,18 +35,14 @@ void service_QSO_mode(int decoded_signals, int message_touch){
 	receive_status = Check_Calling_Stations(decoded_signals, 0);
 
 
-		//if(receive_status == 1 && Auto_QSO_State != 2 && stop_QSO_reply == 0 ) {
 		if(receive_status == 1 && Auto_QSO_State != 2 && RSL_sent == 0 ) {
 			Auto_QSO_State = 2;
-			//show_variable(200,350, Auto_QSO_State);
-			//show_variable(250,240, 2);
 		}
 
 		switch (Auto_QSO_State) {
 
 		case 0:
-			//show_variable(200,240, Auto_QSO_State);
-			//show_variable(250,240, 0);
+
 		break;
 
 		case 1:
@@ -74,13 +66,14 @@ void service_QSO_mode(int decoded_signals, int message_touch){
 		break;
 
 		case 3:
+
 			if(RR73_sent == 1)
 			{que_message(2);
 			QSO_xmit = 1;
 			Auto_QSO_State = 4;
 			}
 			else if
-			(RSL_sent < 4){
+			(RSL_sent < 5){
 			que_message(1);
 			QSO_xmit = 1;
 			RSL_sent ++;
@@ -91,14 +84,12 @@ void service_QSO_mode(int decoded_signals, int message_touch){
 
 			Auto_QSO_State = 4;
 
-
 		break;
 
 		case 4:
 			clear_xmit_messages();
 			Auto_QSO_State = 0;
-			//stop_QSO_reply = 1;
-			//RSL_sent = 0;
+
 		break;
 
 

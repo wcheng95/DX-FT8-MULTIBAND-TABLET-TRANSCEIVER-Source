@@ -371,9 +371,7 @@ int Check_Calling_Stations(int num_decoded, int reply_state)
 					}
 
 					Beacon_Reply_Status = 1;
-				}
-				// else
-				// Beacon_Reply_Status = 0;
+				} // Check for RR73 =1
 
 			} // check for old call
 		} // check for station call

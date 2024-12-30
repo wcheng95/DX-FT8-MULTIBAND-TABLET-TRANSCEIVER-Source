@@ -528,6 +528,7 @@ void executeButton(uint16_t index)
 		}
 		else
 		{
+			Beacon_On = 1;
 			clear_reply_message_box();
 			clear_log_stored_data();
 			clear_Beacon_log_messages();
@@ -917,7 +918,7 @@ void set_codec_input_gain(void)
 {
 	Set_PGA_Gain(AGC_Gain);
 	HAL_Delay(10);
-	Set_ADC_DVC(190);
+	Set_ADC_DVC(200);
 }
 
 void receive_sequence(void)
