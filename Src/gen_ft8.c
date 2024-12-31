@@ -48,7 +48,6 @@ int Target_RSL;			  // four character RSL  + /0
 int Station_RSL;
 char CQ_Target_Call[7];
 
-
 char reply_message[21];
 char reply_message_list[18][8];
 int reply_message_count;
@@ -95,6 +94,7 @@ static int in_range(int num, int min, int max)
 
 void set_reply(uint16_t index)
 {
+
 	uint8_t packed[K_BYTES];
 	char RSL[5];
 
@@ -143,6 +143,7 @@ void compose_messages(void)
 
 void que_message(int index)
 {
+
 	uint8_t packed[K_BYTES];
 
 	pack77(xmit_messages[index], packed);
@@ -163,56 +164,70 @@ void que_message(int index)
 
 void clear_qued_message(void)
 {
+
 	BSP_LCD_SetFont(&Font16);
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
+	// BSP_LCD_DisplayStringAt(240, 140, blank, 0x03);
 	BSP_LCD_DisplayStringAt(display_start, 220, blank, 0x03);
 }
 
 void clear_xmit_messages(void)
 {
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
+	// BSP_LCD_FillRect(240, 130, 240, 120);
 	BSP_LCD_DisplayStringAt(display_start, 240, blank, 0x03);
 }
 
 void Read_Station_File(void)
 {
-	uint8_t i, j;
-	char read_buffer[132];
+	uint16_t result = 0;
+	uint8_t i;
+	char read_buffer[64];
 
 	f_mount(&FS, SDPath, 1);
 	if (f_open(&fil, "StationData.txt", FA_OPEN_ALWAYS | FA_READ) == FR_OK)
 	{
 		char *Station_Data;
-
-		for (j = 0; j < 64; j++)
-			read_buffer[j] = 0;
+		memset(read_buffer, 0, sizeof(read_buffer));
 		f_lseek(&fil, 0);
-		f_gets(read_buffer, 64, &fil);
+		f_gets(read_buffer, 63, &fil);
 		i = strlen(read_buffer);
-		read_buffer[i] = 0;
 
 		Station_Data = strtok(read_buffer, ":");
 		if (Station_Data != NULL)
 		{
-			strcpy(Station_Call, Station_Data);
+			i = strlen(Station_Data);
+			result = i > 0 && i < sizeof(Station_Call) ? 1 : 0;
+			if (result != 0)
+				strcpy(Station_Call, Station_Data);
 			Station_Data = strtok(NULL, ":");
 		}
-		if (Station_Data != NULL)
+		if (result != 0 && Station_Data != NULL)
 		{
-			strcpy(Locator, Station_Data);
+			i = strlen(Station_Data);
+			result = i > 0 && i < sizeof(Locator) ? 1 : 0;
+			if (result != 0)
+				strcpy(Locator, Station_Data);
 		}
 		f_close(&fil);
+	}
+
+	if (result == 0)
+	{
+		// TODO Display StationData Error
 	}
 }
 
 void clear_reply_message_box(void)
 {
+
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
 	BSP_LCD_FillRect(display_start, 40, display_width, 215);
 }
 
 void SD_Initialize(void)
 {
+
 	BSP_LCD_SetFont(&Font16);
 	BSP_LCD_SetTextColor(LCD_COLOR_RED);
 
