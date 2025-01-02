@@ -12,7 +12,7 @@
 typedef struct {
 	const char *Name;
 	const int16_t Initial;
-	const int16_t Minimum;
+    int16_t Minimum;
 	const int16_t Maximum;
 	const int16_t ChangeUnits;
 	int16_t CurrentValue;

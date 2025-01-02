@@ -911,6 +911,7 @@ void Check_Board_Version(void)
 
 		Band_Minimum = _40M;
 	}
+	s_optionsData.Initial = Band_Minimum;
 }
 
 void set_codec_input_gain(void)
