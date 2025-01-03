@@ -124,6 +124,11 @@ int16_t Options_StoreValue(int optionIdx)
 	return Write_Int_MicroSD((int16_t)optionIdx, option_value);
 }
 
+void Options_SetBandMinimum(int bandMinimum)
+{
+	s_optionsData[0].Minimum = bandMinimum;
+}
+
 // Routine to write a integer value to the MicroSD starting at MicroSD address MicroSD_Addr
 int16_t Write_Int_MicroSD(uint16_t DiskBlock, int16_t value)
 {

@@ -12,7 +12,7 @@
 typedef struct {
 	const char *Name;
 	int16_t Initial;
-    	const int16_t Minimum;
+    int16_t Minimum;
 	const int16_t Maximum;
 	const int16_t ChangeUnits;
 	int16_t CurrentValue;
@@ -35,5 +35,6 @@ void Options_ResetToDefaults(void);
 int16_t Options_Initialize(void);
 int16_t Options_StoreValue(int optionIdx);
 void SD_Initialize(void);
+void Options_SetBandMinimum(int bandMinimum);
 
 #endif /* OPTIONS_H_ */
