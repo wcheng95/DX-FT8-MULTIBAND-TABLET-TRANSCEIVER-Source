@@ -9,6 +9,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <math.h>
+#include <ctype.h>
 
 #include "pack.h"
 #include "encode.h"
@@ -190,31 +191,48 @@ void Read_Station_File(void)
 		char *Station_Data;
 		memset(read_buffer, 0, sizeof(read_buffer));
 		f_lseek(&fil, 0);
-		f_gets(read_buffer, 63, &fil);
-		i = strlen(read_buffer);
+		f_gets(read_buffer, sizeof(read_buffer), &fil);
 
+		Station_Call[0] = 0;
 		Station_Data = strtok(read_buffer, ":");
 		if (Station_Data != NULL)
 		{
 			i = strlen(Station_Data);
 			result = i > 0 && i < sizeof(Station_Call) ? 1 : 0;
 			if (result != 0)
+			{
 				strcpy(Station_Call, Station_Data);
-			Station_Data = strtok(NULL, ":");
+				Station_Data = strtok(NULL, ":");
+				for (i = 0; i < strlen(Station_Call); ++i)
+				{
+					if (!isprint((int)Station_Call[i]))
+					{
+						Station_Call[0] = 0;
+						break;
+					}
+				}
+			}
 		}
+
+		Locator[0] = 0;
 		if (result != 0 && Station_Data != NULL)
 		{
 			i = strlen(Station_Data);
 			result = i > 0 && i < sizeof(Locator) ? 1 : 0;
 			if (result != 0)
+			{
 				strcpy(Locator, Station_Data);
+				for (i = 0; i < strlen(Locator); ++i)
+				{
+					if (!isalnum((int)Locator[i]))
+					{
+						Locator[0] = 0;
+						break;
+					}
+				}
+			}
 		}
 		f_close(&fil);
-	}
-
-	if (result == 0)
-	{
-		// TODO Display StationData Error
 	}
 }
 

@@ -218,15 +218,29 @@ void setup_display(void)
 
 	BSP_LCD_DisplayStringAt(0, 60, (const uint8_t *)"DX FT8: A FT8 Xceiver", LEFT_MODE);
 	BSP_LCD_DisplayStringAt(50, 80, (const uint8_t *)"Hardware: V2.0", LEFT_MODE);
-	BSP_LCD_DisplayStringAt(50, 100, (const uint8_t *)"Firmware: V1.7.1", LEFT_MODE);
+	BSP_LCD_DisplayStringAt(50, 100, (const uint8_t *)"Firmware: V1.8", LEFT_MODE);
 	BSP_LCD_DisplayStringAt(50, 120, (const uint8_t *)"W5BAA - WB2CBA", LEFT_MODE);
+
 	BSP_LCD_DisplayStringAt(50, 160,
 							(Band_Minimum == _20M)
 								? (const uint8_t *)"Five Band Board"
 								: (const uint8_t *)"Seven Band Board",
 							LEFT_MODE);
 
-	for (int buttonId = 0; buttonId < 10; ++buttonId)
+	if (strlen(Station_Call) == 0 || strlen(Locator) == 0)
+	{
+		BSP_LCD_DisplayStringAt(0, 180, (const uint8_t *)"Invalid Call or Locator", LEFT_MODE);
+	}
+	else
+	{
+		char callOrLocator[32];
+		sprintf(callOrLocator, "Call    : %s", Station_Call);
+		BSP_LCD_DisplayStringAt(50, 180, (const uint8_t *)callOrLocator, LEFT_MODE);
+		sprintf(callOrLocator, "Locator : %s", Locator);
+		BSP_LCD_DisplayStringAt(50, 200, (const uint8_t *)callOrLocator, LEFT_MODE);
+	}
+
+	for (int buttonId = 0; buttonId <= 9; ++buttonId)
 		drawButton(buttonId);
 }
 

@@ -89,13 +89,13 @@ int main(void)
 	HAL_Delay(10);
 	BSP_TS_Init(BSP_LCD_GetXSize(), BSP_LCD_GetYSize());
 
-	setup_display();
-
 	initalize_constants();
 
 	init_DSP();
 
 	SD_Initialize();
+	Read_Station_File();
+	setup_display();
 
 	Options_Initialize();
 
@@ -116,7 +116,6 @@ int main(void)
 
 	Xmit_Mode = 0;
 
-	Read_Station_File();
 	HAL_Delay(10);
 
 	start_duplex(0);
