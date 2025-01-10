@@ -505,6 +505,7 @@ void executeButton(uint16_t index)
 		clear_xmit_messages();
 		terminate_QSO();
 		Auto_QSO_State = 0;
+		QSO_xmit = 0;
 		clear_reply_message_box();
 		clear_log_stored_data();
 		clear_log_messages();
