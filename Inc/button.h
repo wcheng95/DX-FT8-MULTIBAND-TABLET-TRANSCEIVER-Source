@@ -85,7 +85,6 @@ extern const FreqStruct sBand_Data[];
 extern int AGC_Gain;
 extern int ADC_DVC_Gain;
 extern int ADC_DVC_Off;
-extern char display_frequency[];
 
 uint16_t testButton(uint16_t x, uint16_t y, uint16_t w, uint16_t h);
 

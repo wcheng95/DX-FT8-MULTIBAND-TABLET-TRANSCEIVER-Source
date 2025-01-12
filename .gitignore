@@ -5,3 +5,5 @@ Debug/*
 .settings/*
 .metadata/
 .metadata/*
+.cproject
+.settings/language.settings.xml
