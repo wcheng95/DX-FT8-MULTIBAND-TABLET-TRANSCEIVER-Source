@@ -205,7 +205,7 @@ void Read_Station_File(void)
 				Station_Data = strtok(NULL, ":");
 				for (i = 0; i < strlen(Station_Call); ++i)
 				{
-					if (!isprint((int)Station_Call[i]))
+					if (!isprint((int)Station_Call[i]) || isspace((int)Station_Call[i]))
 					{
 						Station_Call[0] = 0;
 						break;
