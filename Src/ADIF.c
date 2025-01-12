@@ -45,7 +45,7 @@ void write_ADIF_Log(void)
 	offset += sprintf(log_line+offset, "<station_callsign:%1u>%s ", num_chars(Station_Call), trim_front(Station_Call));
 	offset += sprintf(log_line+offset, "<my_gridsquare:%1u>%s ", num_chars(Locator), trim_front(Locator));
 	offset += sprintf(log_line+offset, "<rst_sent:3:N>%3i ", Target_RSL);
-	offset += sprintf(log_line+offset, "<rst_rcvd:3:N>%3i <tx_pwr:4>0.5 <eor>", Station_RSL);
+	sprintf(log_line+offset, "<rst_rcvd:3:N>%3i <tx_pwr:4>0.5 <eor>", Station_RSL);
 
 	Write_Log_Data(log_line);
 }
