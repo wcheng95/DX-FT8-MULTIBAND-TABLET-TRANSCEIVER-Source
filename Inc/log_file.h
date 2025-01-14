@@ -14,6 +14,5 @@ void Write_Log_Data(char *ch);
 void Close_Log_File(void);
 void Open_Log_File(void);
 void Init_Log_File(void);
-}
 
 #endif /* LOG_FILE_H_ */

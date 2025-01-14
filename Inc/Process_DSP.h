@@ -32,7 +32,7 @@ extern double NCO_Frequency;
 
 extern int ft8_flag, FT_8_counter, ft8_marker;
 extern q15_t window_dsp_buffer[FFT_SIZE];
-extern uint16_t FFT_Buffer[2 * ft8_buffer];
+extern uint8_t FFT_Buffer[ft8_buffer];
 
 extern q15_t extract_signal[input_gulp_size * 3];  // was float
 extern q15_t dsp_output[FFT_SIZE * 2];
@@ -47,10 +47,6 @@ extern int32_t FFT_Mag_10[FFT_SIZE / 2];
 
 extern float mag_db[FFT_SIZE / 2 + 1];
 extern float window[FFT_SIZE];
-
-//extern int RSL;
-//extern int Gadc;
-//extern int Gdac;
 
 void Process_FIR_I_32K(void);
 void Process_FIR_Q_32K(void);

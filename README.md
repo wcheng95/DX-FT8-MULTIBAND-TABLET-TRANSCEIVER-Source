@@ -21,10 +21,5 @@ The original repo for the ft8 library is at
 https://github.com/kgoba/ft8_lib
 
 I modified the sources to build the firmware successfully.
-There are still concerning warnings about potential buffer overflows often I have marked them with TODO's in the code.
-I took the opportunity to clean up the code removing most of the unused commented out code, unreferenced variables and so on.
-I also used the STM IDE to reformat the code for consistency.
-This repo is the result. 
-Every release is tested on my own FT8 Transceiver.
 
 Paul G8KIG

@@ -36,23 +36,28 @@ int AGC_Gain = 20;
 int ADC_DVC_Gain = 180;
 int ADC_DVC_Off = 90;
 
+int Band_Minimum;
+
 extern int Auto_QSO_State;
 
 char display_frequency[] = "14.075";
 
-#define numBands 5
-
-FreqStruct sBand_Data[] = {
-	{// 20,
-	 14074, "14.075"},
-	{// 17,
-	 18100, "18.101"},
-	{// 15,
-	 21074, "21.075"},
-	{// 12,
-	 24915, "24.916"},
-	{// 10,
-	 28074, "28.075"}};
+const FreqStruct sBand_Data[] =
+	{
+		{// 40,
+		 7074, "7.074"},
+		{// 30,
+		 10136, "10.136"},
+		{// 20,
+		 14074, "14.075"},
+		{// 17,
+		 18100, "18.101"},
+		{// 15,
+		 21074, "21.075"},
+		{// 12,
+		 24915, "24.916"},
+		{// 10,
+		 28074, "28.075"}};
 
 #define numButtons 28
 
@@ -105,17 +110,17 @@ ButtonStruct sButtonData[] = {
 	 /*w*/ 0, // setting the width and height to 0 turns off touch response , display only
 	 /*h*/ 0},
 
-	{	//button 4 QSO Response Freq 0 fixed, 1 Match received station frequency
-	/*text0*/"Fixd",
-	/*text1*/"Rcvd",
-	/*blank*/"   ",
-	/*Active*/1,
-	/*Displayed*/1,
-	/*state*/0,
-	/*x*/240,
-	/*y*/line2,
-	/*w*/button_width,
-		/*h*/30 },
+	{// button 4 QSO Response Freq 0 fixed, 1 Match received station frequency
+	 /*text0*/ "Fixd",
+	 /*text1*/ "Rcvd",
+	 /*blank*/ "   ",
+	 /*Active*/ 1,
+	 /*Displayed*/ 1,
+	 /*state*/ 0,
+	 /*x*/ 240,
+	 /*y*/ line2,
+	 /*w*/ button_width,
+	 /*h*/ 30},
 
 	{// button 5 Sync FT8
 	 /*text0*/ "Sync",
@@ -427,7 +432,6 @@ ButtonStruct sButtonData[] = {
 
 void drawButton(uint16_t i)
 {
-
 	BSP_LCD_SetFont(&Font16);
 	if (sButtonData[i].Active > 0)
 	{
@@ -455,7 +459,6 @@ void checkButton(void)
 
 	for (i = 0; i < numButtons; i++)
 	{
-
 		if (testButton(sButtonData[i].x, sButtonData[i].y, sButtonData[i].w,
 					   sButtonData[i].h) == 1)
 		{
@@ -483,17 +486,26 @@ void checkButton(void)
 	}
 }
 
+void SelectFilterBlock()
+{
+	if (Band_Minimum == _40M)
+	{
+		if (BandIndex < _17M) // i.e. 40M, 30M or 20M
+			RLY_Select_20to40();
+		else
+			RLY_Select_10to17();
+	}
+}
+
 void executeButton(uint16_t index)
 {
-
 	switch (index)
 	{
-
 	case 0:
 		clear_xmit_messages();
 		terminate_QSO();
-		FT8_Message_Touch = 0;
 		Auto_QSO_State = 0;
+		QSO_xmit = 0;
 		clear_reply_message_box();
 		clear_log_stored_data();
 		clear_log_messages();
@@ -517,9 +529,6 @@ void executeButton(uint16_t index)
 		else
 		{
 			Beacon_On = 1;
-			cursor = 192; // 1000 Hz
-			Set_Cursor_Frequency();
-			show_variable(400, 25, (int)NCO_Frequency);
 			clear_reply_message_box();
 			clear_log_stored_data();
 			clear_Beacon_log_messages();
@@ -550,21 +559,17 @@ void executeButton(uint16_t index)
 		break;
 
 	case 4:
-		if (sButtonData[4].state == 1) {
+		if (sButtonData[4].state == 1)
 			QSO_Fix = 1;
-		} else
+		else
 			QSO_Fix = 0;
 		break;
 
 	case 5:
 		if (!sButtonData[5].state)
-		{
 			Auto_Sync = 0;
-		}
 		else
-		{
 			Auto_Sync = 1;
-		}
 		break;
 
 	case 6: // Lower Gain
@@ -628,6 +633,8 @@ void executeButton(uint16_t index)
 		set_Rcvr_Freq();
 		HAL_Delay(10);
 
+		SelectFilterBlock();
+
 		sButtonData[13].state = 1;
 		drawButton(13);
 		HAL_Delay(10);
@@ -660,23 +667,15 @@ void executeButton(uint16_t index)
 static void processButton(int id, int isIncrement, int isDate)
 {
 	RTCStruct *data = &s_RTC_Data[id];
-	if (isIncrement ?
-			data->data < data->Maximum :
-			data->data > data->Minimum)
+	if (isIncrement ? data->data < data->Maximum : data->data > data->Minimum)
 	{
-		data->data = isIncrement ?
-				data->data + 1 :
-				data->data - 1;
+		data->data = isIncrement ? data->data + 1 : data->data - 1;
 	}
 	else
 	{
-		data->data = isIncrement ?
-				data->Minimum :
-				data->Maximum;
+		data->data = isIncrement ? data->Minimum : data->Maximum;
 	}
-	isDate ?
-		display_RTC_DateEdit(RTC_Button - 20, RTC_line3 + 15) :
-		display_RTC_TimeEdit(RTC_Button - 20, RTC_line0 + 15);
+	isDate ? display_RTC_DateEdit(RTC_Button - 20, RTC_line3 + 15) : display_RTC_TimeEdit(RTC_Button - 20, RTC_line0 + 15);
 }
 
 void executeCalibrationButton(uint16_t index)
@@ -684,19 +683,19 @@ void executeCalibrationButton(uint16_t index)
 	switch (index)
 	{
 	case 10: // Lower Band
-		if (BandIndex > 0)
+		if (BandIndex > Band_Minimum)
 		{
 			BandIndex--;
-		 	show_wide(340, 55, sBand_Data[BandIndex].Frequency);
+			show_wide(340, 55, sBand_Data[BandIndex].Frequency);
 			sprintf(display_frequency, "%s", sBand_Data[BandIndex].display);
 		}
 		break;
 
 	case 11: // Raise Band
-		if (BandIndex < numBands - 1)
+		if (BandIndex < _10M)
 		{
 			BandIndex++;
-		 	show_wide(340, 55, sBand_Data[BandIndex].Frequency);
+			show_wide(340, 55, sBand_Data[BandIndex].Frequency);
 			sprintf(display_frequency, "%s", sBand_Data[BandIndex].display);
 		}
 		break;
@@ -767,7 +766,6 @@ uint16_t testButton(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
 
 void setup_Cal_Display(void)
 {
-
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
 	BSP_LCD_FillRect(0, FFT_H, 480, 201);
 
@@ -807,7 +805,7 @@ void erase_Cal_Display(void)
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
 	BSP_LCD_FillRect(0, FFT_H, 480, 201);
 
-	for (int i = 10; i < 28; i++)
+	for (int i = 10; i < numButtons; i++)
 	{
 		sButtonData[i].Active = 0;
 	}
@@ -824,7 +822,7 @@ void PTT_Out_Init(void)
 
 	__HAL_RCC_GPIOI_CLK_ENABLE();
 
-	gpio_init_structure.Pin = GPIO_PIN_2;
+	gpio_init_structure.Pin = GPIO_PIN_2; // D8  RXSW
 	gpio_init_structure.Mode = GPIO_MODE_OUTPUT_OD;
 	gpio_init_structure.Pull = GPIO_PULLUP;
 	gpio_init_structure.Speed = GPIO_SPEED_HIGH;
@@ -835,13 +833,34 @@ void PTT_Out_Init(void)
 
 	__HAL_RCC_GPIOA_CLK_ENABLE();
 
-	gpio_init_structure.Pin = GPIO_PIN_15;
+	gpio_init_structure.Pin = GPIO_PIN_15; // D9 TXSW
 	gpio_init_structure.Mode = GPIO_MODE_OUTPUT_OD;
 	gpio_init_structure.Pull = GPIO_PULLUP;
 	gpio_init_structure.Speed = GPIO_SPEED_HIGH;
 
 	HAL_GPIO_Init(GPIOA, &gpio_init_structure);
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, GPIO_PIN_RESET); // Set = Receive short
+}
+
+void Init_BoardVersionInput(void)
+{
+	GPIO_InitTypeDef gpio_init_structure;
+
+	__HAL_RCC_GPIOH_CLK_ENABLE();
+
+	gpio_init_structure.Pin = GPIO_PIN_6; // D6  BTS
+	gpio_init_structure.Mode = GPIO_MODE_INPUT;
+	gpio_init_structure.Pull = GPIO_PULLUP;
+	gpio_init_structure.Speed = GPIO_SPEED_HIGH;
+
+	HAL_GPIO_Init(GPIOH, &gpio_init_structure);
+
+	HAL_GPIO_WritePin(GPIOH, GPIO_PIN_6, GPIO_PIN_RESET); // Set = Receive connect
+}
+
+void DeInit_BoardVersionInput(void)
+{
+	HAL_GPIO_DeInit(GPIOH, GPIO_PIN_6);
 }
 
 void PTT_Out_Set(void)
@@ -858,6 +877,45 @@ void PTT_Out_RST_Clr(void)
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, GPIO_PIN_SET);
 }
 
+void RLY_Select_20to40(void)
+{
+	HAL_GPIO_WritePin(GPIOI, GPIO_PIN_3, GPIO_PIN_SET);
+}
+
+void RLY_Select_10to17(void)
+{
+	HAL_GPIO_WritePin(GPIOI, GPIO_PIN_3, GPIO_PIN_RESET);
+}
+
+static void Init_BandSwitchOutput(void)
+{
+	GPIO_InitTypeDef gpio_init_structure;
+
+	gpio_init_structure.Pin = GPIO_PIN_3; // D7  RLY
+	gpio_init_structure.Mode = GPIO_MODE_OUTPUT_OD;
+	gpio_init_structure.Pull = GPIO_PULLUP;
+	gpio_init_structure.Speed = GPIO_SPEED_HIGH;
+
+	HAL_GPIO_Init(GPIOI, &gpio_init_structure);
+
+	HAL_GPIO_WritePin(GPIOI, GPIO_PIN_3, GPIO_PIN_RESET);
+}
+
+void Check_Board_Version(void)
+{
+	Band_Minimum = _20M;
+
+	// GPIO Pin 6 is grounded for new model
+	if (HAL_GPIO_ReadPin(GPIOH, GPIO_PIN_6) == 0)
+	{
+		Init_BandSwitchOutput();
+
+		Band_Minimum = _40M;
+	}
+
+	Options_SetMinimum(Band_Minimum);
+}
+
 void set_codec_input_gain(void)
 {
 	Set_PGA_Gain(AGC_Gain);
@@ -867,7 +925,6 @@ void set_codec_input_gain(void)
 
 void receive_sequence(void)
 {
-
 	PTT_Out_Set(); // set output high to connect receiver to antenna
 	HAL_Delay(10);
 	sButtonData[3].state = 0;
@@ -876,7 +933,6 @@ void receive_sequence(void)
 
 void xmit_sequence(void)
 {
-
 	PTT_Out_RST_Clr(); // set output low to disconnect receiver from antenna
 	HAL_Delay(10);
 	sButtonData[3].state = 1;
@@ -887,7 +943,6 @@ const uint64_t F_boot = 11229600000ULL;
 
 void start_Si5351(void)
 {
-
 	init(SI5351_CRYSTAL_LOAD_0PF, SI5351_XTAL_FREQ, 0);
 	drive_strength(SI5351_CLK0, SI5351_DRIVE_8MA);
 	drive_strength(SI5351_CLK1, SI5351_DRIVE_2MA);

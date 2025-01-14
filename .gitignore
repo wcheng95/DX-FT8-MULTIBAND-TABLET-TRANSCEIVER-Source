@@ -1,2 +1,9 @@
 Debug/
 Debug/*
+.cproject
+.settings/
+.settings/*
+.metadata/
+.metadata/*
+.cproject
+.settings/language.settings.xml
