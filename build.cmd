@@ -6,7 +6,7 @@ del *.d
 del *.su
 del objects.list
 
-arm-none-eabi-gcc -mcpu=cortex-m7 -g3 -c -x assembler-with-cpp -Wall -MMD -MP --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb Startup\startup_stm32f746xx.s
+arm-none-eabi-gcc -mcpu=cortex-m7 -g3 -c -x assembler-with-cpp -Wall -MMD -MP --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb Drivers/CMSIS/Device/ST/STM32F7xx/Source/Templates/gcc/startup_stm32f746xx.s
 
 arm-none-eabi-gcc Drivers\BSP\exc7200\exc7200.c -IDrivers\BSP\exc7200\ -mcpu=cortex-m7 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F746xx -DUSE_STM32746G_DISCO -DUSE_IOEXPANDER -c -IInc -IDrivers\CMSIS\Include -IDrivers\CMSIS\Device\ST\STM32F7xx\Include -IDrivers\STM32F7xx_HAL_Driver\Inc -IDrivers\BSP\STM32746G-Discovery -IDrivers\BSP\Common -IUtilities\Log -IUtilities\Fonts -IUtilities\CPU -Os -ffunction-sections -Wall -fstack-usage -MMD -MP --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -Wall
 arm-none-eabi-gcc Drivers\BSP\ft5336\ft5336.c -IDrivers\BSP\ft5336\ -mcpu=cortex-m7 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F746xx -DUSE_STM32746G_DISCO -DUSE_IOEXPANDER -c -IInc -IDrivers\CMSIS\Include -IDrivers\CMSIS\Device\ST\STM32F7xx\Include -IDrivers\STM32F7xx_HAL_Driver\Inc -IDrivers\BSP\STM32746G-Discovery -IDrivers\BSP\Common -IUtilities\Log -IUtilities\Fonts -IUtilities\CPU -Os -ffunction-sections -Wall -fstack-usage -MMD -MP --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -Wall
