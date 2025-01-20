@@ -7,3 +7,5 @@ Debug/*
 .metadata/*
 .cproject
 .settings/language.settings.xml
+STM32746G_DISCOVERY.*
+
