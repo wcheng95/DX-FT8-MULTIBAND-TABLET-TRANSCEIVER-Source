@@ -174,6 +174,7 @@ void display_messages(int decoded_messages)
 {
 	const char CQ[] = "CQ";
 
+
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
 	BSP_LCD_FillRect(0, FFT_H, 240, 200);
 	BSP_LCD_SetFont(&Font16);
@@ -185,12 +186,19 @@ void display_messages(int decoded_messages)
 		const char *field3 = new_decoded[i].field3;
 
 		// TODO display_message.message is 20 characters but 40 required.
-		sprintf(display[i].message, "%s %s %s", field1, field2, field3);
 
 		if (strcmp(CQ, field1) == 0)
+
+		{
+			sprintf(display[i].message, "%s %s %s %2i", field1, field2, field3, new_decoded[i].snr);
 			display[i].text_color = 1;
+		}
 		else
+		{
+			sprintf(display[i].message, "%s %s %s", field1, field2, field3);
 			display[i].text_color = 0;
+		}
+
 	}
 
 	for (int j = 0; j < decoded_messages && j < message_limit; j++)
