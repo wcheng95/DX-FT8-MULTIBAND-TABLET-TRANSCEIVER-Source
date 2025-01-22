@@ -1,5 +1,5 @@
 setlocal
-set PATH=D:\Links\platformio\packages\toolchain-gccarmnoneeabi\bin\;%PATH%
+set PATH=%HOMEDRIVE%%HOMEPATH%\.platformio\packages\toolchain-gccarmnoneeabi\bin\;%PATH%
 
 del *.o
 
