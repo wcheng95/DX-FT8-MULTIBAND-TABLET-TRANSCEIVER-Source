@@ -30,7 +30,6 @@ typedef struct
     char target[7];
     int slot;
     int RR73;
-
 } Decode;
 
 typedef struct
@@ -41,7 +40,6 @@ typedef struct
 
 typedef struct
 {
-
     int number_times_called;
     char call[14];
     char locator[7];
@@ -51,7 +49,7 @@ typedef struct
 
 } Calling_Station;
 
-int Check_Calling_Stations(int num_decoded, int reply_state);
+int Check_Calling_Stations(int num_decoded);
 void Check_CQ_Stations(int num_decoded);
 void display_messages(int decoded_messages);
 void process_selected_Station(int stations_decoded, int TouchIndex);

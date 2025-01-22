@@ -943,7 +943,7 @@ const uint64_t F_boot = 11229600000ULL;
 
 void start_Si5351(void)
 {
-	init(SI5351_CRYSTAL_LOAD_0PF, SI5351_XTAL_FREQ, 0);
+	init(SI5351_CRYSTAL_LOAD_0PF, 0);
 	drive_strength(SI5351_CLK0, SI5351_DRIVE_8MA);
 	drive_strength(SI5351_CLK1, SI5351_DRIVE_2MA);
 	drive_strength(SI5351_CLK2, SI5351_DRIVE_2MA);

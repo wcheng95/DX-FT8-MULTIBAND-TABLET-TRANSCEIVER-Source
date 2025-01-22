@@ -15,8 +15,7 @@ extern int RSL_sent;
 extern int QSO_xmit_count;
 extern int RR73_sent;
 
-
-void service_QSO_mode(int decoded_signals, int message_touch);
+void service_QSO_mode(int decoded_signals);
 void service_Beacon_mode(int decoded_signals);
 
 void setup_to_transmit_on_next_DSP_Flag(void);

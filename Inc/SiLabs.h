@@ -281,7 +281,7 @@ typedef struct {
 
 } Si5351IntStatus;
 
-void init(uint8_t, uint32_t, int32_t);
+void init(uint8_t, int32_t);
 void reset(void);
 uint8_t set_freq(uint64_t, enum si5351_clock);
 uint8_t set_freq_manual(uint64_t, uint64_t, enum si5351_clock);

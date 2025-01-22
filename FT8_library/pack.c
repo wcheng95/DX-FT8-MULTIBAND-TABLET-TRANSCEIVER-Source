@@ -99,7 +99,7 @@ _Bool false = 0;
 // Check if a string could be a valid standard callsign or a valid
 // compound callsign.
 // Return base call "bc" and a logical "cok" indicator.
-_Bool chkcall(const char *call, char *bc) {
+_Bool chkcall(const char *call) {
 	int length = strlen(call);   // n1=len_trim(w)
 	if (length > 11)
 		return false;

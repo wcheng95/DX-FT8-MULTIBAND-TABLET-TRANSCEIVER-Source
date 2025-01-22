@@ -2,7 +2,6 @@ setlocal
 set PATH=D:\Links\platformio\packages\toolchain-gccarmnoneeabi\bin\;%PATH%
 
 del *.o
-del Katy.list
 
 arm-none-eabi-gcc -mcpu=cortex-m7 -g3 -c -Wall -Wextra -x assembler-with-cpp --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb Drivers/CMSIS/Device/ST/STM32F7xx/Source/Templates/gcc/startup_stm32f746xx.s
 
@@ -142,9 +141,7 @@ arm-none-eabi-gcc Src\traffic_manager.c -IFT8_library -IUtilities -IDrivers\BSP\
 
 arm-none-eabi-gcc Utilities\lcd_log.c -IDrivers\BSP\STM32746G_DISCOVERY -IDrivers\BSP\rk043fn48h\ -mcpu=cortex-m7 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F746xx -DUSE_STM32746G_DISCO -DUSE_IOEXPANDER -c -IInc -IDrivers\CMSIS\Include -IDrivers\CMSIS\Device\ST\STM32F7xx\Include -IDrivers\STM32F7xx_HAL_Driver\Inc -IDrivers\BSP\STM32746G-Discovery -IDrivers\BSP\Common -IUtilities\Log -IUtilities\Fonts -IUtilities\CPU -Os -ffunction-sections  --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -Wall -Wextra
 
-dir *.o /w/b > Katy.list
-arm-none-eabi-gcc -o "Katy.elf" @"Katy.list" -Wall -Wextra -mcpu=cortex-m7 -T"STM32F746NGHx_FLASH.ld" --specs=nosys.specs -Wl,-Map="Katy.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-del Katy.list
+arm-none-eabi-gcc -o "Katy.elf" *.o -Wall -Wextra -mcpu=cortex-m7 -T"STM32F746NGHx_FLASH.ld" --specs=nosys.specs -Wl,-Map="Katy.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 
 arm-none-eabi-size Katy.elf 
 arm-none-eabi-objdump -h -S Katy.elf > "Katy.list"

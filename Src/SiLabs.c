@@ -53,21 +53,7 @@ bool clk_first_set[8];
 /********************/
 /* Public functions */
 /********************/
-
-uint8_t i2c_bus_addr;
-
-void Si5351_Si5351(uint8_t i2c_addr)
-
-{
-	i2c_bus_addr = SI5351_BUS_BASE_ADDR;
-	xtal_freq[0] = SI5351_XTAL_FREQ;
-	// Start by using XO ref osc as default for each PLL
-	plla_ref_osc = SI5351_PLL_INPUT_XO;
-	pllb_ref_osc = SI5351_PLL_INPUT_XO;
-	clkin_div = SI5351_CLKIN_DIV_1;
-}
-
-void init(uint8_t xtal_load_c, uint32_t xo_freq, int32_t corr) {
+void init(uint8_t xtal_load_c, int32_t corr) {
 
 	xtal_freq[0] = SI5351_XTAL_FREQ;
 
@@ -935,7 +921,7 @@ void set_clock_disable(enum si5351_clock clk,
 		enum si5351_clock_disable dis_state) {
 	uint8_t reg_val, reg;
 
-	if (clk >= SI5351_CLK0 && clk <= SI5351_CLK3) {
+	if (clk <= SI5351_CLK3) {
 		reg = SI5351_CLK3_0_DISABLE_STATE;
 	} else if (clk >= SI5351_CLK4 && clk <= SI5351_CLK7) {
 		reg = SI5351_CLK7_4_DISABLE_STATE;
@@ -944,7 +930,7 @@ void set_clock_disable(enum si5351_clock clk,
 
 	reg_val = si5351_read(reg);
 
-	if (clk >= SI5351_CLK0 && clk <= SI5351_CLK3) {
+	if (clk <= SI5351_CLK3) {
 		reg_val &= ~(0b11 << (clk * 2));
 		reg_val |= dis_state << (clk * 2);
 	} else if (clk >= SI5351_CLK4 && clk <= SI5351_CLK7) {

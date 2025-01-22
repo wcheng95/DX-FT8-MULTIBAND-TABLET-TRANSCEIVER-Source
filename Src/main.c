@@ -206,7 +206,7 @@ int main(void)
 				if (Beacon_On == 1)
 					service_Beacon_mode(master_decoded);
 				if (Beacon_On == 0)
-					service_QSO_mode(master_decoded, 0);
+					service_QSO_mode(master_decoded);
 			}
 
 			decode_flag = 0;
