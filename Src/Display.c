@@ -21,7 +21,6 @@ char rtc_time_string[9];
 int decode_flag;
 int FT8_Touch_Flag;
 
-const int WF_Line0 = FFT_H - 1;
 const int log_start = 240;
 const int log_width = 230;
 
@@ -266,7 +265,6 @@ void Process_Touch(void)
 
 uint16_t FFT_Touch(void)
 {
-
 	if ((valx > FFT_X && valx < FFT_X + FFT_W) && (valy > FFT_Y && valy < 30))
 		return 1;
 	else
@@ -302,64 +300,66 @@ int FT8_Touch(void)
 		return 0;
 }
 
-int null_count, FFT_Line_Delay;
+const int marker_line_colour_index = 15;
+const int max_noise_data_count = 3;
+const int max_noise_free_datasets_count = 3;
+
+static int noise_free_datasets_count = 0;
 
 void Display_WF(void)
 {
-	if (ft8_marker == 1)
+	const int last_line_offset = FFT_W * (FFT_H - 1);
+
+	// shift data in memory by one time step (FFT_W)
+	memmove(WF_Bfr, &WF_Bfr[FFT_W], last_line_offset);
+
+	// set the new data in the last line unless a marker line is to be drawn
+	for (int x = 0; x < FFT_W; x++)
 	{
-		for (int x = 0; x < FFT_W; x++)
-		*(&WF_Bfr[0] + (FFT_W * WF_Line0) + x) = 15;
-		ft8_marker = 0;
-	}
-	else
-	{
-		for (int x = 0; x < FFT_W; x++)
-		{
-			*(&WF_Bfr[0] + (FFT_W * WF_Line0) + x) = FFT_Buffer[x + ft8_min_bin];
-		}
+		WF_Bfr[last_line_offset + x] = (ft8_marker) ? marker_line_colour_index : FFT_Buffer[x + ft8_min_bin];
 	}
 
-	// shift data in memory by one time stepft8_buffer
-	for (int y = 0; y < WF_Line0 - 1; y++)
-	{
-		memcpy(&WF_Bfr[0] + (FFT_W * y), &WF_Bfr[0] + (FFT_W * (y + 1)), FFT_W);
-	}
-
+	// draw the waterfall
+	uint8_t* ptr = WF_Bfr;
 	for (int y = 0; y < FFT_H; y++)
 	{
 		for (int x = 0; x < FFT_W; x++)
 		{
-			BSP_LCD_DrawPixel(x, y, WFPalette[(*(&WF_Bfr[0] + y * FFT_W + x))]);
+			BSP_LCD_DrawPixel(x, y, WFPalette[*ptr++]);
 		}
 	}
 
-	if (Auto_Sync)
+	if (!ft8_marker && Auto_Sync)
 	{
+		// count the number of noise items seen in the current data
+		int noise_data_count = 0;
+		ptr = &WF_Bfr[last_line_offset];
 		for (int x = 0; x < FFT_W; x++)
 		{
-			if (((*(&WF_Bfr[0] + 39 * FFT_W + x)) > 0) && ++null_count >= 3)
-			{
+			if ((*ptr++ > 0) && (++noise_data_count >= max_noise_data_count))
 				break;
-			}
 		}
 
-		if (null_count < 3)
+		// if less than the maximum noise items in the current data
+		if (noise_data_count < max_noise_data_count)
 		{
-			FFT_Line_Delay++;
-
-			if (FFT_Line_Delay >= 2)
+			// if sufficient noise free data sets are seen it's time to synchronise
+			if (++noise_free_datasets_count >= max_noise_free_datasets_count)
 			{
 				FT8_Sync();
 				Auto_Sync = 0;
-				FFT_Line_Delay = 0;
+				noise_free_datasets_count = 0;
 				sButtonData[5].state = 0;
 				drawButton(5);
 			}
 		}
-
-		null_count = 0;
+		else
+		{
+			noise_free_datasets_count = 0;
+		}
 	}
+
+	ft8_marker = 0;
 
 	BSP_LCD_SetTextColor(LCD_COLOR_RED);
 	BSP_LCD_DrawVLine(FFT_X + cursor, 0, FFT_H - 1);
