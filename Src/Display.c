@@ -14,18 +14,7 @@
 #define FFT_Y 1
 #define FFT_W (ft8_buffer - ft8_min_bin)
 
-#define FT8_X 48
-#define FT8_Y 93
-#define FT8_W ft8_buffer
-
-#define wf_offset 0
-
-TS_StateTypeDef TS_State = {0};
-
-#define LEFT_MODE 3
-
 int FT_8_TouchIndex;
-int FT_8_MessageIndex;
 
 uint16_t cursor;
 char rtc_date_string[9];
@@ -33,27 +22,20 @@ char rtc_time_string[9];
 int decode_flag;
 int FT8_Touch_Flag;
 
-int WF_Line0;
-int WF_Count = 0;
-uint8_t *pWFBfr;
+int WF_Line0 = FFT_H - 1;
 
-int log_start = 240;
-int log_width = 230;
+const int log_start = 240;
+const int log_width = 230;
 
-uint8_t WF_Bfr[FFT_H * (ft8_buffer - ft8_min_bin)];
+uint8_t WF_Bfr[FFT_H * FFT_W];
 
-uint32_t cursor_line[FFT_W];
-
-int power_waterfall_top = 94;
 uint16_t valx, valy;
-uint8_t test;
 int count;
-double Touch_Frequency;
 
 char current_QSO_receive_message[];
 char current_QSO_xmit_message[];
 
-int max_log_messages = 8;
+const int max_log_messages = 8;
 display_message log_messages[8];
 
 void update_log_display(int mode)
@@ -87,7 +69,7 @@ void update_log_display(int mode)
 
 		if (log_messages[i].text_color == 0)
 			BSP_LCD_SetTextColor(LCD_COLOR_RED);
-		if (log_messages[i].text_color == 1)
+		else if (log_messages[i].text_color == 1)
 			BSP_LCD_SetTextColor(LCD_COLOR_YELLOW);
 
 		BSP_LCD_DisplayStringAt(log_start, 40 + i * 20,
@@ -199,7 +181,7 @@ void show_UTC_time(uint16_t x, uint16_t y, int utc_hours, int utc_minutes,
 
 void show_Real_Date(uint16_t x, uint16_t y, int date, int month, int year)
 {
-	sprintf(rtc_date_string, "%02i:%02i:%02i", date, month, year);
+	sprintf(rtc_date_string, "%02i/%02i/%02i", date, month, year);
 	BSP_LCD_SetFont(&Font16);
 	BSP_LCD_SetTextColor(LCD_COLOR_GREEN);
 	BSP_LCD_DisplayStringAt(x, y, (const uint8_t *)rtc_date_string, LEFT_MODE);
@@ -251,12 +233,14 @@ void Set_Cursor_Frequency(void)
 
 void Process_Touch(void)
 {
+	TS_StateTypeDef TS_State;
+
 	if (!Tune_On && !xmit_flag && !Beacon_On)
 		sButtonData[5].state = 0;
 	else
 		sButtonData[5].state = 1;
 
-	test = BSP_TS_GetState(&TS_State);
+	BSP_TS_GetState(&TS_State);
 
 	if (TS_State.touchDetected > 0)
 	{
@@ -303,16 +287,8 @@ int FT8_Touch(void)
 
 		return 1;
 	}
-
 	else
 		return 0;
-}
-
-void Init_Waterfall(void)
-{
-	pWFBfr = &WF_Bfr[0];
-	WF_Count = 0;
-	WF_Line0 = FFT_H - 1;
 }
 
 int null_count, FFT_Line_Delay;
@@ -321,43 +297,40 @@ void Display_WF(void)
 {
 	if (ft8_marker == 1)
 	{
-
-		for (int x = 0; x < (FFT_W); x++)
-			*(pWFBfr + (FFT_W * WF_Line0) + x) = 15;
+		for (int x = 0; x < FFT_W; x++)
+		*(&WF_Bfr[0] + (FFT_W * WF_Line0) + x) = 15;
 		ft8_marker = 0;
 	}
 	else
 	{
 		for (int x = 0; x < FFT_W; x++)
 		{
-			*(pWFBfr + (FFT_W * WF_Line0) + x) = FFT_Buffer[x + ft8_min_bin];
+			*(&WF_Bfr[0] + (FFT_W * WF_Line0) + x) = FFT_Buffer[x + ft8_min_bin];
 		}
 	}
 
 	// shift data in memory by one time stepft8_buffer
-	for (int y = 0; y < WF_Line0; y++)
+	for (int y = 0; y < WF_Line0 - 1; y++)
 	{
-
-		memcpy(WF_Bfr + (FFT_W * y), WF_Bfr + (FFT_W * (y + 1)), FFT_W);
+		memcpy(&WF_Bfr[0] + (FFT_W * y), &WF_Bfr[0] + (FFT_W * (y + 1)), FFT_W);
 	}
 
 	for (int y = 0; y < FFT_H; y++)
 	{
-
-		for (int x = 0; x < ft8_buffer - ft8_min_bin; x++)
+		for (int x = 0; x < FFT_W; x++)
 		{
-
-			BSP_LCD_DrawPixel(x, y, WFPalette[(*(pWFBfr + y * FFT_W + x))]);
+			BSP_LCD_DrawPixel(x, y, WFPalette[(*(&WF_Bfr[0] + y * FFT_W + x))]);
 		}
 	}
 
 	if (Auto_Sync)
 	{
-		for (int x = 0; x < ft8_buffer - ft8_min_bin; x++)
+		for (int x = 0; x < FFT_W; x++)
 		{
-
-			if ((*(pWFBfr + 39 * FFT_W + x)) > 0)
-				null_count++;
+			if (((*(&WF_Bfr[0] + 39 * FFT_W + x)) > 0) && ++null_count >= 3)
+			{
+				break;
+			}
 		}
 
 		if (null_count < 3)
@@ -378,5 +351,5 @@ void Display_WF(void)
 	}
 
 	BSP_LCD_SetTextColor(LCD_COLOR_RED);
-	BSP_LCD_DrawLine(FFT_X + cursor, FFT_H - 1, FFT_X + cursor, 0);
+	BSP_LCD_DrawVLine(FFT_X + cursor, 0, FFT_H - 1);
 }

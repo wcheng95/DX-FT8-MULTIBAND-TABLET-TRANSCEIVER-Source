@@ -185,8 +185,6 @@ void display_messages(int decoded_messages)
 		const char *field2 = new_decoded[i].field2;
 		const char *field3 = new_decoded[i].field3;
 
-		// TODO display_message.message is 20 characters but 40 required.
-
 		if (strcmp(CQ, field1) == 0)
 
 		{
@@ -313,6 +311,7 @@ int Check_Calling_Stations(int num_decoded)
 
 				if (Beacon_On == 1)
 					update_Beacon_log_display(0);
+				else
 				if (Beacon_On == 0)
 					update_log_display(0);
 
@@ -347,6 +346,7 @@ int Check_Calling_Stations(int num_decoded)
 
 				if (Beacon_On == 1)
 					update_Beacon_log_display(0);
+				else
 				if (Beacon_On == 0)
 					update_log_display(0);
 

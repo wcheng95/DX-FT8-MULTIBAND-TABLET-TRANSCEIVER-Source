@@ -52,8 +52,6 @@ uint16_t FFT_Touch(void);
 
 int FT8_Touch(void);
 
-void Init_Waterfall(void);
-
 void Display_WF(void);
 
 void Set_Cursor_Frequency(void);
