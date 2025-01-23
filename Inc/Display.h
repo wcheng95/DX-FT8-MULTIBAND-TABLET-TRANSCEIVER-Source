@@ -21,10 +21,8 @@ extern char rtc_date_string[9];
 extern char rtc_time_string[9];
 extern int decode_flag;
 extern int FT8_Touch_Flag;
-extern int FT8_Message_Touch;
 
 extern int QSO_Xmit_Touch;
-extern int Xmit_QSO_Message(void);
 
 extern char current_QSO_receive_message[40];
 extern char current_Beacon_receive_message[40];
@@ -63,5 +61,7 @@ void clear_log_messages(void);
 void clear_Beacon_log_messages(void);
 
 void update_Beacon_log_display(int mode);
+
+uint16_t testButton(uint16_t x, uint16_t y, uint16_t w, uint16_t h);
 
 #endif /* DISPLAY_H_ */

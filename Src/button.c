@@ -751,20 +751,6 @@ void executeCalibrationButton(uint16_t index)
 	}
 }
 
-uint16_t testButton(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
-{
-	y = y + 15; // compensate for draw offset
-
-	if ((valx < x + w && valx > x) && (valy > y && valy < y + h))
-	{
-		return 1;
-	}
-	else
-	{
-		return 0;
-	}
-}
-
 void setup_Cal_Display(void)
 {
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);

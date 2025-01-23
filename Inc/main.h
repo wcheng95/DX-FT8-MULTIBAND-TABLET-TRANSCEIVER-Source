@@ -7,7 +7,6 @@
 #include "stdio.h"
 
 #include "stm32746g_discovery.h"
-#include "lcd_log.h"
 #include "stm32f7xx_hal.h"
 
 void HAL_Delay(uint32_t Delay);

@@ -86,8 +86,6 @@ extern int AGC_Gain;
 extern int ADC_DVC_Gain;
 extern int ADC_DVC_Off;
 
-uint16_t testButton(uint16_t x, uint16_t y, uint16_t w, uint16_t h);
-
 void drawButton(uint16_t i);
 void drawMenu(uint16_t i);
 void checkButton(void);

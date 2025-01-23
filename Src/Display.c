@@ -7,7 +7,6 @@
 #include "main.h"
 #include "stdio.h"
 #include "decode_ft8.h"
-
 #include "WF_Table.h"
 
 #define FFT_X 0
@@ -22,15 +21,11 @@ char rtc_time_string[9];
 int decode_flag;
 int FT8_Touch_Flag;
 
-int WF_Line0 = FFT_H - 1;
-
+const int WF_Line0 = FFT_H - 1;
 const int log_start = 240;
 const int log_width = 230;
 
-uint8_t WF_Bfr[FFT_H * FFT_W];
-
-uint16_t valx, valy;
-int count;
+static uint8_t WF_Bfr[FFT_H * FFT_W];
 
 char current_QSO_receive_message[];
 char current_QSO_xmit_message[];
@@ -231,6 +226,8 @@ void Set_Cursor_Frequency(void)
 	NCO_Frequency = (double)((float)cursor * FFT_Resolution + ft8_min_freq);
 }
 
+uint16_t valx, valy;
+
 void Process_Touch(void)
 {
 	TS_StateTypeDef TS_State;
@@ -274,6 +271,20 @@ uint16_t FFT_Touch(void)
 		return 1;
 	else
 		return 0;
+}
+
+uint16_t testButton(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
+{
+	y = y + 15; // compensate for draw offset
+
+	if ((valx < x + w && valx > x) && (valy > y && valy < y + h))
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
 }
 
 int FT8_Touch(void)
