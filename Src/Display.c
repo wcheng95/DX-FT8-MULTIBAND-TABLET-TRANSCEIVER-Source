@@ -322,7 +322,7 @@ void Display_WF(void)
 	{
 		for (int x = 0; x < FFT_W; x++)
 		{
-			const uint8_t pixel = *ptr++ & 15;
+			const uint8_t pixel = *ptr++ >> 4;
 			// pixels with value 0 and 1 are both black
 			if (pixel > 1)
 				BSP_LCD_DrawPixel(x, y, WFPalette[pixel]);
