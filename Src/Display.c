@@ -251,6 +251,8 @@ void Process_Touch(void)
 		if (FFT_Touch() == 1)
 		{
 			cursor = (valx - FFT_X);
+			if (cursor > FFT_W - 8)
+				cursor = FFT_W - 8;
 			NCO_Frequency = (double)(cursor + ft8_min_bin) * FFT_Resolution;
 			show_variable(400, 25, (int)NCO_Frequency);
 		}
@@ -295,30 +297,30 @@ int FT8_Touch(void)
 	return 0;
 }
 
-const int marker_line_colour_index = 15;
-const int max_noise_data_count = 3;
-const int max_noise_free_datasets_count = 3;
+const int marker_line_colour_index = 16; // GRAY index in WFPalette
+const int max_noise_count = 3;
+const int max_noise_free_sets_count = 3;
 
-static int noise_free_datasets_count = 0;
+static int noise_free_sets_count = 0;
 
 void Display_WF(void)
 {
-	const int last_line_offset = FFT_W * (FFT_H - 1);
+	const int byte_count_to_last_line = FFT_W * (FFT_H - 1);
 
 	// shift data in memory by one time step (FFT_W)
-	memmove(WF_Bfr, &WF_Bfr[FFT_W], last_line_offset);
+	memmove(WF_Bfr, &WF_Bfr[FFT_W], byte_count_to_last_line);
 
 	// set the new data in the last line unless a marker line is to be drawn
 	for (int x = 0; x < FFT_W; x++)
 	{
-		WF_Bfr[last_line_offset + x] = (ft8_marker) ? marker_line_colour_index : FFT_Buffer[x + ft8_min_bin];
+		WF_Bfr[byte_count_to_last_line + x] = (ft8_marker) ? marker_line_colour_index : FFT_Buffer[x + ft8_min_bin];
 	}
 
 	// draw the waterfall
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
 	BSP_LCD_FillRect(0, 0, FFT_W, FFT_H);
 	// Draw from the bottom to the top
-	uint8_t* ptr = &WF_Bfr[last_line_offset];
+	uint8_t* ptr = &WF_Bfr[byte_count_to_last_line];
 	for (int y = FFT_H - 1; y >= 0; y--)
 	{
 		for (int x = 0; x < FFT_W; x++)
@@ -326,47 +328,43 @@ void Display_WF(void)
 			uint8_t pixel = *ptr++;
 			// Pixel values 0 and 1 are black.
 			if (pixel > 1)
-				BSP_LCD_DrawPixel(x, y, WFPalette[pixel]);
+				BSP_LCD_DrawPixel(x, y, WFPalette[pixel-2]);
 		}
 
 		ptr -= (FFT_W * 2);
 		
-		// do not display the transmit frequency bounds when transmitting
-		if (!Xmit_DSP_counter)
-		{
-			BSP_LCD_DrawPixel(cursor, y, LCD_COLOR_RED);
-			// Each FFT datum is 6.25hz, the transmit bandwidth is 50Hz (= 8 pixels)
-			BSP_LCD_DrawPixel(cursor + 8, y, LCD_COLOR_RED);
-		}
+		BSP_LCD_DrawPixel(cursor, y, LCD_COLOR_RED);
+		// Each FFT datum is 6.25hz, the transmit bandwidth is 50Hz (= 8 pixels)
+		BSP_LCD_DrawPixel(cursor + 8, y, LCD_COLOR_RED);
 	}
 
 	if (!ft8_marker && Auto_Sync)
 	{
-		// count the number of noise items seen in the current data
-		int noise_data_count = 0;
-		ptr = &WF_Bfr[last_line_offset];
+		// count the amount of noise seen in the FFT
+		int noise_count = 0;
+		ptr = &WF_Bfr[byte_count_to_last_line];
 		for (int x = 0; x < FFT_W; x++)
 		{
-			if ((*ptr++ > 0) && (++noise_data_count >= max_noise_data_count))
+			if ((*ptr++ > 0) && (++noise_count >= max_noise_count))
 				break;
 		}
 
-		// if less than the maximum noise items in the current data
-		if (noise_data_count < max_noise_data_count)
+		// if less than the maximum noise count in the FFT
+		if (noise_count < max_noise_count)
 		{
-			// if sufficient noise free data sets are seen it's time to synchronise
-			if (++noise_free_datasets_count >= max_noise_free_datasets_count)
+			// if sufficient noise free FFT data is seen it's time to synchronise
+			if (++noise_free_sets_count >= max_noise_free_sets_count)
 			{
 				FT8_Sync();
 				Auto_Sync = 0;
-				noise_free_datasets_count = 0;
+				noise_free_sets_count = 0;
 				sButtonData[5].state = 0;
 				drawButton(5);
 			}
 		}
 		else
 		{
-			noise_free_datasets_count = 0;
+			noise_free_sets_count = 0;
 		}
 	}
 

@@ -50,7 +50,6 @@ typedef struct
 } Calling_Station;
 
 int Check_Calling_Stations(int num_decoded);
-void Check_CQ_Stations(int num_decoded);
 void display_messages(int decoded_messages);
 void process_selected_Station(int stations_decoded, int TouchIndex);
 void clear_log_stored_data(void);
