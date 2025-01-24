@@ -1,5 +1,10 @@
+# !/bin/bash
 set -e
-export PATH=~/.platformio/packages/toolchain-gccarmnoneeabi/bin:$PATH
+if [ -f "~/.platformio/packages/toolchain-gccarmnoneeabi/bin/arm-none-eabi-gcc" ]; then
+    export PATH=~/.platformio/packages/toolchain-gccarmnoneeabi/bin:$PATH
+else
+    export PATH=/opt/st/stm32cubeide_1.16.1/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.linux64_1.1.0.202410170702/tools/bin:$PATH
+fi
 
 if [ -f *.o ]; then
     rm *.o

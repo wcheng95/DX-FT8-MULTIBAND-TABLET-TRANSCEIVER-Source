@@ -315,17 +315,15 @@ void Display_WF(void)
 	}
 
 	// draw the waterfall
-	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-	BSP_LCD_FillRect(0, 0, FFT_W, FFT_H);
 	uint8_t* ptr = WF_Bfr;
 	for (int y = 0; y < FFT_H; y++)
 	{
 		for (int x = 0; x < FFT_W; x++)
 		{
-			const uint8_t pixel = *ptr++ >> 4;
-			// pixels with value 0 and 1 are both black
-			if (pixel > 1)
-				BSP_LCD_DrawPixel(x, y, WFPalette[pixel]);
+			uint8_t pixel = *ptr++;
+			if (pixel > 15)
+				pixel = 15;
+			BSP_LCD_DrawPixel(x, y, WFPalette[pixel]);
 		}
 
 		BSP_LCD_DrawPixel(cursor, y, LCD_COLOR_RED);
