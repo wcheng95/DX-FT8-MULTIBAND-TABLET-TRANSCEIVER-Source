@@ -267,8 +267,7 @@ uint16_t FFT_Touch(void)
 {
 	if ((valx > FFT_X && valx < FFT_X + FFT_W) && (valy > FFT_Y && valy < 30))
 		return 1;
-	else
-		return 0;
+	return 0;
 }
 
 uint16_t testButton(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
@@ -279,10 +278,7 @@ uint16_t testButton(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
 	{
 		return 1;
 	}
-	else
-	{
-		return 0;
-	}
+	return 0;
 }
 
 int FT8_Touch(void)
@@ -296,8 +292,7 @@ int FT8_Touch(void)
 
 		return 1;
 	}
-	else
-		return 0;
+	return 0;
 }
 
 const int marker_line_colour_index = 15;
@@ -320,13 +315,22 @@ void Display_WF(void)
 	}
 
 	// draw the waterfall
+	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
+	BSP_LCD_FillRect(0, 0, FFT_W, FFT_H);
 	uint8_t* ptr = WF_Bfr;
 	for (int y = 0; y < FFT_H; y++)
 	{
 		for (int x = 0; x < FFT_W; x++)
 		{
-			BSP_LCD_DrawPixel(x, y, WFPalette[*ptr++]);
+			const uint8_t pixel = *ptr++ & 15;
+			// pixels with value 0 and 1 are both black
+			if (pixel > 1)
+				BSP_LCD_DrawPixel(x, y, WFPalette[pixel]);
 		}
+
+		BSP_LCD_DrawPixel(cursor, y, LCD_COLOR_RED);
+		// Each FFT datum is 6.25hz, the transmit bandwidth is 50Hz (= 8 pixels)
+		BSP_LCD_DrawPixel(cursor + 8, y, LCD_COLOR_RED);
 	}
 
 	if (!ft8_marker && Auto_Sync)
@@ -360,7 +364,4 @@ void Display_WF(void)
 	}
 
 	ft8_marker = 0;
-
-	BSP_LCD_SetTextColor(LCD_COLOR_RED);
-	BSP_LCD_DrawVLine(FFT_X + cursor, 0, FFT_H - 1);
 }
