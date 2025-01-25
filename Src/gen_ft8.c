@@ -189,9 +189,9 @@ void Read_Station_File(void)
 		f_gets(read_buffer, sizeof(read_buffer), &fil);
 
 		Station_Call[0] = 0;
-		call_part = strtok(read_buffer, ":");
+		call_part = strtok(read_buffer, ":\r\n");
 		if (call_part != NULL)
-			locator_part = strtok(NULL, ":");
+			locator_part = strtok(NULL, ":\r\n");
 		if (locator_part != NULL)
 			extra_part = strtok(NULL, ":\r\n");
 		if (call_part != NULL)

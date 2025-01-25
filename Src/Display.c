@@ -302,7 +302,6 @@ void Process_Touch(void)
 	}
 }
 
-const int marker_line_colour_index = 16; // GRAY index in WFPalette
 const int max_noise_count = 3;
 const int max_noise_free_sets_count = 3;
 
@@ -322,18 +321,13 @@ void Display_WF(void)
 	}
 
 	// draw the waterfall
-	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-	BSP_LCD_FillRect(0, 0, FFT_W, FFT_H);
 	// Draw from the bottom to the top
 	uint8_t* ptr = &WF_Bfr[byte_count_to_last_line];
 	for (int y = FFT_H - 1; y >= 0; y--)
 	{
 		for (int x = 0; x < FFT_W; x++)
 		{
-			uint8_t pixel = *ptr++;
-			// Pixel values 0 and 1 are black.
-			if (pixel > 1)
-				BSP_LCD_DrawPixel(x, y, WFPalette[pixel-2]);
+			BSP_LCD_DrawPixel(x, y, WFPalette[*ptr++]);
 		}
 
 		ptr -= (FFT_W * 2);
