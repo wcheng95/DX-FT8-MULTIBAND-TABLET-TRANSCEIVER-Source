@@ -60,7 +60,6 @@ void update_log_display(int mode)
 
 	for (int i = 0; i < max_log_messages; i++)
 	{
-
 		if (log_messages[i].text_color == 0)
 			BSP_LCD_SetTextColor(LCD_COLOR_RED);
 		else if (log_messages[i].text_color == 1)
@@ -225,52 +224,7 @@ void Set_Cursor_Frequency(void)
 	NCO_Frequency = (double)((float)cursor * FFT_Resolution + ft8_min_freq);
 }
 
-uint16_t valx, valy;
-
-void Process_Touch(void)
-{
-	TS_StateTypeDef TS_State;
-
-	if (!Tune_On && !xmit_flag && !Beacon_On)
-		sButtonData[5].state = 0;
-	else
-		sButtonData[5].state = 1;
-
-	BSP_TS_GetState(&TS_State);
-
-	if (TS_State.touchDetected > 0)
-	{
-		valx = (uint16_t)TS_State.touchX[0];
-		valy = (uint16_t)TS_State.touchY[0];
-
-		do
-		{
-			BSP_TS_GetState(&TS_State);
-		} while (TS_State.touchDetected > 0);
-
-		if (FFT_Touch() == 1)
-		{
-			cursor = (valx - FFT_X);
-			if (cursor > FFT_W - 8)
-				cursor = FFT_W - 8;
-			NCO_Frequency = (double)(cursor + ft8_min_bin) * FFT_Resolution;
-			show_variable(400, 25, (int)NCO_Frequency);
-		}
-		else
-		{
-			checkButton();
-		}
-
-		FT8_Touch_Flag = FT8_Touch();
-	}
-}
-
-uint16_t FFT_Touch(void)
-{
-	if ((valx > FFT_X && valx < FFT_X + FFT_W) && (valy > FFT_Y && valy < 30))
-		return 1;
-	return 0;
-}
+static uint16_t valx, valy;
 
 uint16_t testButton(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
 {
@@ -283,18 +237,69 @@ uint16_t testButton(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
 	return 0;
 }
 
-int FT8_Touch(void)
+static uint16_t FFT_Touch()
 {
-	int y_test;
+	if ((valx > FFT_X && valx < FFT_X + FFT_W) && (valy > FFT_Y && valy < 30))
+		return 1;
+	return 0;
+}
+
+static int FT8_Touch(void)
+{
 	if ((valx > 0 && valx < 240) && (valy > 40 && valy < 240))
 	{
-		y_test = valy - 40;
+		int y_test = valy - 40;
 
 		FT_8_TouchIndex = y_test / 20;
 
 		return 1;
 	}
 	return 0;
+}
+
+void Process_Touch(void)
+{
+	static uint8_t touch_detected = 0;
+
+	TS_StateTypeDef TS_State;
+	BSP_TS_GetState(&TS_State);
+
+	if (!Tune_On && !xmit_flag && !Beacon_On)
+		sButtonData[5].state = 0;
+	else
+		sButtonData[5].state = 1;
+
+	if (!touch_detected)
+	{
+		// Display touched?
+		if  (TS_State.touchDetected)
+		{
+			valx = (uint16_t)TS_State.touchX[0];
+			valy = (uint16_t)TS_State.touchY[0];
+
+			FT8_Touch_Flag = FT8_Touch();
+
+			touch_detected = 1;
+		}
+	}
+	// Display touch lifted
+	else if (!TS_State.touchDetected)
+	{
+		touch_detected = 0;
+		// In the FFT area?
+		if (FFT_Touch())
+		{
+			cursor = (valx - FFT_X);
+			if (cursor > FFT_W - 8)
+				cursor = FFT_W - 8;
+			NCO_Frequency = (double)(cursor + ft8_min_bin) * FFT_Resolution;
+			show_variable(400, 25, (int)NCO_Frequency);
+		}
+		else
+		{
+			checkButton();
+		}
+	}
 }
 
 const int marker_line_colour_index = 16; // GRAY index in WFPalette

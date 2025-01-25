@@ -23,7 +23,8 @@ const uint32_t WFPalette[] = {
 		LCD_COLOR_YELLOW,
 		LCD_COLOR_LIGHTYELLOW,
 		LCD_COLOR_WHITE,
-		LCD_COLOR_GRAY};
+		LCD_COLOR_GRAY
+};
 
 #endif /* WF_TABLE_H_ */
 

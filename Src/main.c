@@ -49,24 +49,43 @@
 
 #include "options.h"
 
-#define ARM_MATH_CM7
-
 TIM_HandleTypeDef hTim2;
 uint32_t current_time, start_time, ft8_time;
 
 int master_decoded;
 int QSO_xmit;
 int Xmit_DSP_counter;
-
-int slot_state;
+int slot_state = 0;
 int target_slot;
 int target_freq;
+int slot_number;
 
 /* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);
 static void Error_Handler(void);
 static void CPU_CACHE_Enable(void);
 static void HID_InitApplication(void);
+
+static void update_synchronization(void)
+{
+	current_time = HAL_GetTick();
+	ft8_time = current_time - start_time;
+
+	if (ft8_time % 15000 <= 160 || FT_8_counter > 90)
+	{
+		ft8_flag = 1;
+		FT_8_counter = 0;
+		ft8_marker = 1;
+		decode_flag = 0;
+
+		if (QSO_xmit == 1 && target_slot == slot_state)
+		{
+			setup_to_transmit_on_next_DSP_Flag();
+			update_log_display(1);
+			QSO_xmit = 0;
+		}
+	}
+}
 
 int main(void)
 {
@@ -184,7 +203,6 @@ int main(void)
 
 			if (Tune_On == 1)
 			{
-				display_RealTime(100, 240);
 				display_Real_Date(0, 240);
 			}
 
@@ -193,16 +211,17 @@ int main(void)
 
 		if (decode_flag == 1 && Tune_On == 0 && xmit_flag == 0)
 		{
-			update_slot_status();
+			// toggle the slot state
+			slot_state = (slot_state == 0) ? 1 : 0;
 			clear_decoded_messages();
 
 			master_decoded = ft8_decode();
-
 			if (master_decoded > 0)
 			{
 				display_messages(master_decoded);
 				if (Beacon_On == 1)
 					service_Beacon_mode(master_decoded);
+				else
 				if (Beacon_On == 0)
 					service_QSO_mode(master_decoded);
 			}
@@ -218,37 +237,6 @@ int main(void)
 
 		update_synchronization();
 	}
-}
-
-int slot_state, slot_number;
-
-void update_synchronization(void)
-{
-	current_time = HAL_GetTick();
-	ft8_time = current_time - start_time;
-
-	if (ft8_time % 15000 <= 160 || FT_8_counter > 90)
-	{
-		ft8_flag = 1;
-		FT_8_counter = 0;
-		ft8_marker = 1;
-		decode_flag = 0;
-
-		if (QSO_xmit == 1 && target_slot == slot_state)
-		{
-			setup_to_transmit_on_next_DSP_Flag();
-			update_log_display(1);
-			QSO_xmit = 0;
-		}
-	}
-}
-
-void update_slot_status(void)
-{
-	if (slot_state == 0)
-		slot_state = 1;
-	else
-		slot_state = 0;
 }
 
 /**

@@ -20,16 +20,14 @@ extern uint16_t cursor;
 extern char rtc_date_string[9];
 extern char rtc_time_string[9];
 extern int decode_flag;
-extern int FT8_Touch_Flag;
 
 extern int QSO_Xmit_Touch;
+extern int FT8_Touch_Flag;
 
 extern char current_QSO_receive_message[40];
 extern char current_Beacon_receive_message[40];
 extern char current_Beacon_xmit_message[40];
 extern char current_QSO_xmit_message[40];
-
-extern uint16_t valx, valy;
 
 void show_variable(uint16_t x, uint16_t y, int variable);
 
@@ -45,10 +43,6 @@ void show_Real_Date(uint16_t x, uint16_t y, int date, int month, int year);
 void setup_display(void);
 
 void Process_Touch(void);
-
-uint16_t FFT_Touch(void);
-
-int FT8_Touch(void);
 
 void Display_WF(void);
 

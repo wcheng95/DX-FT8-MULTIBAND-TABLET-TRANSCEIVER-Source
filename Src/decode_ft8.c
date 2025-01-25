@@ -51,6 +51,7 @@ static int num_calls; // number of unique calling stations
 static int message_limit = 10;
 
 int Auto_QSO_State; // chh
+int Target_RSL;
 
 int ft8_decode(void)
 {
@@ -174,7 +175,6 @@ void display_messages(int decoded_messages)
 {
 	const char CQ[] = "CQ";
 
-
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
 	BSP_LCD_FillRect(0, FFT_H, 240, 200);
 	BSP_LCD_SetFont(&Font16);
@@ -186,7 +186,6 @@ void display_messages(int decoded_messages)
 		const char *field3 = new_decoded[i].field3;
 
 		if (strcmp(CQ, field1) == 0)
-
 		{
 			sprintf(display[i].message, "%s %s %s %2i", field1, field2, field3, new_decoded[i].snr);
 			display[i].text_color = 1;
