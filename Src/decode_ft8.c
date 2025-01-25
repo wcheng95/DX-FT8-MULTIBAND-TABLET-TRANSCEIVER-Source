@@ -32,7 +32,7 @@
 const int kLDPC_iterations = 20;
 const int kMax_candidates = 20;
 const int kMax_decoded_messages = 20; // chhh 27 feb
-const int kMax_message_length = 20;
+const unsigned int kMax_message_length = 20;
 const int kMin_score = 40; // Minimum sync score threshold for candidates
 
 static int validate_locator(const char locator[]);
@@ -51,6 +51,7 @@ static int num_calls; // number of unique calling stations
 static int message_limit = 10;
 
 int Auto_QSO_State; // chh
+int Target_RSL;
 
 int ft8_decode(void)
 {
@@ -184,13 +185,17 @@ void display_messages(int decoded_messages)
 		const char *field2 = new_decoded[i].field2;
 		const char *field3 = new_decoded[i].field3;
 
-		// TODO display_message.message is 20 characters but 40 required.
-		sprintf(display[i].message, "%s %s %s", field1, field2, field3);
-
 		if (strcmp(CQ, field1) == 0)
+		{
+			sprintf(display[i].message, "%s %s %s %2i", field1, field2, field3, new_decoded[i].snr);
 			display[i].text_color = 1;
+		}
 		else
+		{
+			sprintf(display[i].message, "%s %s %s", field1, field2, field3);
 			display[i].text_color = 0;
+		}
+
 	}
 
 	for (int j = 0; j < decoded_messages && j < message_limit; j++)
@@ -219,13 +224,13 @@ static int validate_locator(const char locator[])
 	N1 = locator[2] - 48;
 	N2 = locator[3] - 48;
 
-	if (A1 >= 0 && A1 <= 17)
+	if (A1 <= 17)
 		test++;
 	if (A2 > 0 && A2 < 17)
 		test++; // block RR73 Arctic and Antarctica
-	if (N1 >= 0 && N1 <= 9)
+	if (N1 <= 9)
 		test++;
-	if (N2 >= 0 && N2 <= 9)
+	if (N2 <= 9)
 		test++;
 
 	if (test == 4)
@@ -270,9 +275,8 @@ void clear_decoded_messages(void)
 	}
 }
 
-int Check_Calling_Stations(int num_decoded, int reply_state)
+int Check_Calling_Stations(int num_decoded)
 {
-
 	int Beacon_Reply_Status = 0;
 
 	for (int i = 0; i < num_decoded; i++)
@@ -306,6 +310,7 @@ int Check_Calling_Stations(int num_decoded, int reply_state)
 
 				if (Beacon_On == 1)
 					update_Beacon_log_display(0);
+				else
 				if (Beacon_On == 0)
 					update_log_display(0);
 
@@ -340,6 +345,7 @@ int Check_Calling_Stations(int num_decoded, int reply_state)
 
 				if (Beacon_On == 1)
 					update_Beacon_log_display(0);
+				else
 				if (Beacon_On == 0)
 					update_log_display(0);
 

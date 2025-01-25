@@ -26,7 +26,6 @@ extern q15_t out_buff[BUFFERSIZE];
 
 extern uint16_t buff_offset;
 
-//extern float R_lgain;
 extern float x_NCOphzinc;
 
 extern int DSP_Flag;
@@ -43,6 +42,5 @@ void start_audio_I2C(void);
 void start_codec(void);
 
 void I2S2_RX_ProcessBuffer(uint16_t offset);
-void I2S2_FT8_Xmit_ProcessBuffer(uint16_t offset);
 
 #endif /* SDR_AUDIO_H_ */

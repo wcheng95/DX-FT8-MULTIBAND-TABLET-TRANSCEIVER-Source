@@ -22,8 +22,6 @@
 #include "SiLabs.h"
 #include "options.h"
 
-#define FFT_Resolution 6.25 // 8000/2/1280
-
 int Tune_On; // 0 = Receive, 1 = Xmit Tune Signal
 int Beacon_On;
 int Arm_Tune;
@@ -430,24 +428,24 @@ ButtonStruct sButtonData[] = {
 
 }; // end of button definition
 
-void drawButton(uint16_t i)
+void drawButton(uint16_t button)
 {
 	BSP_LCD_SetFont(&Font16);
-	if (sButtonData[i].Active > 0)
+	if (sButtonData[button].Active > 0)
 	{
-		if (sButtonData[i].state == 1)
+		if (sButtonData[button].state == 1)
 			BSP_LCD_SetBackColor(LCD_COLOR_RED);
 		else
 			BSP_LCD_SetBackColor(LCD_COLOR_BLUE);
 
 		BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
 
-		if (sButtonData[i].state == 1)
-			BSP_LCD_DisplayStringAt(sButtonData[i].x, sButtonData[i].y + 15,
-									(const uint8_t *)sButtonData[i].text1, LEFT_MODE);
+		if (sButtonData[button].state == 1)
+			BSP_LCD_DisplayStringAt(sButtonData[button].x, sButtonData[button].y + 15,
+									(const uint8_t *)sButtonData[button].text1, LEFT_MODE);
 		else
-			BSP_LCD_DisplayStringAt(sButtonData[i].x, sButtonData[i].y + 15,
-									(const uint8_t *)sButtonData[i].text0, LEFT_MODE);
+			BSP_LCD_DisplayStringAt(sButtonData[button].x, sButtonData[button].y + 15,
+									(const uint8_t *)sButtonData[button].text0, LEFT_MODE);
 
 		BSP_LCD_SetBackColor(LCD_COLOR_BLACK);
 	}
@@ -455,31 +453,29 @@ void drawButton(uint16_t i)
 
 void checkButton(void)
 {
-	uint16_t i;
-
-	for (i = 0; i < numButtons; i++)
+	for (uint16_t button = 0; button < numButtons; button++)
 	{
-		if (testButton(sButtonData[i].x, sButtonData[i].y, sButtonData[i].w,
-					   sButtonData[i].h) == 1)
+		if (testButton(sButtonData[button].x, sButtonData[button].y, sButtonData[button].w,
+					   sButtonData[button].h) == 1)
 		{
 
-			switch (sButtonData[i].Active)
+			switch (sButtonData[button].Active)
 			{
 			case 0:
 				break;
 
 			case 1:
-				sButtonData[i].state = !sButtonData[i].state;
-				drawButton(i);
-				executeButton(i);
+				sButtonData[button].state = !sButtonData[button].state;
+				drawButton(button);
+				executeButton(button);
 				break;
 
 			case 2:
-				executeButton(i);
+				executeButton(button);
 				break;
 
 			case 3:
-				executeCalibrationButton(i);
+				executeCalibrationButton(button);
 				break;
 			}
 		}
@@ -497,11 +493,20 @@ void SelectFilterBlock()
 	}
 }
 
+static void toggle_button_state(int button)
+{
+	sButtonData[button].state = 1;
+	drawButton(button);
+	HAL_Delay(10);
+	sButtonData[button].state = 0;
+	drawButton(button);
+}
+
 void executeButton(uint16_t index)
 {
 	switch (index)
 	{
-	case 0:
+	case 0: // Reset
 		clear_xmit_messages();
 		terminate_QSO();
 		Auto_QSO_State = 0;
@@ -510,14 +515,10 @@ void executeButton(uint16_t index)
 		clear_log_stored_data();
 		clear_log_messages();
 
-		sButtonData[0].state = 1;
-		drawButton(0);
-		HAL_Delay(10);
-		sButtonData[0].state = 0;
-		drawButton(0);
+		toggle_button_state(0);
 		break;
 
-	case 1:
+	case 1: // Toggle beacon mode
 		if (!sButtonData[1].state)
 		{
 			Beacon_On = 0;
@@ -536,7 +537,7 @@ void executeButton(uint16_t index)
 		}
 		break;
 
-	case 2:
+	case 2: // Toggle tune (setup) mode
 		if (!sButtonData[2].state)
 		{
 			tune_Off_sequence();
@@ -558,14 +559,14 @@ void executeButton(uint16_t index)
 		// no code required, all dependent stuff works off of button state
 		break;
 
-	case 4:
+	case 4: // Toggle QSO TX fix mode
 		if (sButtonData[4].state == 1)
 			QSO_Fix = 1;
 		else
 			QSO_Fix = 0;
 		break;
 
-	case 5:
+	case 5: // Toggle synchonisation mode
 		if (!sButtonData[5].state)
 			Auto_Sync = 0;
 		else
@@ -596,8 +597,9 @@ void executeButton(uint16_t index)
 		break;
 
 	case 9: // Raise Freq
-		if (cursor <= (ft8_buffer - ft8_min_bin - 2))
-		{ // limits highest NCO frequency to 3875 hz
+		if (cursor < (ft8_buffer - ft8_min_bin - 8))
+		{ 
+			// limits highest NCO frequency to (3875 - 50)hz
 			cursor++;
 			NCO_Frequency = (double)(cursor + ft8_min_bin) * FFT_Resolution;
 		}
@@ -635,31 +637,17 @@ void executeButton(uint16_t index)
 
 		SelectFilterBlock();
 
-		sButtonData[13].state = 1;
-		drawButton(13);
-		HAL_Delay(10);
-		sButtonData[13].state = 0;
-		drawButton(13);
+		toggle_button_state(13);
 		break;
 
-	case 14: // Set RTC to Edit
+	case 14: // Edit RTC time
 		set_RTC_to_TimeEdit();
-		HAL_Delay(10);
-		sButtonData[14].state = 1;
-		drawButton(14);
-		HAL_Delay(10);
-		sButtonData[14].state = 0;
-		drawButton(14);
+		toggle_button_state(14);
 		break;
 
-	case 27: // Set RTC to Edit
+	case 27: // Edit RTC date
 		set_RTC_to_DateEdit();
-		HAL_Delay(10);
-		sButtonData[27].state = 1;
-		drawButton(27);
-		HAL_Delay(10);
-		sButtonData[27].state = 0;
-		drawButton(27);
+		toggle_button_state(27);
 		break;
 	}
 }
@@ -750,20 +738,6 @@ void executeCalibrationButton(uint16_t index)
 	}
 }
 
-uint16_t testButton(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
-{
-	y = y + 15; // compensate for draw offset
-
-	if ((valx < x + w && valx > x) && (valy > y && valy < y + h))
-	{
-		return 1;
-	}
-	else
-	{
-		return 0;
-	}
-}
-
 void setup_Cal_Display(void)
 {
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
@@ -772,23 +746,19 @@ void setup_Cal_Display(void)
 	sButtonData[10].Active = 3;
 	sButtonData[11].Active = 3;
 
-	sButtonData[12].Active = 1;
-	sButtonData[13].Active = 1;
-	sButtonData[14].Active = 1;
+	for (int button = 12; button <= 14; ++button)
+		sButtonData[button].Active = 1;
 
-	for (int i = 15; i < 27; i++)
+	for (int button = 15; button < 27; button++)
 	{
-		sButtonData[i].Active = 3;
-		drawButton(i);
+		sButtonData[button].Active = 3;
+		drawButton(button);
 	}
 
 	sButtonData[27].Active = 1;
 
-	drawButton(10);
-	drawButton(11);
-	drawButton(12);
-	drawButton(13);
-	drawButton(14);
+	for (int button = 10; button <= 14; ++button)
+		drawButton(button);
 	drawButton(27);
 
 	show_wide(340, 55, start_freq);
@@ -805,14 +775,14 @@ void erase_Cal_Display(void)
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
 	BSP_LCD_FillRect(0, FFT_H, 480, 201);
 
-	for (int i = 10; i < numButtons; i++)
+	for (int button = 10; button < numButtons; button++)
 	{
-		sButtonData[i].Active = 0;
+		sButtonData[button].Active = 0;
 	}
 
-	sButtonData[12].state = 0;
-	sButtonData[13].state = 0;
-	sButtonData[14].state = 0;
+	for (int button = 12; button <= 14; ++button)
+		sButtonData[button].state = 0;
+
 	sButtonData[27].state = 0;
 }
 
@@ -943,7 +913,7 @@ const uint64_t F_boot = 11229600000ULL;
 
 void start_Si5351(void)
 {
-	init(SI5351_CRYSTAL_LOAD_0PF, SI5351_XTAL_FREQ, 0);
+	init(SI5351_CRYSTAL_LOAD_0PF, 0);
 	drive_strength(SI5351_CLK0, SI5351_DRIVE_8MA);
 	drive_strength(SI5351_CLK1, SI5351_DRIVE_2MA);
 	drive_strength(SI5351_CLK2, SI5351_DRIVE_2MA);

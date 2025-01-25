@@ -9,14 +9,13 @@
 #define DECODE_FT8_H_
 
 extern int Auto_QSO_State;
-extern char Target_Frequency[8]; // Seven character frequency  + /0
 extern char Locator[5];          // four character locator  + /0
 extern char Station_Call[7];     // six character call sign + /0
 extern char Target_Call[7];      // six character call sign + /0
 extern char Target_Locator[5];   // four character locator  + /0
 extern char RSL[5];
-extern int Target_RSL; // four character RSL  + /0
 extern int Station_RSL;
+extern int Target_RSL;
 
 typedef struct
 {
@@ -30,7 +29,6 @@ typedef struct
     char target[7];
     int slot;
     int RR73;
-
 } Decode;
 
 typedef struct
@@ -41,7 +39,6 @@ typedef struct
 
 typedef struct
 {
-
     int number_times_called;
     char call[14];
     char locator[7];
@@ -51,8 +48,7 @@ typedef struct
 
 } Calling_Station;
 
-int Check_Calling_Stations(int num_decoded, int reply_state);
-void Check_CQ_Stations(int num_decoded);
+int Check_Calling_Stations(int num_decoded);
 void display_messages(int decoded_messages);
 void process_selected_Station(int stations_decoded, int TouchIndex);
 void clear_log_stored_data(void);
