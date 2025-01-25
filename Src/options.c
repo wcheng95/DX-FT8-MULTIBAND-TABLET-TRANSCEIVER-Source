@@ -31,7 +31,7 @@ char SDPath[4]; /* SD card logical drive path */
 // Order must match OptionNumber in options.h
 OptionStruct s_optionsData[] = {{
 	/*Name*/ "  Band_Index ", // opt0
-	/*Init*/ 3,  //Set default band to 20 meters for 5 Band Board Protection
+	/*Init*/ _20M,  //Set default band to 20 meters for 5 Band Board Protection
 	/*Min */ 0,
 	/*Max */ 4,
 	/*Rate*/ 1,

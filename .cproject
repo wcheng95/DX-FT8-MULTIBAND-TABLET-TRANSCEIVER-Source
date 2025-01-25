@@ -110,9 +110,6 @@
 							<tool id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.objcopy.symbolsrec.208515853" name="MCU Output Converter Motorola S-rec with symbols" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.objcopy.symbolsrec"/>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.967010804.485051138" name="startup_stm32f746xx.s" rcbsApplicability="disable" resourcePath="Startup/startup_stm32f746xx.s" toolsToInvoke="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.1951434306.583659953">
-						<tool id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.1951434306.583659953" name="MCU GCC Assembler" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.assembler.1951434306"/>
-					</fileInfo>
 					<fileInfo id="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.967010804.745301570" name="lcd_log_conf.h" rcbsApplicability="disable" resourcePath="Inc/lcd_log_conf.h" toolsToInvoke=""/>
 					<sourceEntries>
 						<entry excluding="Startup/startup_stm32f746xx.s|main.c|fft|FT8_library|Drivers|Inc|Src|Middlewares|DSP_CMSIS|Utilities" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>

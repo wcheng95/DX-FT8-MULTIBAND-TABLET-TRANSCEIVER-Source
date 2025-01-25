@@ -86,15 +86,11 @@ extern int AGC_Gain;
 extern int ADC_DVC_Gain;
 extern int ADC_DVC_Off;
 
-uint16_t testButton(uint16_t x, uint16_t y, uint16_t w, uint16_t h);
-
 void drawButton(uint16_t i);
-void drawMenu(uint16_t i);
 void checkButton(void);
 
 void executeButton(uint16_t index);
 void executeCalibrationButton(uint16_t index);
-void Execute_PTT(void);
 void xmit_sequence(void);
 void receive_sequence(void);
 void start_Si5351(void);

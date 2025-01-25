@@ -40,20 +40,20 @@
 
 #include "button.h"
 
-char Target_Frequency[8]; // Seven character frequency  + /0
 char Locator[5];		  // four character locator  + /0
 char Station_Call[7];	  // six character call sign + /0
 char Target_Call[7];	  // six character call sign + /0
 char Target_Locator[5];	  // four character locator  + /0
-int Target_RSL;			  // four character RSL  + /0
 int Station_RSL;
-char CQ_Target_Call[7];
+
+static char Extra_Data[13];
 
 char reply_message[21];
 char reply_message_list[18][8];
 int reply_message_count;
 
-const int display_start = 240;
+const int display_start_x = 240;
+const int display_start_y = 240;
 const int display_width = 230;
 
 static uint8_t isInitialized = 0;
@@ -79,9 +79,9 @@ void set_cq(void)
 
 	BSP_LCD_SetFont(&Font16);
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-	BSP_LCD_DisplayStringAt(display_start, 240, blank, 0x03);
+	BSP_LCD_DisplayStringAt(display_start_x, display_start_y, blank, LEFT_MODE);
 	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-	BSP_LCD_DisplayStringAt(display_start, 240, (const uint8_t *)message, 0x03);
+	BSP_LCD_DisplayStringAt(display_start_x, display_start_y, (const uint8_t *)message, LEFT_MODE);
 }
 
 static int in_range(int num, int min, int max)
@@ -95,7 +95,6 @@ static int in_range(int num, int min, int max)
 
 void set_reply(uint16_t index)
 {
-
 	uint8_t packed[K_BYTES];
 	char RSL[5];
 
@@ -120,9 +119,9 @@ void set_reply(uint16_t index)
 
 	BSP_LCD_SetFont(&Font16);
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-	BSP_LCD_DisplayStringAt(display_start, 240, blank, 0x03);
+	BSP_LCD_DisplayStringAt(display_start_x, display_start_y, blank, LEFT_MODE);
 	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-	BSP_LCD_DisplayStringAt(display_start, 240, (const uint8_t *)reply_message, 0x03);
+	BSP_LCD_DisplayStringAt(display_start_x, display_start_y, (const uint8_t *)reply_message, LEFT_MODE);
 }
 
 static char xmit_messages[3][20];
@@ -139,12 +138,11 @@ void compose_messages(void)
 			QSO_seventy_three);
 
 	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-	BSP_LCD_DisplayStringAt(display_start, 240, (const uint8_t *)xmit_messages[0], 0x03);
+	BSP_LCD_DisplayStringAt(display_start_x, display_start_y, (const uint8_t *)xmit_messages[0], LEFT_MODE);
 }
 
 void que_message(int index)
 {
-
 	uint8_t packed[K_BYTES];
 
 	pack77(xmit_messages[index], packed);
@@ -152,10 +150,10 @@ void que_message(int index)
 
 	BSP_LCD_SetFont(&Font16);
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-	BSP_LCD_DisplayStringAt(display_start, 220, blank, 0x03);
+	BSP_LCD_DisplayStringAt(display_start_x, display_start_y - 20, blank, LEFT_MODE);
 
 	BSP_LCD_SetTextColor(LCD_COLOR_RED);
-	BSP_LCD_DisplayStringAt(display_start, 220, (const uint8_t *)xmit_messages[index], 0x03);
+	BSP_LCD_DisplayStringAt(display_start_x, display_start_y - 20, (const uint8_t *)xmit_messages[index], LEFT_MODE);
 
 	strcpy(current_QSO_xmit_message, xmit_messages[index]);
 
@@ -165,44 +163,44 @@ void que_message(int index)
 
 void clear_qued_message(void)
 {
-
 	BSP_LCD_SetFont(&Font16);
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-	// BSP_LCD_DisplayStringAt(240, 140, blank, 0x03);
-	BSP_LCD_DisplayStringAt(display_start, 220, blank, 0x03);
+	BSP_LCD_DisplayStringAt(display_start_x, display_start_y - 20, blank, LEFT_MODE);
 }
 
 void clear_xmit_messages(void)
 {
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-	// BSP_LCD_FillRect(240, 130, 240, 120);
-	BSP_LCD_DisplayStringAt(display_start, 240, blank, 0x03);
+	BSP_LCD_DisplayStringAt(display_start_x, display_start_y, blank, LEFT_MODE);
 }
 
 void Read_Station_File(void)
 {
 	uint16_t result = 0;
-	uint8_t i;
+	size_t i;
 	char read_buffer[64];
 
 	f_mount(&FS, SDPath, 1);
 	if (f_open(&fil, "StationData.txt", FA_OPEN_ALWAYS | FA_READ) == FR_OK)
 	{
-		char *Station_Data;
+		char *call_part, *locator_part = NULL, *extra_part = NULL;
 		memset(read_buffer, 0, sizeof(read_buffer));
 		f_lseek(&fil, 0);
 		f_gets(read_buffer, sizeof(read_buffer), &fil);
 
 		Station_Call[0] = 0;
-		Station_Data = strtok(read_buffer, ":");
-		if (Station_Data != NULL)
+		call_part = strtok(read_buffer, ":\r\n");
+		if (call_part != NULL)
+			locator_part = strtok(NULL, ":\r\n");
+		if (locator_part != NULL)
+			extra_part = strtok(NULL, ":\r\n");
+		if (call_part != NULL)
 		{
-			i = strlen(Station_Data);
+			i = strlen(call_part);
 			result = i > 0 && i < sizeof(Station_Call) ? 1 : 0;
 			if (result != 0)
 			{
-				strcpy(Station_Call, Station_Data);
-				Station_Data = strtok(NULL, ":");
+				strcpy(Station_Call, call_part);
 				for (i = 0; i < strlen(Station_Call); ++i)
 				{
 					if (!isprint((int)Station_Call[i]) || isspace((int)Station_Call[i]))
@@ -215,18 +213,37 @@ void Read_Station_File(void)
 		}
 
 		Locator[0] = 0;
-		if (result != 0 && Station_Data != NULL)
+		if (result != 0 && locator_part != NULL)
 		{
-			i = strlen(Station_Data);
+			i = strlen(locator_part);
 			result = i > 0 && i < sizeof(Locator) ? 1 : 0;
 			if (result != 0)
 			{
-				strcpy(Locator, Station_Data);
+				strcpy(Locator, locator_part);
 				for (i = 0; i < strlen(Locator); ++i)
 				{
 					if (!isalnum((int)Locator[i]))
 					{
 						Locator[0] = 0;
+						break;
+					}
+				}
+			}
+		}
+
+		Extra_Data[0] = 0;
+		if (result != 0 && extra_part != NULL)
+		{
+			i = strlen(extra_part);
+			result = i > 0 && i < sizeof(Extra_Data) ? 1 : 0;
+			if (result != 0)
+			{
+				strcpy(Extra_Data, extra_part);
+				for (i = 0; i < strlen(Extra_Data); ++i)
+				{
+					if (!isalnum((int)Extra_Data[i]))
+					{
+						Extra_Data[0] = 0;
 						break;
 					}
 				}
@@ -238,14 +255,12 @@ void Read_Station_File(void)
 
 void clear_reply_message_box(void)
 {
-
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-	BSP_LCD_FillRect(display_start, 40, display_width, 215);
+	BSP_LCD_FillRect(display_start_x, 40, display_width, 215);
 }
 
 void SD_Initialize(void)
 {
-
 	BSP_LCD_SetFont(&Font16);
 	BSP_LCD_SetTextColor(LCD_COLOR_RED);
 
@@ -259,11 +274,12 @@ void SD_Initialize(void)
 		}
 		else
 		{
-			BSP_LCD_DisplayStringAt(0, 100, (uint8_t *)"Insert SD.", 0x03);
+			BSP_LCD_DisplayStringAt(0, 100, (uint8_t *)"Insert SD.", LEFT_MODE);
 			while (BSP_SD_IsDetected() != SD_PRESENT)
 			{
+				HAL_Delay(100);
 			}
-			BSP_LCD_DisplayStringAt(0, 100, (uint8_t *)"Reboot Now.", 0x03);
+			BSP_LCD_DisplayStringAt(0, 100, (uint8_t *)"Reboot Now.", LEFT_MODE);
 		}
 	}
 }

@@ -8,27 +8,27 @@
 #ifndef WF_TABLE_H_
 #define WF_TABLE_H_
 
-
-
 const uint32_t WFPalette[] = {
-		0xFF000000,
-		0xFF000000,
-		0xFF000080,
-		0xFF0000FF,
-		0xFF8080FF,
-		0xFF008000,
-		0xFF00FF00,
-		0xFF80FF80,
-		0xFF800000,
-		0xFFFF0000,
-		0xFFFF8080,
-		0xFFFFA500,
-		0xFF808000,
-		0xFFFFFF00,
-		0xFFFFFF80,
-		0xFFFFFFFF};
+		LCD_COLOR_BLACK, 		//  0
+		LCD_COLOR_BLACK, 		//  1
+		LCD_COLOR_DARKBLUE, 	//  2
+		LCD_COLOR_BLUE,			//  3
+		LCD_COLOR_LIGHTBLUE,	//  4
+		LCD_COLOR_DARKGREEN,	//  5
+		LCD_COLOR_GREEN,		//  6
+		LCD_COLOR_LIGHTGREEN,	//  7
+		LCD_COLOR_DARKRED,	 	//  8
+		LCD_COLOR_RED,		 	//  9
+		LCD_COLOR_LIGHTRED,	 	// 10
+		LCD_COLOR_ORANGE,	 	// 11
+		LCD_COLOR_DARKYELLOW,	// 12
+		LCD_COLOR_YELLOW,	 	// 13
+		LCD_COLOR_LIGHTYELLOW,	// 14
+		LCD_COLOR_WHITE,		// 15
+		LCD_COLOR_GRAY			// 16
+};
 
-
+const int marker_line_colour_index = 16; // GRAY index in WFPalette
 
 #endif /* WF_TABLE_H_ */
 

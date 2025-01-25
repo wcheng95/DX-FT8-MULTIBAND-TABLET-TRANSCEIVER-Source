@@ -52,8 +52,6 @@ void SysTick_Handler(void);
 
 void AUDIO_IN_SAIx_DMAx_IRQHandler(void);
 void AUDIO_OUT_SAIx_DMAx_IRQHandler(void);
-void USARTx_DMA_RX_IRQHandler(void);
-
 
 #ifdef __cplusplus
 }
