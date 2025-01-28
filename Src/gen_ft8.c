@@ -40,8 +40,8 @@
 
 #include "button.h"
 
-char Locator[5];		  // four character locator  + /0
 char Station_Call[7];	  // six character call sign + /0
+char Locator[5];		  // four character locator  + /0
 char Target_Call[7];	  // six character call sign + /0
 char Target_Locator[5];	  // four character locator  + /0
 int Station_RSL;
