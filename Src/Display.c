@@ -237,21 +237,27 @@ uint16_t testButton(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
 	return 0;
 }
 
-static uint16_t FFT_Touch()
+static uint8_t FFT_Touch()
 {
 	if ((valx > FFT_X && valx < FFT_X + FFT_W) && (valy > FFT_Y && valy < 30))
 		return 1;
 	return 0;
 }
 
-static int FT8_Touch(void)
+static uint8_t LCD_Backlight_Touch()
+{
+	// Touch on the 'frequency' area top right of the display
+	if ((valx > FFT_W) && (valy < 20))
+		return 1;
+	return 0;
+}
+
+static uint8_t FT8_Touch(void)
 {
 	if ((valx > 0 && valx < 240) && (valy > 40 && valy < 240))
 	{
 		int y_test = valy - 40;
-
 		FT_8_TouchIndex = y_test / 20;
-
 		return 1;
 	}
 	return 0;
@@ -279,6 +285,7 @@ static int BL_Touch(void)
 void Process_Touch(void)
 {
 	static uint8_t touch_detected = 0;
+	static uint8_t display_on = 1;
 
 	TS_StateTypeDef TS_State;
 	BSP_TS_GetState(&TS_State);
@@ -306,6 +313,8 @@ void Process_Touch(void)
 	// Display touch lifted
 	else if (!TS_State.touchDetected)
 	{
+		uint8_t turn_backlight_on = 1;
+
 		touch_detected = 0;
 		// In the FFT area?
 		if (FFT_Touch())
@@ -316,11 +325,24 @@ void Process_Touch(void)
 			NCO_Frequency = (double)(cursor + ft8_min_bin) * FFT_Resolution;
 			show_variable(400, 25, (int)NCO_Frequency);
 		}
+		else if (LCD_Backlight_Touch())
+		{
+			if (display_on)
+			{
+				BSP_LCD_DisplayOff();
+				turn_backlight_on = display_on = 0;
+			}
+		}
 		else
 		{
 			checkButton();
 		}
 
+		if (turn_backlight_on && !display_on)
+		{
+			BSP_LCD_DisplayOn();
+			display_on = 1;
+		}
 	}
 }
 
