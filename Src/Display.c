@@ -259,12 +259,20 @@ static int FT8_Touch(void)
 
 static int BL_Touch(void)
 {
-	if ((valx > 320 && valx < 4000) && (valy > 100 && valy < 180))
+	if ((valx > 240 && valx < 480) && (valy > 40 && valy < 120))
 	{
-		BSP_LCD_BL_Off();
+
+		BSP_LCD_BL_On();
 		return 1;
 	}
+
+	else if((valx > 240 && valx < 480) && (valy > 160 && valy < 240))
+	{
+		BSP_LCD_BL_Off();
+	}
+
 	return 0;
+
 }
 
 
@@ -290,8 +298,9 @@ void Process_Touch(void)
 
 			FT8_Touch_Flag = FT8_Touch();
 
+			BL_Touch();
+
 			touch_detected = 1;
-			BSP_LCD_BL_On();
 		}
 	}
 	// Display touch lifted
@@ -311,7 +320,7 @@ void Process_Touch(void)
 		{
 			checkButton();
 		}
-		if(BL_Touch()) BSP_LCD_BL_Off();
+
 	}
 }
 
