@@ -97,14 +97,14 @@ int ft8_decode(void)
 
 		char message[14 + 14 + 7 + 1];
 
-		char field1[14];
-		char field2[14];
-		char field3[7];
-		int rc = unpack77_fields(a91, field1, field2, field3);
+		char call_to[14];
+		char call_from[14];
+		char locator[7];
+		int rc = unpack77_fields(a91, call_to, call_from, locator);
 		if (rc < 0)
 			continue;
 
-		sprintf(message, "%s %s %s ", field1, field2, field3);
+		sprintf(message, "%s %s %s ", call_to, call_from, locator);
 
 		_Bool found = false;
 		for (int i = 0; i < num_decoded; ++i)
@@ -129,35 +129,35 @@ int ft8_decode(void)
 				new_decoded[num_decoded].sync_score = cand.score;
 				new_decoded[num_decoded].freq_hz = (int)freq_hz;
 
-				strcpy(new_decoded[num_decoded].field1, field1);
-				strcpy(new_decoded[num_decoded].field2, field2);
-				strcpy(new_decoded[num_decoded].field3, field3);
+				strcpy(new_decoded[num_decoded].call_to, call_to);
+				strcpy(new_decoded[num_decoded].call_from, call_from);
+				strcpy(new_decoded[num_decoded].locator, locator);
 
 				new_decoded[num_decoded].slot = slot_state;
 
-				raw_RSL = (float)new_decoded[num_decoded].sync_score;
+				raw_RSL = (float)cand.score;
 				display_RSL = (int)((raw_RSL - 160)) / 6;
 				new_decoded[num_decoded].snr = display_RSL;
 
-				// TODO Decode.field3 is 7 bytes but Decode.target is only 5
-				if (validate_locator(field3) == 1)
+				if (validate_locator(locator) == 1)
 				{
-					strcpy(new_decoded[num_decoded].target, field3);
+					strcpy(new_decoded[num_decoded].target_locator, locator);
 				}
 
-				else if (strindex(field3, "73") >= 0 || strindex(field3, "RR73") >= 0 || strindex(field3, "RRR") >= 0)
+				else if (strindex(locator, "73") >= 0 || strindex(locator, "RR73") >= 0 || strindex(locator, "RRR") >= 0)
 				{
 					new_decoded[num_decoded].RR73 = 1;
 				}
 				else
 				{
-					if (field3[0] == 82)
+					if (locator[0] == 82)
 					{
-						field3[0] = 32;
+						locator[0] = 32;
 						new_decoded[num_decoded].RR73 = 1;
 					}
-					received_RSL = atoi(field3);
-					if (received_RSL < 30) // Prevents an 73 being decode as an received RSL
+
+					received_RSL = atoi(locator);
+					if (received_RSL < 30) // Prevents an 73 being decoded as a received RSL
 					{
 						new_decoded[num_decoded].received_snr = received_RSL;
 					}
@@ -174,6 +174,7 @@ int ft8_decode(void)
 void display_messages(int decoded_messages)
 {
 	const char CQ[] = "CQ";
+	const char *paramlist = "%s %s %s";
 
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
 	BSP_LCD_FillRect(0, FFT_H, 240, 200);
@@ -181,21 +182,27 @@ void display_messages(int decoded_messages)
 
 	for (int i = 0; i < decoded_messages && i < message_limit; i++)
 	{
-		const char *field1 = new_decoded[i].field1;
-		const char *field2 = new_decoded[i].field2;
-		const char *field3 = new_decoded[i].field3;
+		const char *call_to = new_decoded[i].call_to;
+		const char *call_from = new_decoded[i].call_from;
+		const char *locator = new_decoded[i].locator;
 
-		if (strcmp(CQ, field1) == 0)
+		if (strcmp(CQ, call_to) == 0)
 		{
-			sprintf(display[i].message, "%s %s %s %2i", field1, field2, field3, new_decoded[i].snr);
+			if (strcmp(Station_Call, call_from) != 0)
+			{
+				sprintf(display[i].message, "%s %s %s %2i", call_to, call_from, locator, new_decoded[i].snr);
+			}
+			else
+			{
+				sprintf(display[i].message, paramlist, call_to, call_from, locator);
+			}
 			display[i].text_color = 1;
 		}
 		else
 		{
-			sprintf(display[i].message, "%s %s %s", field1, field2, field3);
+			sprintf(display[i].message, paramlist, call_to, call_from, locator);
 			display[i].text_color = 0;
 		}
-
 	}
 
 	for (int j = 0; j < decoded_messages && j < message_limit; j++)
@@ -204,7 +211,7 @@ void display_messages(int decoded_messages)
 			BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
 		else
 			BSP_LCD_SetTextColor(LCD_COLOR_GREEN);
-		BSP_LCD_DisplayStringAt(0, 40 + j * 20, (const uint8_t *)display[j].message, 0x03);
+		BSP_LCD_DisplayStringAt(0, 40 + j * 20, (const uint8_t *)display[j].message, LEFT_MODE);
 	}
 }
 
@@ -262,11 +269,10 @@ void clear_decoded_messages(void)
 
 	for (int i = 0; i < kMax_decoded_messages; i++)
 	{
-
-		strcpy(new_decoded[i].field1, call_blank);
-		strcpy(new_decoded[i].field2, call_blank);
-		strcpy(new_decoded[i].field3, locator_blank);
-		strcpy(new_decoded[i].target, locator_blank);
+		strcpy(new_decoded[i].call_to, call_blank);
+		strcpy(new_decoded[i].call_from, call_blank);
+		strcpy(new_decoded[i].locator, locator_blank);
+		strcpy(new_decoded[i].target_locator, locator_blank);
 		new_decoded[i].freq_hz = 0;
 		new_decoded[i].sync_score = 0;
 		new_decoded[i].received_snr = 99;
@@ -278,19 +284,18 @@ void clear_decoded_messages(void)
 int Check_Calling_Stations(int num_decoded)
 {
 	int Beacon_Reply_Status = 0;
-
 	for (int i = 0; i < num_decoded; i++)
-	{ // check to see if being called
+	{ 
+		// check to see if being called
 		int old_call;
 		int old_call_address;
 
-		if (strindex(new_decoded[i].field1, Station_Call) >= 0)
+		if (strindex(new_decoded[i].call_to, Station_Call) >= 0)
 		{
 			old_call = 0;
-
 			for (int j = 0; j < num_calls; j++)
 			{
-				if (strcmp(Answer_CQ[j].call, new_decoded[i].field2) == 0)
+				if (strcmp(Answer_CQ[j].call, new_decoded[i].call_from) == 0)
 				{
 					old_call = Answer_CQ[j].number_times_called;
 					old_call++;
@@ -299,14 +304,14 @@ int Check_Calling_Stations(int num_decoded)
 				}
 			}
 
-			const char *field1 = new_decoded[i].field1;
-			const char *field2 = new_decoded[i].field2;
-			const char *field3 = new_decoded[i].field3;
+			const char *call_to = new_decoded[i].call_to;
+			const char *call_from = new_decoded[i].call_from;
+			const char *locator = new_decoded[i].locator;
 
 			if (old_call == 0)
 			{
-				sprintf(current_Beacon_receive_message, "%s %s %s", field1, field2, field3);
-				sprintf(current_QSO_receive_message, "%s %s %s", field1, field2, field3);
+				sprintf(current_Beacon_receive_message, "%s %s %s", call_to, call_from, locator);
+				strcpy(current_QSO_receive_message, current_Beacon_receive_message);
 
 				if (Beacon_On == 1)
 					update_Beacon_log_display(0);
@@ -314,7 +319,7 @@ int Check_Calling_Stations(int num_decoded)
 				if (Beacon_On == 0)
 					update_log_display(0);
 
-				strcpy(Target_Call, field2);
+				strcpy(Target_Call, call_from);
 
 				if (Beacon_On == 1)
 					Target_RSL = new_decoded[i].snr;
@@ -327,21 +332,18 @@ int Check_Calling_Stations(int num_decoded)
 
 				Beacon_Reply_Status = 1;
 
-				strcpy(Answer_CQ[num_calls].call, field2);
-				strcpy(Answer_CQ[num_calls].locator, new_decoded[i].target);
+				strcpy(Answer_CQ[num_calls].call, call_from);
+				strcpy(Answer_CQ[num_calls].locator, new_decoded[i].target_locator);
 				Answer_CQ[num_calls].RSL = Target_RSL;
 				Answer_CQ[num_calls].received_RSL = Station_RSL;
 
 				num_calls++;
-
 				break;
 			}
-
 			if (old_call >= 1 && old_call < 5)
 			{
-
-				sprintf(current_Beacon_receive_message, "%s %s %s", field1, field2, field3);
-				sprintf(current_QSO_receive_message, "%s %s %s", field1, field2, field3);
+				sprintf(current_Beacon_receive_message, "%s %s %s", call_to, call_from, locator);
+				strcpy(current_QSO_receive_message, current_Beacon_receive_message);
 
 				if (Beacon_On == 1)
 					update_Beacon_log_display(0);
@@ -364,7 +366,6 @@ int Check_Calling_Stations(int num_decoded)
 
 				if (Answer_CQ[old_call_address].RR73 == 0)
 				{
-
 					if (Beacon_On == 1)
 					{
 						if (new_decoded[i].RR73 == 1)
@@ -389,11 +390,10 @@ int Check_Calling_Stations(int num_decoded)
 
 void process_selected_Station(int stations_decoded, int TouchIndex)
 {
-
 	if (stations_decoded > 0 && TouchIndex <= stations_decoded)
 	{
-		strcpy(Target_Call, new_decoded[TouchIndex].field2);
-		strcpy(Target_Locator, new_decoded[TouchIndex].target);
+		strcpy(Target_Call, new_decoded[TouchIndex].call_from);
+		strcpy(Target_Locator, new_decoded[TouchIndex].target_locator);
 		Target_RSL = new_decoded[TouchIndex].snr;
 		target_slot = new_decoded[TouchIndex].slot;
 		target_freq = new_decoded[TouchIndex].freq_hz;
@@ -412,7 +412,6 @@ void process_selected_Station(int stations_decoded, int TouchIndex)
 
 void set_QSO_Xmit_Freq(int freq)
 {
-
 	freq = freq - ft8_min_freq;
 	cursor = (uint16_t)((float)freq / FFT_Resolution);
 

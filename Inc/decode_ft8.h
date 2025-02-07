@@ -19,14 +19,14 @@ extern int Target_RSL;
 
 typedef struct
 {
-    char field1[14];
-    char field2[14];
-    char field3[7];
+    char call_to[14];   // call also be 'CQ'
+    char call_from[14];
+    char locator[7];    // can also be a response 'RR73' etc.
     int freq_hz;
     int sync_score;
     int snr;
     int received_snr;
-    char target[7];
+    char target_locator[7];
     int slot;
     int RR73;
 } Decode;
