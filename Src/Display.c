@@ -247,7 +247,7 @@ static uint8_t FFT_Touch()
 static uint8_t LCD_Backlight_Touch()
 {
 	// Touch on the 'frequency' area top right of the display
-	if ((valx > FFT_W) && (valy < 20))
+	if ((valx > FFT_W) && (valy < 25))
 		return 1;
 	return 0;
 }
@@ -262,25 +262,6 @@ static uint8_t FT8_Touch(void)
 	}
 	return 0;
 }
-
-static int BL_Touch(void)
-{
-	if ((valx > 240 && valx < 480) && (valy > 40 && valy < 120))
-	{
-
-		BSP_LCD_BL_On();
-		return 1;
-	}
-
-	else if((valx > 240 && valx < 480) && (valy > 160 && valy < 240))
-	{
-		BSP_LCD_BL_Off();
-	}
-
-	return 0;
-
-}
-
 
 void Process_Touch(void)
 {
@@ -305,8 +286,6 @@ void Process_Touch(void)
 
 			FT8_Touch_Flag = FT8_Touch();
 
-			BL_Touch();
-
 			touch_detected = 1;
 		}
 	}
@@ -316,26 +295,28 @@ void Process_Touch(void)
 		uint8_t turn_backlight_on = 1;
 
 		touch_detected = 0;
-		// In the FFT area?
-		if (FFT_Touch())
+		if (display_on)
 		{
-			cursor = (valx - FFT_X);
-			if (cursor > FFT_W - 8)
-				cursor = FFT_W - 8;
-			NCO_Frequency = (double)(cursor + ft8_min_bin) * FFT_Resolution;
-			show_variable(400, 25, (int)NCO_Frequency);
-		}
-		else if (LCD_Backlight_Touch())
-		{
-			if (display_on)
+			// In the FFT area?
+			if (FFT_Touch())
+			{
+				cursor = (valx - FFT_X);
+				if (cursor > FFT_W - 8)
+					cursor = FFT_W - 8;
+
+				NCO_Frequency = (double)(cursor + ft8_min_bin) * FFT_Resolution;
+				show_variable(400, 25, (int)NCO_Frequency);
+			}
+			// in the backlight area?
+			else if (LCD_Backlight_Touch())
 			{
 				BSP_LCD_DisplayOff();
 				turn_backlight_on = display_on = 0;
 			}
-		}
-		else
-		{
-			checkButton();
+			else
+			{
+				checkButton();
+			}
 		}
 
 		if (turn_backlight_on && !display_on)
