@@ -71,8 +71,12 @@ void set_cq(void)
 {
 	char message[18];
 	uint8_t packed[K_BYTES];
-
-	sprintf(message, "%s %s %s", CQ, Station_Call, Locator);
+	if(strcmp(Extra_Data,"SOTA") == 0 || strcmp(Extra_Data,"POTA") == 0){
+	    sprintf(message, "%s_%s %s %s", CQ, Extra_Data, Station_Call, Locator);
+	}
+	else {
+	    sprintf(message, "%s %s %s", CQ, Station_Call, Locator);
+	}
 
 	pack77(message, packed);
 	genft8(packed, tones);
