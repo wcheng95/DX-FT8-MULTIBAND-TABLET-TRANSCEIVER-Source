@@ -29,6 +29,7 @@ int Auto_Sync;
 uint16_t start_freq;
 int BandIndex;
 int QSO_Fix;
+int Send_Free;
 
 int AGC_Gain = 20;
 int ADC_DVC_Gain = 180;
@@ -97,16 +98,16 @@ ButtonStruct sButtonData[] = {
 	 /*h*/ 30},
 
 	{// button 3 display R/T status
-	 /*text0*/ "Rcv ",
-	 /*text1*/ "Xmit",
+	 /*text0*/ " CQ ",
+	 /*text1*/ "Free",
 	 /*blank*/ "    ",
 	 /*Active*/ 1,
 	 /*Displayed*/ 1,
 	 /*state*/ 0,
 	 /*x*/ 180,
 	 /*y*/ line2,
-	 /*w*/ 0, // setting the width and height to 0 turns off touch response , display only
-	 /*h*/ 0},
+	 /*w*/ button_width, // setting the width and height to 0 turns off touch response , display only
+	 /*h*/ 30},
 
 	{// button 4 QSO Response Freq 0 fixed, 1 Match received station frequency
 	 /*text0*/ "Fixd",
@@ -424,7 +425,19 @@ ButtonStruct sButtonData[] = {
 	 /*x*/ RTC_Button,
 	 /*y*/ RTC_line5,
 	 /*w*/ button_width,
-	 /*h*/ 30}
+	 /*h*/ 30},
+
+	 {// button 28 display R/T status
+		 /*text0*/ " ",
+		 /*text1*/ " ",
+		 /*blank*/ " ",
+		 /*Active*/ 1,
+		 /*Displayed*/ 1,
+		 /*state*/ 0,
+		 /*x*/ 168,
+		 /*y*/ line2,
+		 /*w*/ 0, // setting the width and height to 0 turns off touch response , display only
+		 /*h*/ 0},
 
 }; // end of button definition
 
@@ -556,6 +569,11 @@ void executeButton(uint16_t index)
 		break;
 
 	case 3:
+		if (sButtonData[3].state == 1)
+			Send_Free = 1;
+		else
+			Send_Free = 0;
+		break;
 		// no code required, all dependent stuff works off of button state
 		break;
 
@@ -897,16 +915,16 @@ void receive_sequence(void)
 {
 	PTT_Out_Set(); // set output high to connect receiver to antenna
 	HAL_Delay(10);
-	sButtonData[3].state = 0;
-	drawButton(3);
+	sButtonData[28].state = 0;
+	drawButton(28);
 }
 
 void xmit_sequence(void)
 {
 	PTT_Out_RST_Clr(); // set output low to disconnect receiver from antenna
 	HAL_Delay(10);
-	sButtonData[3].state = 1;
-	drawButton(3);
+	sButtonData[28].state = 1;
+	drawButton(28);
 }
 
 const uint64_t F_boot = 11229600000ULL;
