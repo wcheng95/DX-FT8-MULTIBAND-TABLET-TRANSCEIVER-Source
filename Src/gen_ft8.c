@@ -47,6 +47,7 @@ char Target_Locator[5];	  // four character locator  + /0
 int Station_RSL;
 
 static char Extra_Data[13];
+static char Free_Text[14];
 
 char reply_message[21];
 char reply_message_list[18][8];
@@ -69,15 +70,17 @@ const uint8_t blank[] = "                  ";
 
 void set_cq(void)
 {
-	char message[18];
+	char message[28];
 	uint8_t packed[K_BYTES];
-	if(strcmp(Extra_Data,"SOTA") == 0 || strcmp(Extra_Data,"POTA") == 0){
-	    sprintf(message, "%s_%s %s %s", CQ, Extra_Data, Station_Call, Locator);
+	if((strcmp(Extra_Data,"POTA") == 0 || strcmp(Extra_Data,"SOTA") == 0) && Send_Free == 0){
+		sprintf(message, "%s_%s %s %s", CQ, Extra_Data, Station_Call, Locator);
+	}
+	else if(Send_Free == 1){
+		sprintf(message, "%s", Free_Text);
 	}
 	else {
 	    sprintf(message, "%s %s %s", CQ, Station_Call, Locator);
 	}
-
 	pack77(message, packed);
 	genft8(packed, tones);
 
@@ -253,6 +256,15 @@ void Read_Station_File(void)
 				}
 			}
 		}
+		Free_Text[0] = 0;
+		if (extra_part != NULL)
+			extra_part = strtok(NULL, ":\r\n");
+		if (result != 0 && extra_part != NULL)
+		{
+            strncpy(Free_Text, extra_part, sizeof(Free_Text) - 1);
+            Free_Text[sizeof(Free_Text) - 1] = 0; // Null-terminate
+		}
+
 		f_close(&fil);
 	}
 }
