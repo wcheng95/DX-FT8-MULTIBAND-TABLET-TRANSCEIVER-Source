@@ -34,7 +34,11 @@ int32_t pack28(const char *callsign) {
 		return 1;
 	if (starts_with(callsign, "CQ "))
 		return 2;
-
+	if (starts_with(callsign, "CQ_SOTA "))
+		return 386456;
+	if (starts_with(callsign, "CQ_POTA "))
+		return 327407;
+	
 	if (starts_with(callsign, "CQ_")) {
 
 		// TODO:
