@@ -72,11 +72,13 @@ void set_cq(void)
 {
 	char message[28];
 	uint8_t packed[K_BYTES];
-	if((strcmp(Extra_Data,"POTA") == 0 || strcmp(Extra_Data,"SOTA") == 0) && Send_Free == 0){
-		sprintf(message, "%s_%s %s %s", CQ, Extra_Data, Station_Call, Locator);
-	}
-	else if(Send_Free == 1){
-		sprintf(message, "%s", Free_Text);
+	if(strcmp(Extra_Data,"POTA") == 0 || strcmp(Extra_Data, "SOTA") == 0 ||strcmp(Extra_Data,"NONE") == 0 ){
+		if(Send_Free == 0){
+		    sprintf(message, "%s_%s %s %s", CQ, Extra_Data, Station_Call, Locator);
+	    }
+	    else if(Send_Free == 1){
+		    sprintf(message, "%s", Free_Text);
+	    }
 	}
 	else {
 	    sprintf(message, "%s %s %s", CQ, Station_Call, Locator);
