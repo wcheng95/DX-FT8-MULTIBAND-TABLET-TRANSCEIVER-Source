@@ -29,6 +29,8 @@ int Auto_Sync;
 uint16_t start_freq;
 int BandIndex;
 int QSO_Fix;
+int CQ_Mode_Index;
+int Free_Index;
 int Send_Free;
 
 int AGC_Gain = 20;
@@ -58,7 +60,7 @@ const FreqStruct sBand_Data[] =
 		{// 10,
 		 28074, "28.075"}};
 
-#define numButtons 28
+#define numButtons 35
 
 ButtonStruct sButtonData[] = {
 	{// button 0  inhibit xmit either as beacon or answer CQ
@@ -227,7 +229,7 @@ ButtonStruct sButtonData[] = {
 	 /*Displayed*/ 1,
 	 /*state*/ 0,
 	 /*x*/ 360,
-	 /*y*/ 140,
+	 /*y*/ 110,
 	 /*w*/ button_width,
 	 /*h*/ 30
 
@@ -439,6 +441,78 @@ ButtonStruct sButtonData[] = {
 		 /*w*/ 0, // setting the width and height to 0 turns off touch response , display only
 		 /*h*/ 0},
 
+
+	{// button 29 Standard CQ
+		 /*text0*/ " CQ ",
+		 /*text1*/ " CQ ",
+		 /*blank*/ "    ",
+		 /*Active*/ 1,
+		 /*Displayed*/ 1,
+		 /*state*/ 1,
+		 /*x*/ 240,
+		 /*y*/ 150,
+		 /*w*/ button_width,
+		 /*h*/ 30},
+
+	{// button 30 CQ DX
+		 /*text0*/ " DX ",
+		 /*text1*/ " DX ",
+		 /*blank*/ "    ",
+		 /*Active*/ 1,
+		 /*Displayed*/ 1,
+		 /*state*/ 0,
+		 /*x*/ 300,
+		 /*y*/ 150,
+		 /*w*/ button_width,
+		 /*h*/ 30},
+
+	{// button 31 CQ POTA
+		 /*text0*/ "POTA",
+		 /*text1*/ "POTA",
+		 /*blank*/ "    ",
+		 /*Active*/ 1,
+		 /*Displayed*/ 1,
+		 /*state*/ 0,
+		 /*x*/ 360,
+		 /*y*/ 150,
+		 /*w*/ button_width,
+		 /*h*/ 30},
+	{// button 32 CQ SOTA
+		 /*text0*/ "SOTA",
+		 /*text1*/ "SOTA",
+		 /*blank*/ "    ",
+		 /*Active*/ 1,
+		 /*Displayed*/ 1,
+		 /*state*/ 0,
+		 /*x*/ 420,
+		 /*y*/ 150,
+		 /*w*/ button_width,
+		 /*h*/ 30},
+
+	{// button 33 Free Text 1
+		 /*text0*/ "Free1",
+		 /*text1*/ "Free1",
+		 /*blank*/ "    ",
+		 /*Active*/ 1,
+		 /*Displayed*/ 1,
+		 /*state*/ 0,
+		 /*x*/ 240,
+		 /*y*/ 180,
+		 /*w*/ 160,
+		 /*h*/ 30},
+	{// button 34 Free Text 2
+		 /*text0*/ "Free2",
+		 /*text1*/ "Free2",
+		 /*blank*/ "    ",
+		 /*Active*/ 1,
+		 /*Displayed*/ 1,
+		 /*state*/ 0,
+		 /*x*/ 240,
+		 /*y*/ 205,
+		 /*w*/ 160,
+		 /*h*/ 30},
+
+
 }; // end of button definition
 
 void drawButton(uint16_t button)
@@ -570,11 +644,11 @@ void executeButton(uint16_t index)
 
 	case 3:
 		if (sButtonData[3].state == 1)
-			Send_Free = 1;
+			if(Free_Index != 0) Send_Free = 1;
+			else {sButtonData[3].state = 0; drawButton(3);Send_Free = 0;}
 		else
 			Send_Free = 0;
-		break;
-		// no code required, all dependent stuff works off of button state
+
 		break;
 
 	case 4: // Toggle QSO TX fix mode
@@ -667,6 +741,62 @@ void executeButton(uint16_t index)
 		set_RTC_to_DateEdit();
 		toggle_button_state(27);
 		break;
+
+	case 29: // Standard CQ
+		if (sButtonData[29].state == 1){
+			CQ_Mode_Index = 0;
+			sButtonData[30].state = 0;drawButton(30);
+			sButtonData[31].state = 0;drawButton(31);
+			sButtonData[32].state = 0;drawButton(32);
+			sButtonData[3].text0 = " CQ ";drawButton(3);
+		}
+		break;
+
+	case 30: // CQ DX
+		if (sButtonData[30].state == 1){
+			CQ_Mode_Index = 1;
+			sButtonData[29].state = 0;drawButton(29);
+			sButtonData[31].state = 0;drawButton(31);
+			sButtonData[32].state = 0;drawButton(32);
+			sButtonData[3].text0 = " DX ";drawButton(3);
+		}
+		break;
+	case 31: // CQ POTA
+		if (sButtonData[31].state == 1){
+			CQ_Mode_Index = 2;
+			sButtonData[30].state = 0;drawButton(30);
+			sButtonData[29].state = 0;drawButton(20);
+			sButtonData[32].state = 0;drawButton(32);
+			sButtonData[3].text0 = "POTA";drawButton(3);
+		}
+		break;
+
+	case 32: // Standard CQ
+		if (sButtonData[32].state == 1){
+			CQ_Mode_Index = 3;
+			sButtonData[30].state = 0;drawButton(30);
+			sButtonData[31].state = 0;drawButton(31);
+			sButtonData[29].state = 0;drawButton(29);
+			sButtonData[3].text0 = "SOTA";drawButton(3);
+		}
+		break;
+
+	case 33: // Standard CQ
+		if (sButtonData[33].state == 1){
+			if(sButtonData[34].state == 1) {sButtonData[34].state = 0;drawButton(34);}
+            Free_Index = 1;
+		}
+		else
+			Free_Index = 0;
+		break;
+	case 34: // Standard CQ
+		if (sButtonData[34].state == 1){
+			if(sButtonData[33].state == 1) {sButtonData[33].state = 0;drawButton(33);}
+			Free_Index = 2;
+		}
+		else
+			Free_Index = 0;
+		break;
 	}
 }
 
@@ -753,6 +883,7 @@ void executeCalibrationButton(uint16_t index)
 	case 26: // Raise Year
 		processButton(2, 1, 1);
 		break;
+
 	}
 }
 
@@ -779,6 +910,11 @@ void setup_Cal_Display(void)
 		drawButton(button);
 	drawButton(27);
 
+	for (int button = 29; button <= 34; ++button){
+		sButtonData[button].Active = 1;
+		drawButton(button);
+	}
+
 	show_wide(340, 55, start_freq);
 
 	load_RealTime();
@@ -796,6 +932,11 @@ void erase_Cal_Display(void)
 	for (int button = 10; button < numButtons; button++)
 	{
 		sButtonData[button].Active = 0;
+	}
+
+	for (int button = 29; button <= 34; ++button){
+		sButtonData[button].Active = 0;
+		drawButton(button);
 	}
 
 	for (int button = 12; button <= 14; ++button)
