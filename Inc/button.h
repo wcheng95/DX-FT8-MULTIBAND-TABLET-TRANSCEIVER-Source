@@ -79,6 +79,7 @@ extern int Arm_Tune;
 extern int Auto_Sync;
 extern int QSO_Fix;
 extern int Send_Free;
+extern int Choose_Free;
 extern uint16_t start_freq;
 extern int BandIndex;
 extern int Band_Minimum;
