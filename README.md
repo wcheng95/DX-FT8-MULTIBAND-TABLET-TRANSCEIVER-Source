@@ -11,8 +11,6 @@ To choose between CQ and Free Text, click the button next to Tune, originally ca
 
 Wei AG6AQ
 
-
-======================================================
 For more information about the DX FT8 Multiband Tablet Transceiver please use the
 
 https://github.com/WB2CBA/DX-FT8-FT8-MULTIBAND-TABLET-TRANSCEIVER
