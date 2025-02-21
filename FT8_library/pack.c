@@ -34,12 +34,24 @@ int32_t pack28(const char *callsign) {
 		return 1;
 	if (starts_with(callsign, "CQ "))
 		return 2;
-	if (starts_with(callsign, "CQ_SOTA "))
+/*	if (starts_with(callsign, "CQ_SOTA "))
 		return 386456;
 	if (starts_with(callsign, "CQ_POTA "))
 		return 327407;
-	
+	if (starts_with(callsign, "CQ_DX "))
+		return 1135;
+*/
 	if (starts_with(callsign, "CQ_")) {
+		int32_t n28 = 0;
+		char str[5] = {'\0'};
+		int i;
+		i = strlen(callsign) - 3 ;
+		strncpy(str, &callsign[3], i);
+	    for (int j = 0; j < i; j++) {
+	        n28 = n28 * 27 + (str[i] - 'A' + 1);
+	    }
+	    n28 += 1003;
+	    return n28;
 
 		// TODO:
 		// if(nnum.eq.3 .and. nlet.eq.0) then n28=3+nqsy
@@ -284,7 +296,7 @@ int pack77(const char *msg, uint8_t *c77) {
 
 	// Default to free text
 	// i3=0 n3=0
-	//  packtext77(msg, c77);
+	packtext77(msg, c77);
 	return 0;
 }
 
