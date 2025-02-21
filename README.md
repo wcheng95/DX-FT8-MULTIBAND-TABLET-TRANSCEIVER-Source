@@ -1,16 +1,17 @@
 This is a fork from https://github.com/g8kig/DX-FT8-MULTIBAND-TABLET-TRANSCEIVER
-It adds CQ POTA/SOTA capability to DXFT8 V1.9 and requires two additional fields in StationData.txt
+It adds CQ DX/POTA/SOTA capability to DXFT8 V1.9. You can also put 1 or 2 optional free text to StationData.txt
 
-[YourCall]:[YourGrid]:[SOTA|POTA|NONE]:[13 Free Text]
+[YourCall]:[YourGrid]:[Free Text 1]:[Free Text 2]
 
-StationData.txt examples:
-AG6AQ:CM97:POTA:PARK US-01234
-AG6AQ:CM97:SOTA:PEAKW6/NC-150
- 
+Free Text can be 1 to 13 characters in the range of [ 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ+-./?]
+
+Click "Tune" and select one of [CQ] [DX] [POTA] [SOTA]
+You can choose [Free Text 1] or [Free Text 2] or none.
 To choose between CQ and Free Text, click the button next to Tune, originally called Rcv/Xmit.
-All the changes apply to Beacon mode only, If StationData.txt doesn't have those two extra fields, it's a standard V1.9
 
 Wei AG6AQ
+
+
 ======================================================
 For more information about the DX FT8 Multiband Tablet Transceiver please use the
 
