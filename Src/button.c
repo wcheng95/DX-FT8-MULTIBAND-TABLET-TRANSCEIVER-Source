@@ -943,6 +943,7 @@ void erase_Cal_Display(void)
 		sButtonData[button].state = 0;
 
 	sButtonData[27].state = 0;
+	sButtonData[28].Active = 1;
 }
 
 void PTT_Out_Init(void)
