@@ -34,29 +34,32 @@ int32_t pack28(const char *callsign) {
 		return 1;
 	if (starts_with(callsign, "CQ "))
 		return 2;
-/*	if (starts_with(callsign, "CQ_SOTA "))
+	if (starts_with(callsign, "CQ_SOTA "))
 		return 386456;
 	if (starts_with(callsign, "CQ_POTA "))
 		return 327407;
+	if (starts_with(callsign, "CQ_QRPP "))
+		return 349184;
 	if (starts_with(callsign, "CQ_DX "))
 		return 1135;
-*/
-	if (starts_with(callsign, "CQ_")) {
+
+/*	if (starts_with(callsign, "CQ_")) {
 		int32_t n28 = 0;
 		char str[5] = {'\0'};
 		int i;
 		i = strlen(callsign) - 3 ;
 		strncpy(str, &callsign[3], i);
+        str[i < 4 ? i : 4] = '\0';  // Ensure null-termination
 	    for (int j = 0; j < i; j++) {
-	        n28 = n28 * 27 + (str[i] - 'A' + 1);
+	        n28 = n28 * 27 + (str[j] - 'A' + 1);
 	    }
 	    n28 += 1003;
 	    return n28;
-
+*/
 		// TODO:
 		// if(nnum.eq.3 .and. nlet.eq.0) then n28=3+nqsy
 		// if(nlet.ge.1 .and. nlet.le.4 .and. nnum.eq.0) then n28=3+1000+m
-	}
+//	}
 
 	// TODO: Check for <...> callsign
 	// if(text(1:1).eq.'<')then
