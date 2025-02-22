@@ -8,6 +8,7 @@ Free Text can be 1 to 13 characters in the range of [ 0123456789ABCDEFGHIJKLMNOP
 Click "Tune" and select one of [CQ] [DX] [POTA] [SOTA]
 You can choose [Free Text 1] or [Free Text 2] or none.
 To choose between CQ and Free Text, click the button next to Tune, originally called Rcv/Xmit.
+The code supports [QRPP] too. You can put "CQ_QRPP [YourCall] [YourGrid]" as one of the free text(don't worry about its length exceed 13). Please notice there is an underscore between CQ and QRPP.
 
 Wei AG6AQ
 
