@@ -79,7 +79,7 @@ void set_cq(void)
 		else if(CQ_Mode_Index == 2)
 			sprintf(message, "CQ_POTA %s %s", Station_Call, Locator);
 		else //if(CQ_Mode_Index == 3)
-			sprintf(message, "CQ_SOTA %s %s", Station_Call, Locator);
+			sprintf(message, "CQ_QRPP %s %s", Station_Call, Locator);
 	}
 	else {//if(Send_Free == 1)
 		if(Free_Index == 1) sprintf(message, "%s", Free_Text1);

@@ -478,8 +478,8 @@ ButtonStruct sButtonData[] = {
 		 /*w*/ button_width,
 		 /*h*/ 30},
 	{// button 32 CQ SOTA
-		 /*text0*/ "SOTA",
-		 /*text1*/ "SOTA",
+		 /*text0*/ "QRPP",
+		 /*text1*/ "QRPP",
 		 /*blank*/ "    ",
 		 /*Active*/ 1,
 		 /*Displayed*/ 1,
@@ -777,7 +777,7 @@ void executeButton(uint16_t index)
 			sButtonData[30].state = 0;drawButton(30);
 			sButtonData[31].state = 0;drawButton(31);
 			sButtonData[29].state = 0;drawButton(29);
-			sButtonData[3].text0 = "SOTA";drawButton(3);
+			sButtonData[3].text0 = "QRPP";drawButton(3);
 		}
 		break;
 
