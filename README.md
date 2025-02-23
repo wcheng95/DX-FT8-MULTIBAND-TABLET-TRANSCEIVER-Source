@@ -1,5 +1,5 @@
 This is a fork from https://github.com/g8kig/DX-FT8-MULTIBAND-TABLET-TRANSCEIVER
-It adds CQ DX/POTA/SOTA capability to DXFT8 V1.9. You can also put 1 or 2 optional free text to StationData.txt
+It adds CQ [A-ZZZZ] capability to DXFT8 V1.9. You can also put 1 or 2 optional free text to StationData.txt
 
 [YourCall]:[YourGrid]:[Free Text 1]:[Free Text 2]
 
@@ -9,7 +9,7 @@ Click "Tune" and select one of [CQ] [DX] [POTA] [SOTA]
 You can choose [Free Text 1] or [Free Text 2] or none.
 To choose between CQ and Free Text, click the button next to Tune, originally called Rcv/Xmit.
 
-The code supports [QRPP] too. You can put "CQ_QRPP [YourCall] [YourGrid]" as one of the free text(don't worry about its length exceed 13). Please notice there is an underscore between CQ and QRPP.
+The code supports CQ [A-ZZZZ] through free text. You can put "CQ_[A-ZZZZ] [YourCall] [YourGrid]" as one of the free texts(don't worry about its length exceed 13). Please notice there is an underscore after CQ and it's critical.
 
 Wei AG6AQ
 
