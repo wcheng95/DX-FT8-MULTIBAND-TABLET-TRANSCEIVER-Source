@@ -27,6 +27,7 @@ int32_t pack28(const char *callsign) {
 	int32_t NTOKENS = 2063592L;
 	int32_t MAX22 = 4194304L;
 
+
 	// Check for special tokens first
 	if (starts_with(callsign, "DE "))
 		return 0;
@@ -34,32 +35,19 @@ int32_t pack28(const char *callsign) {
 		return 1;
 	if (starts_with(callsign, "CQ "))
 		return 2;
-	if (starts_with(callsign, "CQ_SOTA "))
-		return 386456;
-	if (starts_with(callsign, "CQ_POTA "))
-		return 327407;
-	if (starts_with(callsign, "CQ_QRPP "))
-		return 349184;
-	if (starts_with(callsign, "CQ_DX "))
-		return 1135;
 
-/*	if (starts_with(callsign, "CQ_")) {
-		int32_t n28 = 0;
-		char str[5] = {'\0'};
-		int i;
-		i = strlen(callsign) - 3 ;
-		strncpy(str, &callsign[3], i);
-        str[i < 4 ? i : 4] = '\0';  // Ensure null-termination
-	    for (int j = 0; j < i; j++) {
-	        n28 = n28 * 27 + (str[j] - 'A' + 1);
+	int length = 0; // strlen(callsign);  // We will need it later
+	while (callsign[length] != ' ' && callsign[length] != 0) {
+		length++;
+	}
+	if (starts_with(callsign, "CQ_")) {
+		uint32_t n28 = 0;
+	    for (int j = 3; j < length; j++) {
+	        n28 = n28 * 27 + (callsign[j] - 'A' + 1);
 	    }
 	    n28 += 1003;
 	    return n28;
-*/
-		// TODO:
-		// if(nnum.eq.3 .and. nlet.eq.0) then n28=3+nqsy
-		// if(nlet.ge.1 .and. nlet.le.4 .and. nnum.eq.0) then n28=3+1000+m
-//	}
+	}
 
 	// TODO: Check for <...> callsign
 	// if(text(1:1).eq.'<')then
@@ -67,11 +55,6 @@ int32_t pack28(const char *callsign) {
 	//   n28=NTOKENS + n22
 
 	char c6[6] = { ' ', ' ', ' ', ' ', ' ', ' ' };
-
-	int length = 0; // strlen(callsign);  // We will need it later
-	while (callsign[length] != ' ' && callsign[length] != 0) {
-		length++;
-	}
 
 	// Copy callsign to 6 character buffer
 	if (starts_with(callsign, "3DA0") && length <= 7) {
