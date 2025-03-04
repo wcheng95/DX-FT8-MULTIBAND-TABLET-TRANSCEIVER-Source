@@ -11,8 +11,10 @@ To choose between CQ and Free Text, click the button next to Tune, originally ca
 
 Set "CQ_[A-ZZZZ] [YourCall] [YourGrid]" as one of the free texts(don't worry about its length exceed 13) and you can call "CQ ASIA", "CQ EU" or "CQ MARS". Please notice there is an underscore after CQ and it's critical.
 
-Wei AG6AQ
+[20250303] Add two more free text buttons (three .bin files are identical)
 
+Wei AG6AQ
+=========
 For more information about the DX FT8 Multiband Tablet Transceiver please use the
 
 https://github.com/WB2CBA/DX-FT8-FT8-MULTIBAND-TABLET-TRANSCEIVER
