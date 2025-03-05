@@ -1,18 +1,4 @@
-This is a fork from https://github.com/g8kig/DX-FT8-MULTIBAND-TABLET-TRANSCEIVER
-It adds CQ [A-ZZZZ] capability to DXFT8 V1.9. You can also put 1 or 2 optional free text to StationData.txt
-
-[YourCall]:[YourGrid]:[Free Text 1]:[Free Text 2]
-
-Free Text can be 1 to 13 characters in the range of [ 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ+-./?]
-
-Click "Tune" and select one of [CQ] [DX] [POTA] [SOTA]
-You can choose [Free Text 1] or [Free Text 2] or none.
-To choose between CQ and Free Text, click the button next to Tune, originally called Rcv/Xmit.
-
-Set "CQ_[A-ZZZZ] [YourCall] [YourGrid]" as one of the free texts(don't worry about its length exceed 13) and you can call "CQ ASIA", "CQ EU" or "CQ MARS". Please notice there is an underscore after CQ and it's critical.
-
-[20250303] Add two more free text buttons (three .bin files are identical)
-
+Since V1.9.2, the official release has CQ POTA/SOTA capability, I will not work on this fork any more.
 Wei AG6AQ
 =========
 For more information about the DX FT8 Multiband Tablet Transceiver please use the
